@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -15,4 +18,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-//[assembly: Guid("51ba6816-5fdb-4ae7-a473-4c5cf1c1faf4")]
+////[assembly: Guid("51ba6816-5fdb-4ae7-a473-4c5cf1c1faf4")]
