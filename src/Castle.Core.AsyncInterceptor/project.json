@@ -13,13 +13,13 @@
   },
 
   "frameworks": {
-    "netstandard1.0": {
-      "imports": "dnxcore50",
-      "dependencies": {
-        "NETStandard.Library": "1.5.0-rc2-24027",
-        "Castle.Core": "4.0.0-alpha001"
-      }
-    },
+    //"netstandard1.0": {
+    //  "imports": "dnxcore50",
+    //  "dependencies": {
+    //    "NETStandard.Library": "1.5.0-rc2-24027",
+    //    "Castle.Core": "4.0.0-alpha001"
+    //  }
+    //},
     "net45": {
       "dependencies": {
         "Castle.Core": "3.1.0"
