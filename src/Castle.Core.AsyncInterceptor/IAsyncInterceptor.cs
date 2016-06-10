@@ -8,7 +8,7 @@ namespace Castle.DynamicProxy
     /// <summary>
     /// Implement this interface to intercept method invocations with DynamicProxy2.
     /// </summary>
-    public interface IAsyncInterceptor : IInterceptor
+    public interface IAsyncInterceptor
     {
         /// <summary>
         /// Intercepts a synchronous method <paramref name="invocation"/>.

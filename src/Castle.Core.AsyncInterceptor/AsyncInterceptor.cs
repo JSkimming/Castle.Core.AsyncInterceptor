@@ -14,7 +14,7 @@ namespace Castle.DynamicProxy
     /// <summary>
     /// Intercepts method invocations and determines if is an asynchronous method.
     /// </summary>
-    internal class AsyncInterceptor : IInterceptor
+    public class AsyncInterceptor : IInterceptor
     {
         private static readonly MethodInfo HandleAsyncMethodInfo =
             typeof(AsyncInterceptor)
