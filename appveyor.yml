@@ -64,9 +64,15 @@ build_script:
 #      artifacts configuration    #
 #---------------------------------#
 
+artifacts:
+  - path: '**\*.nupkg'
+
 #---------------------------------#
 #       tests configuration       #
 #---------------------------------#
+
+test_script:
+  - dotnet test test\Castle.Core.AsyncInterceptor.Tests
 
 #---------------------------------#
 #     deployment configuration    #

@@ -1,0 +1,22 @@
+{
+  "version": "0.1.0-*",
+
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "AutoFixture": "3.47.4",
+    "AutoFixture.AutoMoq": "3.47.4",
+    "Castle.Core.AsyncInterceptor": "0.1.0-*",
+    "dotnet-test-xunit": "1.0.0-rc2-build10025",
+    "Moq": "4.5.9",
+    "xunit": "2.1.0"
+  },
+
+  "frameworks": {
+    "net451": {
+      "dependencies": {
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027"
+      }
+    }
+  }
+}
