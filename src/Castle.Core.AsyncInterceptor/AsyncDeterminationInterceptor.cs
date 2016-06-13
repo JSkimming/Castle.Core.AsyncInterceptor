@@ -14,10 +14,10 @@ namespace Castle.DynamicProxy
     /// <summary>
     /// Intercepts method invocations and determines if is an asynchronous method.
     /// </summary>
-    public class AsyncInterceptor : IInterceptor
+    public class AsyncDeterminationInterceptor : IInterceptor
     {
         private static readonly MethodInfo HandleAsyncMethodInfo =
-            typeof(AsyncInterceptor)
+            typeof(AsyncDeterminationInterceptor)
                     .GetMethod(nameof(HandleAsyncWithResult), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly ConcurrentDictionary<Type, GenericAsyncHandler> GenericAsyncHandlers =
@@ -26,9 +26,9 @@ namespace Castle.DynamicProxy
         private readonly IAsyncInterceptor _asyncInterceptor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncInterceptor"/> class.
+        /// Initializes a new instance of the <see cref="AsyncDeterminationInterceptor"/> class.
         /// </summary>
-        public AsyncInterceptor(IAsyncInterceptor asyncInterceptor)
+        public AsyncDeterminationInterceptor(IAsyncInterceptor asyncInterceptor)
         {
             _asyncInterceptor = asyncInterceptor;
         }
