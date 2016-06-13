@@ -58,7 +58,7 @@ before_build:
   - dotnet restore
 
 build_script:
-  - dotnet pack src\Castle.Core.AsyncInterceptor
+  - dotnet pack src\Castle.Core.AsyncInterceptor --configuration %CONFIGURATION%
 
 #---------------------------------#
 #      artifacts configuration    #
@@ -66,13 +66,17 @@ build_script:
 
 artifacts:
   - path: '**\*.nupkg'
+  - path: test\TestResults
 
 #---------------------------------#
 #       tests configuration       #
 #---------------------------------#
 
+before_test:
+  - dotnet build test\Castle.Core.AsyncInterceptor.Tests --configuration %CONFIGURATION%
+
 test_script:
-  - dotnet test test\Castle.Core.AsyncInterceptor.Tests
+  - coverage.cmd %CONFIGURATION%
 
 #---------------------------------#
 #     deployment configuration    #
