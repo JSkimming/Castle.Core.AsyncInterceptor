@@ -24,6 +24,10 @@ pull_requests:
 # Operating system (build VM template)
 os: Visual Studio 2015
 
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: wlbvgdxuXKnICUGjPqGoQF35j+AKryMfPyUg+YC44hcF72KnOL+ON4WkPMSvedBb
+
 # Automatically register private account and/or project AppVeyor NuGet feeds.
 nuget:
   account_feed: true
@@ -65,7 +69,7 @@ build_script:
 #---------------------------------#
 
 artifacts:
-  - path: '**\*.nupkg'
+  - path: src\**\*.nupkg
   - path: test\TestResults
 
 #---------------------------------#
@@ -77,6 +81,10 @@ before_test:
 
 test_script:
   - coverage.cmd %CONFIGURATION%
+
+after_test: |
+  FOR /r %%F IN (*coveralls.net.exe) DO SET coveralls_exe=%%F
+  %coveralls_exe% --opencover test\TestResults\Test.Coverage.xml
 
 #---------------------------------#
 #     deployment configuration    #
