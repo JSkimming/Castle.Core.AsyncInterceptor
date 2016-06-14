@@ -27,19 +27,27 @@ namespace Castle.DynamicProxy
     {
         private static readonly ProxyGenerator Generator = new ProxyGenerator();
 
-        public static IInterfaceToProxy CreateProxy(List<string> log)
+        public static IInterfaceToProxy CreateProxy<TInterceptor>(List<string> log, out TInterceptor interceptor)
+            where TInterceptor : class, IAsyncInterceptor
         {
             // Arrange
             var fixture = new Fixture();
             fixture.Inject(log);
             var classWithInterfaceToProxy = fixture.Create<ClassWithInterfaceToProxy>();
-            var testAsyncInterceptor = fixture.Create<TestAsyncInterceptor>();
+            interceptor = fixture.Create<TInterceptor>();
 
             var proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
                 classWithInterfaceToProxy,
-                testAsyncInterceptor);
+                interceptor);
 
             return proxy;
+        }
+
+        public static IInterfaceToProxy CreateProxy<TInterceptor>(List<string> log)
+            where TInterceptor : class, IAsyncInterceptor
+        {
+            TInterceptor unused;
+            return CreateProxy(log, out unused);
         }
     }
 
@@ -51,7 +59,7 @@ namespace Castle.DynamicProxy
 
         public WhenInterceptingSynchronousVoidMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log);
+            _proxy = ProxyGen.CreateProxy<TestAsyncInterceptor>(_log);
         }
 
         [Fact]
@@ -93,7 +101,7 @@ namespace Castle.DynamicProxy
 
         public WhenInterceptingSynchronousResultMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log);
+            _proxy = ProxyGen.CreateProxy<TestAsyncInterceptor>(_log);
         }
 
         [Fact]
@@ -136,7 +144,7 @@ namespace Castle.DynamicProxy
 
         public WhenInterceptingAsynchronousVoidMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log);
+            _proxy = ProxyGen.CreateProxy<TestAsyncInterceptor>(_log);
         }
 
         [Fact]
@@ -178,7 +186,7 @@ namespace Castle.DynamicProxy
 
         public WhenInterceptingAsynchronousResultMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log);
+            _proxy = ProxyGen.CreateProxy<TestAsyncInterceptor>(_log);
         }
 
         [Fact]
