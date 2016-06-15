@@ -4,10 +4,13 @@
 namespace Castle.DynamicProxy.InterfaceProxies
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IInterfaceToProxy
     {
+        IReadOnlyList<string> Log { get; }
+
         void SynchronousVoidMethod();
 
         Guid SynchronousResultMethod();
