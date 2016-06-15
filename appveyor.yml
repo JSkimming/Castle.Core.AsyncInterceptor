@@ -13,7 +13,7 @@ cache:
   - C:\Users\appveyor\.nuget\packages
 
 # version format
-version: 0.1.{build}
+version: 1.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 
@@ -49,14 +49,6 @@ shallow_clone: true
 force_https_clone: true
 
 configuration: Release
-
-# enable patching of AssemblyInfo.cs files
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
 
 #---------------------------------#
 #       build configuration       #
