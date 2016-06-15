@@ -94,5 +94,111 @@ namespace Castle.DynamicProxy
             Assert.Equal($"{methodName}:InterceptStart", log[0]);
             Assert.Equal($"{methodName}:InterceptEnd", log[3]);
         }
+
+        public static IEnumerable<object[]> ClassProxyFactories()
+        {
+            Func<ProxyGenerator, List<string>, ClassWithVirtualMethodToProxy>[] proxyFactories =
+            {
+                (gen, log) => gen.CreateClassProxyWithTarget(
+                    new ClassWithVirtualMethodToProxy(log),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => gen.CreateClassProxyWithTarget(
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    default(Type[]),
+                    new ClassWithVirtualMethodToProxy(log),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    default(Type[]),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    default(Type[]),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => gen.CreateClassProxy<ClassWithVirtualMethodToProxy>(new TestAsyncInterceptor(log)),
+                (gen, log) => gen.CreateClassProxy<ClassWithVirtualMethodToProxy>(
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    default(Type[]),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    default(Type[]),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    default(Type[]),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+            };
+
+            return proxyFactories.Select(p => new object[] { p, new List<string>() });
+        }
+
+        [Theory]
+        [MemberData(nameof(ClassProxyFactories))]
+        public async Task ExtendClassProxyGenerator(
+            Func<ProxyGenerator, List<string>, ClassWithVirtualMethodToProxy> proxyFactory,
+            List<string> log)
+        {
+            // Act
+            ClassWithVirtualMethodToProxy proxy = proxyFactory(Generator, log);
+            Guid result = await proxy.AsynchronousResultMethod();
+
+            // Assert
+            const string methodName = nameof(ClassWithVirtualMethodToProxy.AsynchronousResultMethod);
+            Assert.NotEqual(Guid.Empty, result);
+            Assert.Equal($"{methodName}:InterceptStart", log.First());
+            Assert.Equal($"{methodName}:InterceptEnd", log.Last());
+        }
     }
 }
