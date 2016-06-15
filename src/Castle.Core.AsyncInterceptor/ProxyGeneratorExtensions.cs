@@ -33,7 +33,7 @@ namespace Castle.DynamicProxy
         }
 
         /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithTargetInterface{TInterface}(TInterface,IInterceptor[])"/> documentation.
+        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithTarget{TInterface}(TInterface,IInterceptor[])"/> documentation.
         /// </summary>
         public static TInterface CreateInterfaceProxyWithTarget<TInterface>(
             this ProxyGenerator proxyGenerator,
@@ -217,111 +217,6 @@ namespace Castle.DynamicProxy
                 interfaceToProxy,
                 additionalInterfacesToProxy,
                 target,
-                options,
-                interceptors.ToInterceptors());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget{TInterface}(IInterceptor)"/> documentation.
-        /// </summary>
-        public static TInterface CreateInterfaceProxyWithoutTarget<TInterface>(
-            this ProxyGenerator proxyGenerator,
-            IAsyncInterceptor interceptor)
-            where TInterface : class
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget<TInterface>(interceptor.ToInterceptor());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget{TInterface}(IInterceptor[])"/> documentation.
-        /// </summary>
-        public static TInterface CreateInterfaceProxyWithoutTarget<TInterface>(
-            this ProxyGenerator proxyGenerator,
-            params IAsyncInterceptor[] interceptors)
-            where TInterface : class
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget<TInterface>(interceptors.ToInterceptors());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget{TInterface}(ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
-        public static TInterface CreateInterfaceProxyWithoutTarget<TInterface>(
-            this ProxyGenerator proxyGenerator,
-            ProxyGenerationOptions options,
-            params IAsyncInterceptor[] interceptors)
-            where TInterface : class
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget<TInterface>(
-                options,
-                interceptors.ToInterceptors());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget(Type, IInterceptor)"/> documentation.
-        /// </summary>
-        public static object CreateInterfaceProxyWithoutTarget(
-            this ProxyGenerator proxyGenerator,
-            Type interfaceToProxy,
-            IAsyncInterceptor interceptor)
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget(interfaceToProxy, interceptor.ToInterceptor());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget(Type, IInterceptor[])"/> documentation.
-        /// </summary>
-        public static object CreateInterfaceProxyWithoutTarget(
-            this ProxyGenerator proxyGenerator,
-            Type interfaceToProxy,
-            params IAsyncInterceptor[] interceptors)
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget(interfaceToProxy, interceptors.ToInterceptors());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget(Type, Type[], IInterceptor[])"/> documentation.
-        /// </summary>
-        public static object CreateInterfaceProxyWithoutTarget(
-            this ProxyGenerator proxyGenerator,
-            Type interfaceToProxy,
-            Type[] additionalInterfacesToProxy,
-            params IAsyncInterceptor[] interceptors)
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget(
-                interfaceToProxy,
-                additionalInterfacesToProxy,
-                interceptors.ToInterceptors());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget(Type, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
-        public static object CreateInterfaceProxyWithoutTarget(
-            this ProxyGenerator proxyGenerator,
-            Type interfaceToProxy,
-            ProxyGenerationOptions options,
-            params IAsyncInterceptor[] interceptors)
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget(
-                interfaceToProxy,
-                options,
-                interceptors.ToInterceptors());
-        }
-
-        /// <summary>
-        /// See the <see cref="ProxyGenerator.CreateInterfaceProxyWithoutTarget(Type, Type[], ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
-        public static object CreateInterfaceProxyWithoutTarget(
-            this ProxyGenerator proxyGenerator,
-            Type interfaceToProxy,
-            Type[] additionalInterfacesToProxy,
-            ProxyGenerationOptions options,
-            params IAsyncInterceptor[] interceptors)
-        {
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget(
-                interfaceToProxy,
-                additionalInterfacesToProxy,
                 options,
                 interceptors.ToInterceptors());
         }

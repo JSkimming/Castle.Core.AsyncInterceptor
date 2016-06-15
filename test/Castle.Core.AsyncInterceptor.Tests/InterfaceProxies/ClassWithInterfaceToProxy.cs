@@ -11,7 +11,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class ClassWithInterfaceToProxy : IInterfaceToProxy
     {
-        private readonly ICollection<string> _log;
+        private readonly List<string> _log;
 
         public ClassWithInterfaceToProxy(List<string> log)
         {
@@ -20,6 +20,8 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
             _log = log;
         }
+
+        public IReadOnlyList<string> Log => _log;
 
         public void SynchronousVoidMethod()
         {
