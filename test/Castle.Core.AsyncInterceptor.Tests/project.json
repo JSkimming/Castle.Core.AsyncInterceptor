@@ -7,9 +7,9 @@
     "AutoFixture": "3.48.0",
     "AutoFixture.AutoMoq": "3.48.0",
     "Castle.Core.AsyncInterceptor": "1.0.0-*",
-    "dotnet-test-xunit": "1.0.0-rc2-build10025",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "Moq": "4.5.10",
-    "xunit": "2.1.0"
+    "xunit": "2.2.0-beta2-build3300"
   },
 
   "frameworks": {
