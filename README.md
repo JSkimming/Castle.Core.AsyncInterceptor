@@ -38,7 +38,7 @@ public void Intercept(IInvocation invocation)
 
 ## What's not simple about asynchronous method interception?
 
-When implementing `IInterceptor` the underlying the class is invoked like this:
+When implementing `IInterceptor` the underlying the method is invoked like this:
 
 ```c#
 public void Intercept(IInvocation invocation)
@@ -105,3 +105,102 @@ To intercept methods that return a [`Task<TResult>`](https://msdn.microsoft.com/
 from simple. It's the reason why I created this library. Rather than go into the detail (the solution requires using
 reflection) the stack overflow answer to the question [Intercept async method that returns generic Task<> via
 DynamicProxy](http://stackoverflow.com/a/28374134) provides great overview.
+
+## How to intercept asynchronous methods __with__ AsyncInterceptor?
+
+If you've got this far, then it's probably safe to assume you want to intercept asynchronous methods, and the options
+for doing it manually look like a lot of work.
+
+### Option 1:  Implement `IAsyncInterceptor` interface to intercept invocations
+
+Create a class them implements `IAsyncInterceptor`, then register it for interception in the same was as `Interceptor`
+using the ProxyGenerator extension methods, e.g.
+
+```c#
+var myClass = new ClasThatimplementsIMyInterface();
+var generator = new ProxyGenerator();
+var interceptor = new ClasThatimplementsIAsyncInterceptor();
+IMyInterface proxy = generator.CreateInterfaceProxyWithTargetInterface<IMyInterface>(myClass, interceptor)
+```
+
+Implementing
+[IAsyncInterceptor](https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/master/src/Castle.Core.AsyncInterceptor/IAsyncInterceptor.cs)
+is the closest to traditional interception when implementing
+[IInterceptor](https://github.com/castleproject/Core/blob/master/src/Castle.Core/DynamicProxy/IInterceptor.cs)
+
+Instead of a single `void Intercept(IInvocation invocation)` method to implement, there are three:
+
+```c#
+void InterceptSynchronous(IInvocation invocation);
+void InterceptAsynchronous(IInvocation invocation);
+void InterceptAsynchronous<TResult>(IInvocation invocation);
+```
+
+#### `InterceptSynchronous(IInvocation invocation)`
+
+`InterceptSynchronous` is effectively the same as `IInterceptor.Intercept`, though it is only called for synchronous
+methods, e.g. methods that do not return `Task` or `Task<TResult>`.
+
+Implementing `InterceptSynchronous` could look something like this:
+
+```c#
+public void InterceptSynchronous(IInvocation invocation)
+{
+    // Step 1. Do something prior to invocation.
+
+    invocation.Proceed();
+
+    // Step 2. Do something after invocation.
+}
+```
+
+#### `InterceptAsynchronous(IInvocation invocation)`
+
+`InterceptAsynchronous(IInvocation invocation)` is called for methods that return `Task` but not the generic
+`TaskT<Result>`.
+
+Implementing `InterceptAsynchronous(IInvocation invocation)` could look something like this:
+
+```c#
+public void InterceptAsynchronous(IInvocation invocation)
+{
+    invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
+}
+
+private async Task InternalInterceptAsynchronous(IInvocation invocation)
+{
+    // Step 1. Do something prior to invocation.
+
+    invocation.Proceed();
+    var task = (Task)invocation.ReturnValue;
+    await task;
+
+    // Step 2. Do something after invocation.
+}
+```
+
+#### `InterceptAsynchronous<TResult>(IInvocation invocation)`
+
+`InterceptAsynchronous<TResult>(IInvocation invocation)` is called for methods that return the generic `TaskT<Result>`.
+
+Implementing `InterceptAsynchronous<TResult>(IInvocation invocation)` could look something like this:
+
+```c#
+public void InterceptAsynchronous<TResult>(IInvocation invocation)
+{
+    invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
+}
+
+private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation invocation)
+{
+    // Step 1. Do something prior to invocation.
+
+    invocation.Proceed();
+    var task = (Task<TResult>)invocation.ReturnValue;
+    TResult result = await task;
+
+    // Step 2. Do something after invocation.
+
+    return result;
+}
+```
