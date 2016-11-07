@@ -268,3 +268,37 @@ public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<object>
     }
 }
 ```
+
+## Method invocation timing using `AsyncTimingInterceptor`
+
+A common use-case for method invocation interception is to time how long a method takes to execute. For this reason
+[`AsyncTimingInterceptor`](https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/documentation/src/Castle.Core.AsyncInterceptor/AsyncTimingInterceptor.cs)
+is provided.
+
+`AsyncTimingInterceptor` is specialised implementation of `ProcessingAsyncInterceptor<TState>` that uses a
+[Stopwatch](https://msdn.microsoft.com/en-us/library/system.diagnostics.stopwatch.aspx) as the `TState`.
+
+`AsyncTimingInterceptor` defines two abstract methods, one that is invoked before method invocation and before the
+Stopwatch has started. The second after method invocation and the Stopwatch has stopped
+
+```c#
+protected abstract void StartingTiming(IInvocation invocation);
+protected abstract void CompletedTiming(IInvocation invocation, Stopwatch stopwatch);
+```
+
+I possible extension of `AsyncTimingInterceptor` could be as follows:
+
+```c#
+public class TestAsyncTimingInterceptor : AsyncTimingInterceptor
+{
+    protected override void StartingTiming(IInvocation invocation)
+    {
+        Trace.WriteLine($"{invocation.Method.Name}:StartingTiming");
+    }
+
+    protected override void CompletedTiming(IInvocation invocation, Stopwatch stopwatch)
+    {
+        Trace.WriteLine($"{invocation.Method.Name}:CompletedTiming:{stopwatch.Elapsed:g}");
+    }
+}
+```
