@@ -205,7 +205,7 @@ private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation i
 }
 ```
 
-### Option 2: Extend `ProcessingAsyncInterceptor<TState>` interface to intercept invocations
+### Option 2: Extend `ProcessingAsyncInterceptor<TState>` class to intercept invocations
 
 Create a class that extends the abstract base class `ProcessingAsyncInterceptor<TState>`, then register it for
 interception in the same was as `IInterceptor` using the ProxyGenerator extension methods, e.g.
@@ -234,7 +234,7 @@ State can be maintained between the two method through the generic class paramet
 called before method invocation. The return value of type `TState` is then passed to the `CompletedInvocation` which is
 called after method invocation.
 
-I possible extension of `ProcessingAsyncInterceptor<TState>` could be as follows:
+A possible extension of `ProcessingAsyncInterceptor<TState>` could be as follows:
 
 ```c#
 public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<string>
@@ -253,7 +253,7 @@ public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<string>
 ```
 
 The state of type `TState` returned from `StartingInvocation` can be `null`. Neither `StartingInvocation` nor
-`CompletedInvocation` are require to be overridden in the class that derived from `ProcessingAsyncInterceptor<TState>`
+`CompletedInvocation` are require to be overridden in the class that derives from `ProcessingAsyncInterceptor<TState>`.
 The default implementation of StartingInvocation simply returns `null`. If all you require is to intercept methods
 after they are invoked, then just implement `CompletedInvocation` and ignore the `state` parameter which will be
 null. In that situation your class can be defined as:
@@ -275,7 +275,7 @@ A common use-case for method invocation interception is to time how long a metho
 [`AsyncTimingInterceptor`](https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/documentation/src/Castle.Core.AsyncInterceptor/AsyncTimingInterceptor.cs)
 is provided.
 
-`AsyncTimingInterceptor` is specialised implementation of `ProcessingAsyncInterceptor<TState>` that uses a
+`AsyncTimingInterceptor` is a specialised implementation of `ProcessingAsyncInterceptor<TState>` that uses a
 [Stopwatch](https://msdn.microsoft.com/en-us/library/system.diagnostics.stopwatch.aspx) as the `TState`.
 
 `AsyncTimingInterceptor` defines two abstract methods, one that is invoked before method invocation and before the
@@ -286,7 +286,7 @@ protected abstract void StartingTiming(IInvocation invocation);
 protected abstract void CompletedTiming(IInvocation invocation, Stopwatch stopwatch);
 ```
 
-I possible extension of `AsyncTimingInterceptor` could be as follows:
+A possible extension of `AsyncTimingInterceptor` could be as follows:
 
 ```c#
 public class TestAsyncTimingInterceptor : AsyncTimingInterceptor
