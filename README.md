@@ -102,8 +102,8 @@ public void Intercept(IInvocation invocation)
 ### Methods that return [`Task<TResult>`](https://msdn.microsoft.com/en-us/library/dd321424.aspx)
 
 To intercept methods that return a [`Task<TResult>`](https://msdn.microsoft.com/en-us/library/dd321424.aspx) is far
-from simple. It's the reason why I created this library. Rather than go into the detail (the solution requires using
-reflection) the stack overflow answer to the question [Intercept async method that returns generic Task<> via
+from simple. It's the reason why I created this library. Rather than go into the detail (the solution requires the use
+of reflection) the stack overflow answer to the question [Intercept async method that returns generic Task<> via
 DynamicProxy](http://stackoverflow.com/a/28374134) provides great overview.
 
 ## How to intercept asynchronous methods __with__ AsyncInterceptor?
@@ -113,13 +113,13 @@ for doing it manually look like a lot of work.
 
 ### Option 1:  Implement `IAsyncInterceptor` interface to intercept invocations
 
-Create a class them implements `IAsyncInterceptor`, then register it for interception in the same was as `Interceptor`
+Create a class them implements `IAsyncInterceptor`, then register it for interception in the same was as `IInterceptor`
 using the ProxyGenerator extension methods, e.g.
 
 ```c#
-var myClass = new ClasThatimplementsIMyInterface();
+var myClass = new ClasThatImplementsIMyInterface();
 var generator = new ProxyGenerator();
-var interceptor = new ClasThatimplementsIAsyncInterceptor();
+var interceptor = new ClasThatImplementsIAsyncInterceptor();
 IMyInterface proxy = generator.CreateInterfaceProxyWithTargetInterface<IMyInterface>(myClass, interceptor)
 ```
 
@@ -202,5 +202,69 @@ private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation i
     // Step 2. Do something after invocation.
 
     return result;
+}
+```
+
+### Option 2: Extend `ProcessingAsyncInterceptor<TState>` interface to intercept invocations
+
+Create a class that extends the abstract base class `ProcessingAsyncInterceptor<TState>`, then register it for
+interception in the same was as `IInterceptor` using the ProxyGenerator extension methods, e.g.
+
+```c#
+var myClass = new ClasThatImplementsIMyInterface();
+var generator = new ProxyGenerator();
+var interceptor = new ClasThatExtendsProcessingAsyncInterceptor();
+IMyInterface proxy = generator.CreateInterfaceProxyWithTargetInterface<IMyInterface>(myClass, interceptor)
+```
+
+Extending
+[`ProcessingAsyncInterceptor<TState>`](https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/documentation/src/Castle.Core.AsyncInterceptor/ProcessingAsyncInterceptor.cs),
+provides a simplified mechanism of intercepting method invocations without having to implement the three methods of
+`IAsyncInterceptor`.
+
+`ProcessingAsyncInterceptor<TState>` defines two virtual methods, one that is invoked before to the method invocation,
+the second after.
+
+```c#
+protected virtual TState StartingInvocation(IInvocation invocation);
+protected virtual void CompletedInvocation(IInvocation invocation, TState state);
+```
+
+State can be maintained between the two method through the generic class parameter `TState`. `StartingInvocation` is
+called before method invocation. The return value of type `TState` is then passed to the `CompletedInvocation` which is
+called after method invocation.
+
+I possible extension of `ProcessingAsyncInterceptor<TState>` could be as follows:
+
+```c#
+public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<string>
+{
+    protected override string StartingInvocation(IInvocation invocation)
+    {
+        return $"{invocation.Method.Name}:StartingInvocation:{DateTime.UtcNow:O}";
+    }
+
+    protected override void CompletedInvocation(IInvocation invocation, string state)
+    {
+        Trace.WriteLine(state);
+        Trace.WriteLine($"{invocation.Method.Name}:CompletedInvocation:{DateTime.UtcNow:O}");
+    }
+}
+```
+
+The state of type `TState` returned from `StartingInvocation` can be `null`. Neither `StartingInvocation` nor
+`CompletedInvocation` are require to be overridden in the class that derived from `ProcessingAsyncInterceptor<TState>`
+The default implementation of StartingInvocation simply returns `null`. If all you require is to intercept methods
+after they are invoked, then just implement `CompletedInvocation` and ignore the `state` parameter which will be
+null. In that situation your class can be defined as:
+
+
+```c#
+public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<object>
+{
+    protected override void CompletedInvocation(IInvocation invocation, object state)
+    {
+        Trace.WriteLine($"{invocation.Method.Name}:CompletedInvocation:{DateTime.UtcNow:O}");
+    }
 }
 ```
