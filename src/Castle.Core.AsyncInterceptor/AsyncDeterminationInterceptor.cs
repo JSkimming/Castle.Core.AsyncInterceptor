@@ -75,7 +75,7 @@ namespace Castle.DynamicProxy
                 return MethodType.Synchronous;
 
             // The return type is a task of some sort, so assume it's asynchronous
-            return returnType.IsGenericType ? MethodType.AsyncFunction : MethodType.AsyncAction;
+            return returnType.GetTypeInfo().IsGenericType ? MethodType.AsyncFunction : MethodType.AsyncAction;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Castle.DynamicProxy
         {
             Type taskReturnType = returnType.GetGenericArguments()[0];
             MethodInfo method = HandleAsyncMethodInfo.MakeGenericMethod(taskReturnType);
-            return (GenericAsyncHandler)Delegate.CreateDelegate(typeof(GenericAsyncHandler), method);
+            return (GenericAsyncHandler)method.CreateDelegate(typeof(GenericAsyncHandler));
         }
 
         /// <summary>
