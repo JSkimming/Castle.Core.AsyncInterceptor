@@ -8,12 +8,8 @@
 #      general configuration      #
 #---------------------------------#
 
-# Retain the NuGet package cache between builds
-cache:
-  - C:\Users\appveyor\.nuget\packages
-
 # version format
-version: 1.0.{build}
+version: 1.1.{build}
 pull_requests:
   do_not_increment_build_number: true
 
