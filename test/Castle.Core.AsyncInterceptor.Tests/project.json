@@ -4,11 +4,11 @@
   "testRunner": "xunit",
 
   "dependencies": {
-    "AutoFixture": "3.48.0",
-    "AutoFixture.AutoMoq": "3.48.0",
+    "AutoFixture": "3.50.2",
+    "AutoFixture.AutoMoq": "3.50.2",
     "Castle.Core.AsyncInterceptor": "1.0.0-*",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
-    "Moq": "4.5.10",
+    "Moq": "4.5.28",
     "xunit": "2.2.0-beta2-build3300"
   },
 
