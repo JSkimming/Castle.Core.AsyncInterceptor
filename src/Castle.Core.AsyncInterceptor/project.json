@@ -20,7 +20,7 @@
     },
     "netstandard1.3": {
       "dependencies": {
-        "Castle.Core": "4.0.0-beta002",
+        "Castle.Core": "4.0.0",
         "System.Collections.Concurrent": "4.0.12"
       }
     }
