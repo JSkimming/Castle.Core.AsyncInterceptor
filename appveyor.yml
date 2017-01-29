@@ -16,6 +16,7 @@ pull_requests:
 branches:
   only:
     - master
+    - coverity_scan
 
 #---------------------------------#
 #    environment configuration    #
