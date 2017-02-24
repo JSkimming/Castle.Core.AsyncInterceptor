@@ -1,20 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F820D2E2-6C9C-4165-9C13-C77B2737A5AC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{16521103-8853-4B74-AE2C-319374146826}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Castle.Core.AsyncInterceptor", "src\Castle.Core.AsyncInterceptor\Castle.Core.AsyncInterceptor.xproj", "{51BA6816-5FDB-4AE7-A473-4C5CF1C1FAF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Core.AsyncInterceptor", "src\Castle.Core.AsyncInterceptor\Castle.Core.AsyncInterceptor.csproj", "{51BA6816-5FDB-4AE7-A473-4C5CF1C1FAF4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CE54F76E-8913-4BBA-ADF3-A50777F55419}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Castle.Core.AsyncInterceptor.Tests", "test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.xproj", "{DFDF603A-5ADB-4060-9D7C-17BA4F61982A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Core.AsyncInterceptor.Tests", "test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj", "{DFDF603A-5ADB-4060-9D7C-17BA4F61982A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
