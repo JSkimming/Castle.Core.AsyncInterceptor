@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Core.AsyncIntercepto
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CE54F76E-8913-4BBA-ADF3-A50777F55419}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Core.AsyncInterceptor.Tests", "test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj", "{DFDF603A-5ADB-4060-9D7C-17BA4F61982A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle.Core.AsyncInterceptor.Tests", "test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj", "{DFDF603A-5ADB-4060-9D7C-17BA4F61982A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
