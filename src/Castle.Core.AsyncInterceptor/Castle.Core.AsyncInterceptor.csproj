@@ -3,10 +3,19 @@
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.4</TargetFrameworks>
     <RootNamespace>Castle.DynamicProxy</RootNamespace>
-    <Features>IOperation</Features>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>stylecop.ruleset</CodeAnalysisRuleSet>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Authors>James Skimming</Authors>
+    <Description>AsyncInterceptor is an extension to Castle DynamicProxy to simplify the development of interceptors for asynchronous methods.</Description>
+    <Copyright>Copyright © James Skimming 2016</Copyright>
+    <PackageLicenseUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</PackageProjectUrl>
+    <PackageIconUrl>http://www.castleproject.org/img/castle-logo.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>
   </PropertyGroup>
 
   <!--
@@ -18,20 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Castle.Core" Version="4.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="1.2.0-beta2">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <PackageReference Include="Castle.Core" Version="3.1.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4' ">
-    <PackageReference Include="Castle.Core" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
