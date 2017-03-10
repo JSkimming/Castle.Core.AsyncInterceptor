@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;netstandard1.4</TargetFrameworks>
+    <RootNamespace>Castle.DynamicProxy</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>stylecop.ruleset</CodeAnalysisRuleSet>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Authors>James Skimming</Authors>
+    <Description>AsyncInterceptor is an extension to Castle DynamicProxy to simplify the development of interceptors for asynchronous methods.</Description>
+    <Copyright>Copyright © James Skimming 2016</Copyright>
+    <PackageLicenseUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</PackageProjectUrl>
+    <PackageIconUrl>http://www.castleproject.org/img/castle-logo.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>
+  </PropertyGroup>
+
+  <!--
+  Force the net45 build to generate non Portable PDB until such time that OpenCover supports Portable PDBs
+  https://github.com/OpenCover/opencover/issues/610
+  -->
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Castle.Core" Version="4.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.0">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+</Project>

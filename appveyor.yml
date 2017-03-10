@@ -23,16 +23,11 @@ branches:
 #---------------------------------#
 
 # Operating system (build VM template)
-os: Visual Studio 2015
+image: Visual Studio 2017
 
 environment:
   COVERALLS_REPO_TOKEN:
     secure: wlbvgdxuXKnICUGjPqGoQF35j+AKryMfPyUg+YC44hcF72KnOL+ON4WkPMSvedBb
-
-# Automatically register private account and/or project AppVeyor NuGet feeds.
-nuget:
-  account_feed: true
-  project_feed: true
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -47,15 +42,31 @@ force_https_clone: true
 
 configuration: Release
 
+# enable patching of AssemblyInfo.cs files
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+
+# scripts that run after cloning repository
+install:
+  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe
+
 #---------------------------------#
 #       build configuration       #
 #---------------------------------#
 
 before_build:
-  - dotnet restore
+  - NuGet restore
 
-build_script:
-  - dotnet pack src\Castle.Core.AsyncInterceptor --configuration %CONFIGURATION%
+build:
+  project: castle.core.asyncinterceptor.sln
+  verbosity: minimal
+
+after_build:
+  - msbuild src\Castle.Core.AsyncInterceptor\Castle.Core.AsyncInterceptor.csproj /nologo /verbosity:minimal /t:pack /p:Configuration=%CONFIGURATION%;PackageVersion=%APPVEYOR_BUILD_VERSION%;IncludeSource=true /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 #---------------------------------#
 #      artifacts configuration    #
@@ -68,9 +79,6 @@ artifacts:
 #---------------------------------#
 #       tests configuration       #
 #---------------------------------#
-
-before_test:
-  - dotnet build test\Castle.Core.AsyncInterceptor.Tests --configuration %CONFIGURATION%
 
 test_script:
   - coverage.cmd %CONFIGURATION%

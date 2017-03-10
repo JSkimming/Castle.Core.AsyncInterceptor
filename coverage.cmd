@@ -1,22 +1,5 @@
 @SETLOCAL
 
-@SET nuget_exe=NuGet.exe
-
-@IF ["%APPVEYOR%"] == [""] (
-    call "%~dp0test\GetNuGet.cmd"
-    SET nuget_exe="%~dp0test\.nuget\NuGet.exe"
-
-    IF NOT EXIST "%~dp0test\.nuget\NuGet.exe" (
-        echo Unable to find NuGet executable.
-        EXIT /B 2
-    )
-)
-
-::@echo %nuget_exe%
-
-@echo %nuget_exe% restore "%~dp0test\packages.config" -PackagesDirectory "%~dp0test\packages"
-@call %nuget_exe% restore "%~dp0test\packages.config" -PackagesDirectory "%~dp0test\packages"
-
 @SET config=%1
 @IF ["%config%"] == [""] (
    SET config=Release
@@ -44,7 +27,7 @@
 ::@echo %xunit_exe%
 
 @SET results_path=%~dp0test\TestResults
-@SET test_assemblies=%~dp0test\Castle.Core.AsyncInterceptor.Tests\bin\%config%\net451\win7-x64\Castle.Core.AsyncInterceptor.Tests.dll
+@SET test_assemblies=%~dp0test\Castle.Core.AsyncInterceptor.Tests\bin\%config%\Castle.Core.AsyncInterceptor.Tests.dll
 ::@SET test_assemblies=%test_assemblies% <path to additional assembly>
 @SET xunit_results=%results_path%\Xunit.Tests.html
 @SET coverage_filter=+[Castle.Core.AsyncInterceptor*]* -[*.Tests]*
