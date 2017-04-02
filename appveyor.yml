@@ -77,10 +77,6 @@ test_script:
   - pip install codecov
   - codecov -f "test\TestResults\Test.Coverage.xml"
 
-after_test: |
-  FOR /r %%F IN (*coveralls.net.exe) DO SET coveralls_exe=%%F
-  %coveralls_exe% --opencover test\TestResults\Test.Coverage.xml
-
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
