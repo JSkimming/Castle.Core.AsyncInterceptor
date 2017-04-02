@@ -34,11 +34,6 @@ init:
   # This gives the login details for the build instance so you can RDP to it.
   #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - git config --global core.autocrlf input
-  - ps: if(-not $env:APPVEYOR_PULL_REQUEST_NUMBER) { $env:is_not_pr = "true"; }
-
-# http://blog.appveyor.com/2014/06/04/shallow-clone-for-git-repositories/
-shallow_clone: true
-force_https_clone: true
 
 configuration: Release
 
@@ -49,10 +44,6 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-
-# scripts that run after cloning repository
-install:
-  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe
 
 #---------------------------------#
 #       build configuration       #
@@ -82,6 +73,9 @@ artifacts:
 
 test_script:
   - coverage.cmd %CONFIGURATION%
+  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+  - pip install codecov
+  - codecov -f "test\TestResults\Test.Coverage.xml"
 
 after_test: |
   FOR /r %%F IN (*coveralls.net.exe) DO SET coveralls_exe=%%F
