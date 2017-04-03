@@ -2,7 +2,7 @@
 
 @SET config=%1
 @IF ["%config%"] == [""] (
-   SET config=Release
+   SET config=Debug
 )
 
 @FOR /r %%F IN (*OpenCover.Console.exe) DO @SET cover_exe=%%F
@@ -21,7 +21,7 @@
 
 @FOR /r %%F IN (*xunit.console.exe) DO @SET xunit_exe=%%F
 @IF NOT EXIST "%xunit_exe%" (
-   echo Unable to find MSpec console runner.
+   echo Unable to find xUnit console runner.
    EXIT /B 2
 )
 ::@echo %xunit_exe%

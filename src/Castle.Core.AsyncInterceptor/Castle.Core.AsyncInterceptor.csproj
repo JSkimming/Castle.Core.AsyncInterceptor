@@ -12,7 +12,7 @@
     <Copyright>Copyright © James Skimming 2016</Copyright>
     <PackageLicenseUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</PackageProjectUrl>
-    <PackageIconUrl>http://www.castleproject.org/img/castle-logo.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/castleproject/Core/v4.0.0/docs/images/castle-logo.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>

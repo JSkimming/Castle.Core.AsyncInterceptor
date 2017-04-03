@@ -25,10 +25,6 @@ branches:
 # Operating system (build VM template)
 image: Visual Studio 2017
 
-environment:
-  COVERALLS_REPO_TOKEN:
-    secure: wlbvgdxuXKnICUGjPqGoQF35j+AKryMfPyUg+YC44hcF72KnOL+ON4WkPMSvedBb
-
 # scripts that are called at very beginning, before repo cloning
 init:
   # This gives the login details for the build instance so you can RDP to it.

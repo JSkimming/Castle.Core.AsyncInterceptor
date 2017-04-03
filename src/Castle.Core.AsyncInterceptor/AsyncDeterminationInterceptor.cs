@@ -71,7 +71,7 @@ namespace Castle.DynamicProxy
         private static MethodType GetMethodType(Type returnType)
         {
             // If there's no return type, or it's not a task, then assume it's a synchronous method.
-            if (returnType == null || !typeof(Task).IsAssignableFrom(returnType))
+            if (returnType == typeof(void) || !typeof(Task).IsAssignableFrom(returnType))
                 return MethodType.Synchronous;
 
             // The return type is a task of some sort, so assume it's asynchronous
