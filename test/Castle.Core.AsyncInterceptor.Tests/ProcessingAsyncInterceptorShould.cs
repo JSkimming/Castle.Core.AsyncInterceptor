@@ -19,7 +19,8 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingSynchronousVoidMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
@@ -62,7 +63,8 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingSynchronousResultMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
@@ -105,7 +107,8 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingAsynchronousVoidMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
@@ -148,7 +151,8 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingAsynchronousResultMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
