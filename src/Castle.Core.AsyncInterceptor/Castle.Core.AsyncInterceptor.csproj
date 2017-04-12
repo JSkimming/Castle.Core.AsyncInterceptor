@@ -28,6 +28,12 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.0.0" />
+  </ItemGroup>
+
+  <!--
+  Disable StyleCop as it breaks dotnet build compilation, and therefore breaks the travis CI build
+  -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'dontbother' ">
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>

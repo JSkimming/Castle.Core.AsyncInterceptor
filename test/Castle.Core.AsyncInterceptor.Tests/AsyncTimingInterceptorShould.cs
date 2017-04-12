@@ -19,7 +19,8 @@ namespace Castle.DynamicProxy
 
         public WhenTimingSynchronousVoidMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestAsyncTimingInterceptor(_log);
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
@@ -62,7 +63,8 @@ namespace Castle.DynamicProxy
 
         public WhenTimingSynchronousResultMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestAsyncTimingInterceptor(_log);
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
@@ -105,7 +107,8 @@ namespace Castle.DynamicProxy
 
         public WhenTimingAsynchronousVoidMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestAsyncTimingInterceptor(_log);
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
@@ -148,7 +151,8 @@ namespace Castle.DynamicProxy
 
         public WhenTimingAsynchronousResultMethods()
         {
-            _proxy = ProxyGen.CreateProxy(_log, out _interceptor);
+            _interceptor = new TestAsyncTimingInterceptor(_log);
+            _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
         [Fact]
