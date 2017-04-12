@@ -46,7 +46,7 @@ assembly_info:
 #---------------------------------#
 
 before_build:
-  - NuGet restore
+  - NuGet restore castle.core.asyncinterceptor.sln
 
 build:
   project: castle.core.asyncinterceptor.sln

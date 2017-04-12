@@ -8,5 +8,5 @@
 	powershell -NoProfile -ExecutionPolicy unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe' -OutFile %CACHED_NUGET:"='%"
 )
 
-@echo %CACHED_NUGET% restore
-@%CACHED_NUGET% restore
+@echo %CACHED_NUGET% restore castle.core.asyncinterceptor.sln
+@%CACHED_NUGET% restore castle.core.asyncinterceptor.sln
