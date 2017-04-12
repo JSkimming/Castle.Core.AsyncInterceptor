@@ -2,6 +2,7 @@
 
 [![NuGet Version](https://img.shields.io/nuget/v/Castle.Core.AsyncInterceptor.svg)](https://www.nuget.org/packages/Castle.Core.AsyncInterceptor "NuGet Version")
 [![Build status](https://ci.appveyor.com/api/projects/status/github/JSkimming/Castle.Core.AsyncInterceptor?branch=master&svg=true)](https://ci.appveyor.com/project/JSkimming/castle-core-asyncinterceptor "Build status")
+[![Travis build Status](https://travis-ci.org/JSkimming/Castle.Core.AsyncInterceptor.svg?branch=master)](https://travis-ci.org/JSkimming/Castle.Core.AsyncInterceptor "Travis build status")
 [![codecov](https://codecov.io/gh/JSkimming/Castle.Core.AsyncInterceptor/branch/master/graph/badge.svg)](https://codecov.io/gh/JSkimming/Castle.Core.AsyncInterceptor "Code coverage")
 [![Latest release](https://img.shields.io/github/release/JSkimming/Castle.Core.AsyncInterceptor.svg)](https://github.com/JSkimming/Castle.Core.AsyncInterceptor/releases "Latest release")
 <!--[![Coverity Scan Status](https://img.shields.io/coverity/scan/4829.svg)](https://scan.coverity.com/projects/4829 "Coverity Scan Status")-->
