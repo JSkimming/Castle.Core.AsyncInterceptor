@@ -28,7 +28,7 @@ image: Visual Studio 2017
 # scripts that are called at very beginning, before repo cloning
 init:
   # This gives the login details for the build instance so you can RDP to it.
-  #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - git config --global core.autocrlf input
 
 configuration: Release
@@ -81,9 +81,9 @@ test_script:
 #        global handlers          #
 #---------------------------------#
 
-#on_finish:
-#  # This blocks the build server from shutting down giving time to RDP onto it to help with diagnose build issues.
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+  # This blocks the build server from shutting down giving time to RDP onto it to help with diagnose build issues.
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 #---------------------------------#
 #         notifications           #
