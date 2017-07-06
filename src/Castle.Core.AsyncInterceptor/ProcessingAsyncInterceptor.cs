@@ -6,12 +6,12 @@ namespace Castle.DynamicProxy
     using System.Threading.Tasks;
 
     /// <summary>
-    /// A base type for an <see cref="IAsyncInterceptor"/> which only does some some small processing when intercepting
-    /// a method <see cref="IInvocation"/>
+    /// A base type for an <see cref="IAsyncInterceptor"/> which only does some some small processing when
+    /// intercepting a method <see cref="IInvocation"/>
     /// </summary>
     /// <typeparam name="TState">
     /// The type of the custom object used to maintain state between <see cref="StartingInvocation"/> and
-    /// <see cref="CompletedInvocation"/>.
+    /// <see cref="CompletedInvocation(IInvocation, TState, object)"/>.
     /// </typeparam>
     public abstract class ProcessingAsyncInterceptor<TState> : IAsyncInterceptor
         where TState : class
@@ -25,7 +25,7 @@ namespace Castle.DynamicProxy
             TState state = Proceed(invocation);
 
             // Signal that the invocation has been completed.
-            CompletedInvocation(invocation, state);
+            CompletedInvocation(invocation, state, invocation.ReturnValue);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Castle.DynamicProxy
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
         /// <returns>The custom object used to maintain state between <see cref="StartingInvocation"/> and
-        /// <see cref="CompletedInvocation"/>.</returns>
+        /// <see cref="CompletedInvocation(IInvocation, TState, object)"/>.</returns>
         protected virtual TState StartingInvocation(IInvocation invocation)
         {
             return null;
@@ -65,9 +65,26 @@ namespace Castle.DynamicProxy
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
         /// <param name="state">The custom object used to maintain state between
-        /// <see cref="StartingInvocation(IInvocation)"/> and <see cref="CompletedInvocation"/>.</param>
+        /// <see cref="StartingInvocation(IInvocation)"/> and
+        /// <see cref="CompletedInvocation(IInvocation, TState)"/>.</param>
         protected virtual void CompletedInvocation(IInvocation invocation, TState state)
         {
+        }
+
+        /// <summary>
+        /// Override in derived classes to receive signals after method <paramref name="invocation"/>.
+        /// </summary>
+        /// <param name="invocation">The method invocation.</param>
+        /// <param name="state">The custom object used to maintain state between
+        /// <see cref="StartingInvocation(IInvocation)"/> and
+        /// <see cref="CompletedInvocation(IInvocation, TState, object)"/>.</param>
+        /// <param name="returnValue">
+        /// The underlying return value of the <paramref name="invocation"/>; or <see langword="null"/> if the
+        /// invocation did not return a value.
+        /// </param>
+        protected virtual void CompletedInvocation(IInvocation invocation, TState state, object returnValue)
+        {
+            CompletedInvocation(invocation, state);
         }
 
         /// <summary>
@@ -89,11 +106,13 @@ namespace Castle.DynamicProxy
 
         /// <summary>
         /// Returns a <see cref="Task"/> that replaces the <paramref name="invocation"/>
-        /// <see cref="IInvocation.ReturnValue"/>, that only completes after <see cref="CompletedInvocation"/> has been
-        /// signalled.
+        /// <see cref="IInvocation.ReturnValue"/>, that only completes after
+        /// <see cref="CompletedInvocation(IInvocation, TState, object)"/> has been signaled.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        /// <param name="state">The <typeparamref name="TState"/> returned by <see cref="StartingInvocation"/>.</param>
+        /// <param name="state">
+        /// The <typeparamref name="TState"/> returned by <see cref="StartingInvocation"/>.
+        /// </param>
         private async Task SignalWhenComplete(IInvocation invocation, TState state)
         {
             // Get the task to await.
@@ -102,16 +121,18 @@ namespace Castle.DynamicProxy
             await returnValue.ConfigureAwait(false);
 
             // Signal that the invocation has been completed.
-            CompletedInvocation(invocation, state);
+            CompletedInvocation(invocation, state, null);
         }
 
         /// <summary>
         /// Returns a <see cref="Task{TResult}"/> that replaces the <paramref name="invocation"/>
-        /// <see cref="IInvocation.ReturnValue"/>, that only completes after <see cref="CompletedInvocation"/> has been
-        /// signalled.
+        /// <see cref="IInvocation.ReturnValue"/>, that only completes after
+        /// <see cref="CompletedInvocation(IInvocation, TState, object)"/> has been signaled.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        /// <param name="state">The <typeparamref name="TState"/> returned by <see cref="StartingInvocation"/>.</param>
+        /// <param name="state">
+        /// The <typeparamref name="TState"/> returned by <see cref="StartingInvocation"/>.
+        /// </param>
         private async Task<TResult> SignalWhenComplete<TResult>(IInvocation invocation, TState state)
         {
             // Get the task to await.
@@ -120,7 +141,7 @@ namespace Castle.DynamicProxy
             TResult result = await returnValue.ConfigureAwait(false);
 
             // Signal that the invocation has been completed.
-            CompletedInvocation(invocation, state);
+            CompletedInvocation(invocation, state, result);
 
             return result;
         }
