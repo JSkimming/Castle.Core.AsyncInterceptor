@@ -62,7 +62,9 @@
     <Compile Include="InterfaceProxies\TestAsyncInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestAsyncTimingInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestProcessingAsyncInterceptor.cs" />
+    <Compile Include="InterfaceProxies\TestProcessingReturnValueAsyncInterceptor.cs" />
     <Compile Include="ProcessingAsyncInterceptorShould.cs" />
+    <Compile Include="ProcessingAsyncInterceptorWithReturnValueShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyGeneratorExtensionsShould.cs" />
   </ItemGroup>
