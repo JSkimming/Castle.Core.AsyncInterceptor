@@ -9,7 +9,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Authors>James Skimming</Authors>
     <Description>AsyncInterceptor is an extension to Castle DynamicProxy to simplify the development of interceptors for asynchronous methods.</Description>
-    <Copyright>Copyright © James Skimming 2016</Copyright>
+    <Copyright>Copyright © 2016 James Skimming</Copyright>
     <PackageLicenseUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/castleproject/Core/v4.0.0/docs/images/castle-logo.png</PackageIconUrl>
@@ -28,15 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.0.0" />
-  </ItemGroup>
-
-  <!--
-  Disable StyleCop as it breaks dotnet build compilation, and therefore breaks the travis CI build
-  -->
-  <ItemGroup Condition=" '$(TargetFramework)' == 'dontbother' ">
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.0">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
