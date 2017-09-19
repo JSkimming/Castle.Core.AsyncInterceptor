@@ -4,11 +4,11 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      dotnet: 1.0.1
+      dotnet: 2.0.0
       mono: none
     - os: osx
       osx_image: xcode7.3
-      dotnet: 1.0.1
+      dotnet: 2.0.0
       mono: none
 
 branches:
@@ -16,7 +16,5 @@ branches:
   - master
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ulimit -n 1024; fi
-install:
-  - dotnet restore castle.core.asyncinterceptor.core.sln
 script:
-  - dotnet test -c Release -f netcoreapp1.1 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.TestsCore.csproj
+  - dotnet test -c Release test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.TestsCore.csproj
