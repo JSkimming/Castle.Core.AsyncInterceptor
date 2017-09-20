@@ -63,10 +63,12 @@
     <Compile Include="InterfaceProxies\TestAsyncTimingInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestProcessingAsyncInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestProcessingReturnValueAsyncInterceptor.cs" />
+    <Compile Include="InterfaceProxies\TestSimpleAsyncInterceptor.cs" />
     <Compile Include="ProcessingAsyncInterceptorShould.cs" />
     <Compile Include="ProcessingAsyncInterceptorWithReturnValueShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyGeneratorExtensionsShould.cs" />
+    <Compile Include="SimpleAsyncInterceptorShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
