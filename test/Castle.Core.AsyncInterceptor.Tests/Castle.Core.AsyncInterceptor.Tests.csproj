@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncExceptionInterceptorShould.cs" />
     <Compile Include="AsyncInterceptorShould.cs" />
     <Compile Include="AsyncTimingInterceptorShould.cs" />
     <Compile Include="InterfaceProxies\ClassWithInterfaceToProxy.cs" />

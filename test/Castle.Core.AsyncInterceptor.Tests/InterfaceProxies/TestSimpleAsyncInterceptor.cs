@@ -22,18 +22,18 @@ namespace Castle.DynamicProxy.InterfaceProxies
         {
             try
             {
-                _log.Add($"{invocation.Method.Name}:StartingInvocation");
+                _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
                 await proceed(invocation).ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
 
-                _log.Add($"{invocation.Method.Name}:CompletedInvocation");
+                _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
             }
             catch (Exception e)
             {
-                _log.Add($"{invocation.Method.Name}:ExceptionThrown:{e.Message}");
+                _log.Add($"{invocation.Method.Name}:VoidExceptionThrown:{e.Message}");
                 throw;
             }
         }
@@ -44,19 +44,19 @@ namespace Castle.DynamicProxy.InterfaceProxies
         {
             try
             {
-                _log.Add($"{invocation.Method.Name}:StartingInvocation");
+                _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 
                 TResult result = await proceed(invocation).ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
 
-                _log.Add($"{invocation.Method.Name}:CompletedInvocation");
+                _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
                 return result;
             }
             catch (Exception e)
             {
-                _log.Add($"{invocation.Method.Name}:ExceptionThrown:{e.Message}");
+                _log.Add($"{invocation.Method.Name}:ResultExceptionThrown:{e.Message}");
                 throw;
             }
         }
