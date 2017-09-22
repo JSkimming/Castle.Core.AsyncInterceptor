@@ -100,7 +100,7 @@ namespace Castle.DynamicProxy
             _proxy.SynchronousResultMethod();
 
             // Assert
-            Assert.Equal($"{MethodName}:StartingVoidInvocation", _log[0]);
+            Assert.Equal($"{MethodName}:StartingResultInvocation", _log[0]);
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Castle.DynamicProxy
             _proxy.SynchronousResultMethod();
 
             // Assert
-            Assert.Equal($"{MethodName}:CompletedVoidInvocation", _log[3]);
+            Assert.Equal($"{MethodName}:CompletedResultInvocation", _log[3]);
         }
     }
 

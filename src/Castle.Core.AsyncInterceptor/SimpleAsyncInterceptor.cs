@@ -4,6 +4,8 @@
 namespace Castle.DynamicProxy
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -19,24 +21,27 @@ namespace Castle.DynamicProxy
         private static readonly Task CompletedTask = Task.FromResult(0);
 #endif
 
+        private static readonly MethodInfo InterceptSynchronousMethodInfo =
+            typeof(SimpleAsyncInterceptor)
+                .GetMethod(nameof(InterceptSynchronousResult), BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static readonly ConcurrentDictionary<Type, GenericSynchronousHandler> GenericSynchronousHandlers =
+            new ConcurrentDictionary<Type, GenericSynchronousHandler>
+            {
+                [typeof(void)] = InterceptSynchronousVoid,
+            };
+
+        private delegate void GenericSynchronousHandler(SimpleAsyncInterceptor me, IInvocation invocation);
+
         /// <summary>
         /// Intercepts a synchronous method <paramref name="invocation"/>.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
         public void InterceptSynchronous(IInvocation invocation)
         {
-            Task task = InterceptAsync(invocation, ProceedSynchronous);
-
-            // If the intercept task has yet to complete, wait for it.
-            if (!task.IsCompleted)
-            {
-                Task.Run(() => task).Wait();
-            }
-
-            if (task.IsFaulted)
-            {
-                throw task.Exception.InnerException;
-            }
+            Type returnType = invocation.Method.ReturnType;
+            GenericSynchronousHandler handler = GenericSynchronousHandlers.GetOrAdd(returnType, CreateHandler);
+            handler(this, invocation);
         }
 
         /// <summary>
@@ -77,6 +82,44 @@ namespace Castle.DynamicProxy
             IInvocation invocation,
             Func<IInvocation, Task<TResult>> proceed);
 
+        private static GenericSynchronousHandler CreateHandler(Type returnType)
+        {
+            MethodInfo method = InterceptSynchronousMethodInfo.MakeGenericMethod(returnType);
+            return (GenericSynchronousHandler)method.CreateDelegate(typeof(GenericSynchronousHandler));
+        }
+
+        private static void InterceptSynchronousVoid(SimpleAsyncInterceptor me, IInvocation invocation)
+        {
+            Task task = me.InterceptAsync(invocation, ProceedSynchronous);
+
+            // If the intercept task has yet to complete, wait for it.
+            if (!task.IsCompleted)
+            {
+                Task.Run(() => task).Wait();
+            }
+
+            if (task.IsFaulted)
+            {
+                throw task.Exception.InnerException;
+            }
+        }
+
+        private static void InterceptSynchronousResult<TResult>(SimpleAsyncInterceptor me, IInvocation invocation)
+        {
+            Task task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
+
+            // If the intercept task has yet to complete, wait for it.
+            if (!task.IsCompleted)
+            {
+                Task.Run(() => task).Wait();
+            }
+
+            if (task.IsFaulted)
+            {
+                throw task.Exception.InnerException;
+            }
+        }
+
         private static Task ProceedSynchronous(IInvocation invocation)
         {
             try
@@ -94,6 +137,25 @@ namespace Castle.DynamicProxy
                 return Task.FromException(e);
 #else
                 var tcs = new TaskCompletionSource<int>();
+                tcs.SetException(e);
+                return tcs.Task;
+#endif
+            }
+        }
+
+        private static Task<TResult> ProceedSynchronous<TResult>(IInvocation invocation)
+        {
+            try
+            {
+                invocation.Proceed();
+                return Task.FromResult((TResult)invocation.ReturnValue);
+            }
+            catch (Exception e)
+            {
+#if NETSTANDARD2_0
+                return Task.FromException<TResult>(e);
+#else
+                var tcs = new TaskCompletionSource<TResult>();
                 tcs.SetException(e);
                 return tcs.Task;
 #endif

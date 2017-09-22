@@ -109,7 +109,7 @@ namespace Castle.DynamicProxy
             Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousResultExceptionMethod());
 
             // Assert
-            Assert.Equal(MethodName + ":StartingVoidInvocation", _log[0]);
+            Assert.Equal(MethodName + ":StartingResultInvocation", _log[0]);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Castle.DynamicProxy
                 Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousResultExceptionMethod());
 
             // Assert
-            Assert.Equal(MethodName + ":VoidExceptionThrown:" + ex.Message, _log[2]);
+            Assert.Equal(MethodName + ":ResultExceptionThrown:" + ex.Message, _log[2]);
         }
     }
 
