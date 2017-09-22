@@ -7,15 +7,17 @@ namespace Castle.DynamicProxy
     using System.Threading.Tasks;
 
     /// <summary>
-    /// A base type for an <see cref="IAsyncInterceptor"/> which executes only minimal processing when intercepting a
-    /// method <see cref="IInvocation"/>
+    /// A base type for an <see cref="IAsyncInterceptor"/> to provided a simplified solution of method
+    /// <see cref="IInvocation"/> by enforcing only two types of interception, both asynchronous.
     /// </summary>
     public abstract class SimpleAsyncInterceptor : IAsyncInterceptor
     {
+#if !NETSTANDARD2_0
         /// <summary>
         /// A completed <see cref="Task"/>.
         /// </summary>
         private static readonly Task CompletedTask = Task.FromResult(0);
+#endif
 
         /// <summary>
         /// Intercepts a synchronous method <paramref name="invocation"/>.
@@ -80,13 +82,21 @@ namespace Castle.DynamicProxy
             try
             {
                 invocation.Proceed();
+#if NETSTANDARD2_0
+                return Task.CompletedTask;
+#else
                 return CompletedTask;
+#endif
             }
             catch (Exception e)
             {
+#if NETSTANDARD2_0
+                return Task.FromException(e);
+#else
                 var tcs = new TaskCompletionSource<int>();
                 tcs.SetException(e);
                 return tcs.Task;
+#endif
             }
         }
 
