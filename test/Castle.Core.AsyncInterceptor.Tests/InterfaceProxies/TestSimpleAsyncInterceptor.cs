@@ -18,7 +18,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _msDeley = msDeley;
         }
 
-        protected override async Task Intercept(IInvocation invocation, Func<IInvocation, Task> proceed)
+        protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             }
         }
 
-        protected override async Task<TResult> Intercept<TResult>(
+        protected override async Task<TResult> InterceptAsync<TResult>(
             IInvocation invocation,
             Func<IInvocation, Task<TResult>> proceed)
         {

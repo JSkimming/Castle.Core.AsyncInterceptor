@@ -274,12 +274,12 @@ namespace Castle.DynamicProxy
     {
         private class MyInterceptor : SimpleAsyncInterceptor
         {
-            protected override Task Intercept(IInvocation invocation, Func<IInvocation, Task> proceed)
+            protected override Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
             {
                 return proceed(invocation);
             }
 
-            protected override Task<TResult> Intercept<TResult>(IInvocation invocation, Func<IInvocation, Task<TResult>> proceed)
+            protected override Task<TResult> InterceptAsync<TResult>(IInvocation invocation, Func<IInvocation, Task<TResult>> proceed)
             {
                 return proceed(invocation);
             }

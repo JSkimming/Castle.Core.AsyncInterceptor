@@ -23,7 +23,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         public void InterceptSynchronous(IInvocation invocation)
         {
-            Task task = Intercept(invocation, ProceedSynchronous);
+            Task task = InterceptAsync(invocation, ProceedSynchronous);
 
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
@@ -43,7 +43,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         public void InterceptAsynchronous(IInvocation invocation)
         {
-            invocation.ReturnValue = Intercept(invocation, ProceedAsynchronous);
+            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         public void InterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            invocation.ReturnValue = Intercept(invocation, ProceedAsynchronous<TResult>);
+            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous<TResult>);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
         /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
-        protected abstract Task Intercept(IInvocation invocation, Func<IInvocation, Task> proceed);
+        protected abstract Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed);
 
         /// <summary>
         /// Override in derived classes to intercept method invocations.
@@ -71,7 +71,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
         /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
-        protected abstract Task<TResult> Intercept<TResult>(
+        protected abstract Task<TResult> InterceptAsync<TResult>(
             IInvocation invocation,
             Func<IInvocation, Task<TResult>> proceed);
 
