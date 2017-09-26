@@ -21,7 +21,7 @@ useful use case.
 
 An interceptor that catches exceptions and logs them could be implemented quite simply as:
 
-```c#
+```csharp
 // Intercept() is the single method of IInterceptor.
 public void Intercept(IInvocation invocation)
 {
@@ -41,7 +41,7 @@ public void Intercept(IInvocation invocation)
 
 When implementing `IInterceptor` the underlying the method is invoked like this:
 
-```c#
+```csharp
 public void Intercept(IInvocation invocation)
 {
     // Step 1. Do something prior to invocation.
@@ -73,7 +73,7 @@ To intercept methods that return a [`Task`](https://msdn.microsoft.com/en-us/lib
 The invocation provides access to the return value. By checking the type of the return value it is possible to await
 the completion of the [`Task`](https://msdn.microsoft.com/en-us/library/system.threading.tasks.task.aspx).
 
-```c#
+```csharp
 public void Intercept(IInvocation invocation)
 {
     // Step 1. Do something prior to invocation.
@@ -112,12 +112,69 @@ DynamicProxy](http://stackoverflow.com/a/28374134) provides great overview.
 If you've got this far, then it's probably safe to assume you want to intercept asynchronous methods, and the options
 for doing it manually look like a lot of work.
 
-### Option 1:  Implement `IAsyncInterceptor` interface to intercept invocations
+### Option 1: Extend `AsyncInterceptorBase` class to intercept invocations
+
+Create a class that extends the abstract base class `AsyncInterceptorBase`, then register it for interception in the same was as `IInterceptor` using the ProxyGenerator extension methods, e.g.
+
+```csharp
+var myClass = new ClasThatImplementsIMyInterface();
+var generator = new ProxyGenerator();
+var interceptor = new ClasThatExtendsAsyncInterceptorBase();
+IMyInterface proxy = generator.CreateInterfaceProxyWithTargetInterface<IMyInterface>(myClass, interceptor)
+```
+
+Extending `AsyncInterceptorBase` provides a simple mechanism to intercept methods using the **async/await** pattern. There are two abstract methods that must be implemented.
+
+```csharp
+Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed);
+Task<T> InterceptAsync<T>(IInvocation invocation, Func<IInvocation, Task<T>> proceed);
+```
+
+Each method takes two parameters. The `IInvocation` provided by **DaynamicProxy** and a proceed function to execute the invocation returning an awaitable task.
+
+The first method in called when intercepting `void` methods or methods that return `Task`. The second method is called when intercepting any method that returns a value, including `Task<TResult>`.
+
+A possible extension of `AsyncInterceptorBase` for exception handling could be implemented as follows:
+
+```csharp
+public class ExceptionHandlingInterceptor : AsyncInterceptorBase
+{
+    protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+    {
+        try
+        {
+            // Cannot simply return the the task, as any exceptions would not be caught below.
+            await proceed(invocation).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error calling {invocation.Method.Name}.", ex);
+            throw;
+        }
+    }
+
+    protected override async Task<T> InterceptAsync<T>(IInvocation invocation, Func<IInvocation, Task<T>> proceed)
+    {
+        try
+        {
+            // Cannot simply return the the task, as any exceptions would not be caught below.
+            return await proceed(invocation).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error calling {invocation.Method.Name}.", ex);
+            throw;
+        }
+    }
+}
+```
+
+### Option 2:  Implement `IAsyncInterceptor` interface to intercept invocations
 
 Create a class them implements `IAsyncInterceptor`, then register it for interception in the same was as `IInterceptor`
 using the ProxyGenerator extension methods, e.g.
 
-```c#
+```csharp
 var myClass = new ClasThatImplementsIMyInterface();
 var generator = new ProxyGenerator();
 var interceptor = new ClasThatImplementsIAsyncInterceptor();
@@ -131,7 +188,7 @@ is the closest to traditional interception when implementing
 
 Instead of a single `void Intercept(IInvocation invocation)` method to implement, there are three:
 
-```c#
+```csharp
 void InterceptSynchronous(IInvocation invocation);
 void InterceptAsynchronous(IInvocation invocation);
 void InterceptAsynchronous<TResult>(IInvocation invocation);
@@ -144,7 +201,7 @@ methods, e.g. methods that do not return `Task` or `Task<TResult>`.
 
 Implementing `InterceptSynchronous` could look something like this:
 
-```c#
+```csharp
 public void InterceptSynchronous(IInvocation invocation)
 {
     // Step 1. Do something prior to invocation.
@@ -162,7 +219,7 @@ public void InterceptSynchronous(IInvocation invocation)
 
 Implementing `InterceptAsynchronous(IInvocation invocation)` could look something like this:
 
-```c#
+```csharp
 public void InterceptAsynchronous(IInvocation invocation)
 {
     invocation.ReturnValue = InternalInterceptAsynchronous(invocation);
@@ -186,7 +243,7 @@ private async Task InternalInterceptAsynchronous(IInvocation invocation)
 
 Implementing `InterceptAsynchronous<TResult>(IInvocation invocation)` could look something like this:
 
-```c#
+```csharp
 public void InterceptAsynchronous<TResult>(IInvocation invocation)
 {
     invocation.ReturnValue = InternalInterceptAsynchronous<TResult>(invocation);
@@ -206,12 +263,12 @@ private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation i
 }
 ```
 
-### Option 2: Extend `ProcessingAsyncInterceptor<TState>` class to intercept invocations
+### Option 3: Extend `ProcessingAsyncInterceptor<TState>` class to intercept invocations
 
 Create a class that extends the abstract base class `ProcessingAsyncInterceptor<TState>`, then register it for
 interception in the same was as `IInterceptor` using the ProxyGenerator extension methods, e.g.
 
-```c#
+```csharp
 var myClass = new ClasThatImplementsIMyInterface();
 var generator = new ProxyGenerator();
 var interceptor = new ClasThatExtendsProcessingAsyncInterceptor();
@@ -226,7 +283,7 @@ provides a simplified mechanism of intercepting method invocations without havin
 `ProcessingAsyncInterceptor<TState>` defines two virtual methods, one that is invoked before to the method invocation,
 the second after.
 
-```c#
+```csharp
 protected virtual TState StartingInvocation(IInvocation invocation);
 protected virtual void CompletedInvocation(IInvocation invocation, TState state);
 ```
@@ -237,7 +294,7 @@ called after method invocation.
 
 A possible extension of `ProcessingAsyncInterceptor<TState>` could be as follows:
 
-```c#
+```csharp
 public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<string>
 {
     protected override string StartingInvocation(IInvocation invocation)
@@ -260,7 +317,7 @@ after they are invoked, then just implement `CompletedInvocation` and ignore the
 null. In that situation your class can be defined as:
 
 
-```c#
+```csharp
 public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<object>
 {
     protected override void CompletedInvocation(IInvocation invocation, object state)
@@ -282,14 +339,14 @@ is provided.
 `AsyncTimingInterceptor` defines two abstract methods, one that is invoked before method invocation and before the
 Stopwatch has started. The second after method invocation and the Stopwatch has stopped
 
-```c#
+```csharp
 protected abstract void StartingTiming(IInvocation invocation);
 protected abstract void CompletedTiming(IInvocation invocation, Stopwatch stopwatch);
 ```
 
 A possible extension of `AsyncTimingInterceptor` could be as follows:
 
-```c#
+```csharp
 public class TestAsyncTimingInterceptor : AsyncTimingInterceptor
 {
     protected override void StartingTiming(IInvocation invocation)
