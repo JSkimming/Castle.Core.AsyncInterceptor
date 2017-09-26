@@ -7,12 +7,12 @@ namespace Castle.DynamicProxy.InterfaceProxies
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class TestSimpleAsyncInterceptor : SimpleAsyncInterceptor
+    public class TestAsyncInterceptorBase : AsyncInterceptorBase
     {
         private readonly int _msDeley;
         private readonly ICollection<string> _log;
 
-        public TestSimpleAsyncInterceptor(List<string> log, int msDeley)
+        public TestAsyncInterceptorBase(List<string> log, int msDeley)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _msDeley = msDeley;

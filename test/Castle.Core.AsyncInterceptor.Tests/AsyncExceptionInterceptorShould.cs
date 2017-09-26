@@ -19,7 +19,7 @@ namespace Castle.DynamicProxy
         protected WhenExceptionInterceptingSynchronousVoidMethodsBase(int msDelay)
         {
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
-            var interceptor = new TestSimpleAsyncInterceptor(_log, msDelay);
+            var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
         }
 
@@ -84,7 +84,7 @@ namespace Castle.DynamicProxy
         protected WhenExceptionInterceptingSynchronousResultMethodsBase(int msDelay)
         {
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
-            var interceptor = new TestSimpleAsyncInterceptor(_log, msDelay);
+            var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
         }
 
@@ -149,7 +149,7 @@ namespace Castle.DynamicProxy
         protected WhenExceptionInterceptingAsynchronousVoidMethodsBase(int msDelay)
         {
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
-            var interceptor = new TestSimpleAsyncInterceptor(_log, msDelay);
+            var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
         }
 
@@ -214,7 +214,7 @@ namespace Castle.DynamicProxy
         protected WhenExceptionInterceptingAsynchronousResultMethodsBase(int msDelay)
         {
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
-            var interceptor = new TestSimpleAsyncInterceptor(_log, msDelay);
+            var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
         }
 
@@ -272,7 +272,7 @@ namespace Castle.DynamicProxy
 
     public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronousException
     {
-        private class MyInterceptor : SimpleAsyncInterceptor
+        private class MyInterceptorBase : AsyncInterceptorBase
         {
             protected override Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
             {
@@ -302,7 +302,7 @@ namespace Castle.DynamicProxy
         public void ShouldReturnAFaultedTask()
         {
             // Arrange
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptor());
+            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
 
             // Act
             Task result = sut.Test1();
@@ -316,7 +316,7 @@ namespace Castle.DynamicProxy
         public void ShouldReturnAFaultedTaskResult()
         {
             // Arrange
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptor());
+            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
 
             // Act
             Task<object> result = sut.Test2();

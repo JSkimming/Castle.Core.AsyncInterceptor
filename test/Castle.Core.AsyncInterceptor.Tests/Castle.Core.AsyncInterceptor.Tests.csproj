@@ -55,21 +55,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncExceptionInterceptorShould.cs" />
+    <Compile Include="AsyncInterceptorBaseShould.cs" />
     <Compile Include="AsyncInterceptorShould.cs" />
     <Compile Include="AsyncTimingInterceptorShould.cs" />
     <Compile Include="InterfaceProxies\ClassWithInterfaceToProxy.cs" />
     <Compile Include="InterfaceProxies\ClassWithVirtualMethodToProxy.cs" />
     <Compile Include="InterfaceProxies\IInterfaceToProxy.cs" />
     <Compile Include="InterfaceProxies\TestAsyncInterceptor.cs" />
+    <Compile Include="InterfaceProxies\TestAsyncInterceptorBase.cs" />
     <Compile Include="InterfaceProxies\TestAsyncTimingInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestProcessingAsyncInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestProcessingReturnValueAsyncInterceptor.cs" />
-    <Compile Include="InterfaceProxies\TestSimpleAsyncInterceptor.cs" />
     <Compile Include="ProcessingAsyncInterceptorShould.cs" />
     <Compile Include="ProcessingAsyncInterceptorWithReturnValueShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyGeneratorExtensionsShould.cs" />
-    <Compile Include="SimpleAsyncInterceptorShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
