@@ -6,8 +6,8 @@ namespace Castle.DynamicProxy
     using System.Threading.Tasks;
 
     /// <summary>
-    /// A base type for an <see cref="IAsyncInterceptor"/> which only does some some small processing when
-    /// intercepting a method <see cref="IInvocation"/>
+    /// A base type for an <see cref="IAsyncInterceptor"/> which executes only minimal processing when intercepting a
+    /// method <see cref="IInvocation"/>
     /// </summary>
     /// <typeparam name="TState">
     /// The type of the custom object used to maintain state between <see cref="StartingInvocation"/> and

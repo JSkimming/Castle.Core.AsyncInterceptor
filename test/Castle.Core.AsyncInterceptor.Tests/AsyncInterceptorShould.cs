@@ -24,7 +24,7 @@ namespace Castle.DynamicProxy
 
     public static class ProxyGen
     {
-        private static readonly ProxyGenerator Generator = new ProxyGenerator();
+        public static readonly ProxyGenerator Generator = new ProxyGenerator();
 
         public static IInterfaceToProxy CreateProxy(List<string> log, IAsyncInterceptor interceptor)
         {

@@ -54,12 +54,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncExceptionInterceptorShould.cs" />
+    <Compile Include="AsyncInterceptorBaseShould.cs" />
     <Compile Include="AsyncInterceptorShould.cs" />
     <Compile Include="AsyncTimingInterceptorShould.cs" />
     <Compile Include="InterfaceProxies\ClassWithInterfaceToProxy.cs" />
     <Compile Include="InterfaceProxies\ClassWithVirtualMethodToProxy.cs" />
     <Compile Include="InterfaceProxies\IInterfaceToProxy.cs" />
     <Compile Include="InterfaceProxies\TestAsyncInterceptor.cs" />
+    <Compile Include="InterfaceProxies\TestAsyncInterceptorBase.cs" />
     <Compile Include="InterfaceProxies\TestAsyncTimingInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestProcessingAsyncInterceptor.cs" />
     <Compile Include="InterfaceProxies\TestProcessingReturnValueAsyncInterceptor.cs" />
