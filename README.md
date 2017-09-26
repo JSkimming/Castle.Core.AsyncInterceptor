@@ -104,8 +104,8 @@ public void Intercept(IInvocation invocation)
 
 To intercept methods that return a [`Task<TResult>`](https://msdn.microsoft.com/en-us/library/dd321424.aspx) is far
 from simple. It's the reason why I created this library. Rather than go into the detail (the solution requires the use
-of reflection) the stack overflow answer to the question [Intercept async method that returns generic Task<> via
-DynamicProxy](http://stackoverflow.com/a/28374134) provides great overview.
+of reflection) the stack overflow question [Intercept async method that returns generic Task<> via
+DynamicProxy](https://stackoverflow.com/a/43272955) provides great overview.
 
 ## How to intercept asynchronous methods __with__ AsyncInterceptor?
 
