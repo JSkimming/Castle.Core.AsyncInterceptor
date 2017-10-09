@@ -15,4 +15,4 @@ branches:
   only:
   - master
 script:
-  - dotnet test -c Release test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.TestsCore.csproj
+  - dotnet test -c Release -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
