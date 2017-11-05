@@ -50,7 +50,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous);
+            invocation.ReturnValue = InterceptAsyncWrapper(invocation, ProceedAsynchronous);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous<TResult>);
+            invocation.ReturnValue = InterceptAsyncWrapper(invocation, ProceedAsynchronous<TResult>);
         }
 
         /// <summary>
@@ -181,6 +181,50 @@ namespace Castle.DynamicProxy
 
             TResult result = await originalReturnValue.ConfigureAwait(false);
             return result;
+        }
+
+        private Task InterceptAsyncWrapper(IInvocation invocation, Func<IInvocation, Task> proceed)
+        {
+            // Do not return from this method until proceed is called or the implementor is finished
+            TaskCompletionSource<object> canReturnTcs = new TaskCompletionSource<object>();
+            var newProceed = new Func<IInvocation, Task>(
+                innerInvocation =>
+                {
+                    // "until proceed is called"
+                    canReturnTcs.TrySetResult(null);
+                    return proceed(innerInvocation);
+                });
+
+            // Will block until implementorTask's first await
+            var implementorTask = InterceptAsync(invocation, newProceed);
+
+            // "or the implementor is finished"
+            implementorTask.ContinueWith(_ => canReturnTcs.TrySetResult(null));
+
+            canReturnTcs.Task.Wait();
+            return implementorTask;
+        }
+
+        private Task<TResult> InterceptAsyncWrapper<TResult>(IInvocation invocation, Func<IInvocation, Task<TResult>> proceed)
+        {
+            // Do not return from this method until proceed is called or the implementor is finished
+            TaskCompletionSource<object> canReturnTcs = new TaskCompletionSource<object>();
+            var newProceed = new Func<IInvocation, Task<TResult>>(
+                innerInvocation =>
+                {
+                    // "until proceed is called"
+                    canReturnTcs.TrySetResult(null);
+                    return proceed(innerInvocation);
+                });
+
+            // Will block until implementorTask's first await
+            var implementorTask = InterceptAsync(invocation, newProceed);
+
+            // "or the implementor is finished"
+            implementorTask.ContinueWith(_ => canReturnTcs.TrySetResult(null));
+
+            canReturnTcs.Task.Wait();
+            return implementorTask;
         }
     }
 }
