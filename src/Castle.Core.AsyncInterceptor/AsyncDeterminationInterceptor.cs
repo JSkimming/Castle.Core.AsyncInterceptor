@@ -46,7 +46,6 @@ namespace Castle.DynamicProxy
         /// Intercepts a method <paramref name="invocation"/>.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        ////[DebuggerStepThrough]
         public virtual void Intercept(IInvocation invocation)
         {
             MethodType methodType = GetMethodType(invocation.Method.ReturnType);
