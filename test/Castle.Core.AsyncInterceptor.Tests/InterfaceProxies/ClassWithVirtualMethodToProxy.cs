@@ -29,7 +29,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
         public virtual async Task<Guid> AsynchronousResultMethod()
         {
             _log.Add($"{nameof(AsynchronousResultMethod)}:Start");
-            await Task.Delay(10);
+            await Task.Delay(10).ConfigureAwait(false);
             _log.Add($"{nameof(AsynchronousResultMethod)}:End");
             return Guid.NewGuid();
         }

@@ -85,7 +85,7 @@ namespace Castle.DynamicProxy
         {
             // Act
             IInterfaceToProxy proxy = proxyFactory(Generator, log);
-            Guid result = await proxy.AsynchronousResultMethod();
+            Guid result = await proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             const string methodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
@@ -192,7 +192,7 @@ namespace Castle.DynamicProxy
         {
             // Act
             ClassWithVirtualMethodToProxy proxy = proxyFactory(Generator, log);
-            Guid result = await proxy.AsynchronousResultMethod();
+            Guid result = await proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             const string methodName = nameof(ClassWithVirtualMethodToProxy.AsynchronousResultMethod);
