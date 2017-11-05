@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net47;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <TargetFramework>net47</TargetFramework>
     <RootNamespace>Castle.DynamicProxy</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\src\Castle.Core\Castle.Core.csproj" />
     <ProjectReference Include="..\..\src\Castle.Core.AsyncInterceptor\Castle.Core.AsyncInterceptor.csproj" />
   </ItemGroup>
 
