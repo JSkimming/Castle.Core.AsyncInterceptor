@@ -153,25 +153,25 @@ namespace Castle.DynamicProxy
             Assert.Equal(4, _log.Count);
         }
 
-        [Fact]
-        public async Task ShouldAllowProcessingPriorToInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+        ////[Fact]
+        ////public async Task ShouldAllowProcessingPriorToInvocation()
+        ////{
+        ////    // Act
+        ////    await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
-            // Assert
-            Assert.Equal($"{MethodName}:StartingVoidInvocation", _log[0]);
-        }
+        ////    // Assert
+        ////    Assert.Equal($"{MethodName}:StartingVoidInvocation", _log[0]);
+        ////}
 
-        [Fact]
-        public async Task ShouldAllowProcessingAfterInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+        ////[Fact]
+        ////public async Task ShouldAllowProcessingAfterInvocation()
+        ////{
+        ////    // Act
+        ////    await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
-            // Assert
-            Assert.Equal($"{MethodName}:CompletedVoidInvocation", _log[3]);
-        }
+        ////    // Assert
+        ////    Assert.Equal($"{MethodName}:CompletedVoidInvocation", _log[3]);
+        ////}
     }
 
     public class WhenInterceptingAsynchronousVoidMethodsWithNoDelay
