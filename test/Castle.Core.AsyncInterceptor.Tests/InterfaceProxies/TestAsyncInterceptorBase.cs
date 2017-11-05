@@ -24,6 +24,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             {
                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
+                await Task.Yield();
                 await proceed(invocation).ConfigureAwait(false);
 
                 if (_msDeley > 0)
