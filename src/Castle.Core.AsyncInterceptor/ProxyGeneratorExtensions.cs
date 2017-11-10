@@ -8,7 +8,7 @@ namespace Castle.DynamicProxy
     using System.Linq;
 
     /// <summary>
-    /// Extension methods to <see cref="ProxyGenerator"/>,
+    /// Extension methods to <see cref="IProxyGenerator"/>,
     /// </summary>
     public static class ProxyGeneratorExtensions
     {
