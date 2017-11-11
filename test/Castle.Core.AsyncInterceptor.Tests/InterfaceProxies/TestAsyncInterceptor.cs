@@ -14,10 +14,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         public TestAsyncInterceptor(List<string> log)
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
-
-            _log = log;
+            _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
         public void InterceptSynchronous(IInvocation invocation)
@@ -42,7 +39,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             LogInterceptStart(invocation);
             invocation.Proceed();
             var task = (Task)invocation.ReturnValue;
-            await task;
+            await task.ConfigureAwait(false);
             LogInterceptEnd(invocation);
         }
 
@@ -51,7 +48,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             LogInterceptStart(invocation);
             invocation.Proceed();
             var task = (Task<TResult>)invocation.ReturnValue;
-            TResult result = await task;
+            TResult result = await task.ConfigureAwait(false);
             LogInterceptEnd(invocation);
             return result;
         }

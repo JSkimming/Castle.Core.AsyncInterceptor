@@ -360,3 +360,47 @@ public class TestAsyncTimingInterceptor : AsyncTimingInterceptor
     }
 }
 ```
+## Testing
+
+This library maintains a high level of code coverage with extensive unit tests.
+
+### Running the tests
+
+There are several ways to run the tests, the most convenient is through Visual Studio, via Test Explorer or ReSharper.
+
+The tests can also be executed from the command line like this:
+
+```
+dotnet test test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+```
+
+On Windows the above command will execute the tests on all 3 runtimes, .NETFramework,Version=v4.7,
+.NETCoreApp,Version=v1.1, and .NETCoreApp,Version=v2.0.
+
+To run the tests targeting a specific runtime (which may be necessary if you don't have all them all installed) run the
+following command:
+
+```
+dotnet test -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+```
+
+A docker compose file is provided to run the tests on a linux container. To execute the tests in a container run the
+following command:
+
+```
+docker build .
+```
+
+### Executing the code coverage tests
+
+Code coverage uses the excellent and free [OpenCover](https://github.com/OpenCover/opencover "OpenCover Repository").
+
+To execute the tests with code coverage (Windows Only) run the following command:
+
+```
+coverage.cmd
+```
+
+Code coverage reports are produced using
+[ReportGenerator](https://github.com/danielpalme/ReportGenerator "ReportGenerator Repository") and can be viewed in the
+`test/TestResults/Report` folder.

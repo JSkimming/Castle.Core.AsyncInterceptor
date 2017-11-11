@@ -115,7 +115,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldLog4Entries()
         {
             // Act
-            await _proxy.AsynchronousVoidMethod();
+            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal(4, _log.Count);
@@ -125,7 +125,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowProcessingPriorToInvocation()
         {
             // Act
-            await _proxy.AsynchronousVoidMethod();
+            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:StartingInvocation:{_interceptor.RandomValue}", _log[0]);
@@ -135,7 +135,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowProcessingAfterInvocation()
         {
             // Act
-            await _proxy.AsynchronousVoidMethod();
+            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:CompletedInvocation:{_interceptor.RandomValue}", _log[3]);
@@ -159,7 +159,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldLog4Entries()
         {
             // Act
-            Guid result = await _proxy.AsynchronousResultMethod();
+            Guid result = await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             Assert.NotEqual(Guid.Empty, result);
@@ -170,7 +170,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowProcessingPriorToInvocation()
         {
             // Act
-            await _proxy.AsynchronousResultMethod();
+            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:StartingInvocation:{_interceptor.RandomValue}", _log[0]);
@@ -180,7 +180,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowProcessingAfterInvocation()
         {
             // Act
-            await _proxy.AsynchronousResultMethod();
+            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:CompletedInvocation:{_interceptor.RandomValue}", _log[3]);

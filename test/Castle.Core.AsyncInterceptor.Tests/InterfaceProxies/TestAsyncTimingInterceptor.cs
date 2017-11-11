@@ -14,10 +14,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         public TestAsyncTimingInterceptor(List<string> log)
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
-
-            _log = log;
+            _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
         public Stopwatch Stopwatch { get; private set; }
