@@ -95,7 +95,14 @@ namespace Castle.DynamicProxy
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
             {
-                Task.Run(() => task).Wait();
+                try
+                {
+                    Task.Run(() => task).Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    throw ex.InnerException;
+                }
             }
 
             if (task.IsFaulted)
@@ -106,12 +113,19 @@ namespace Castle.DynamicProxy
 
         private static void InterceptSynchronousResult<TResult>(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
+            Task<TResult> task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
 
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
             {
-                Task.Run(() => task).Wait();
+                try
+                {
+                    Task.Run(() => task).Wait();
+                }
+                catch (AggregateException ex)
+                {
+                    throw ex.InnerException;
+                }
             }
 
             if (task.IsFaulted)
