@@ -13,7 +13,7 @@ namespace Castle.DynamicProxy
     public class WhenProcessingSynchronousVoidMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly TestProcessingAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 
@@ -57,7 +57,7 @@ namespace Castle.DynamicProxy
     public class WhenProcessingSynchronousResultMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly TestProcessingAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 
@@ -101,7 +101,7 @@ namespace Castle.DynamicProxy
     public class WhenProcessingAsynchronousVoidMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly TestProcessingAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 
@@ -145,7 +145,7 @@ namespace Castle.DynamicProxy
     public class WhenProcessingAsynchronousResultMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly TestProcessingAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 

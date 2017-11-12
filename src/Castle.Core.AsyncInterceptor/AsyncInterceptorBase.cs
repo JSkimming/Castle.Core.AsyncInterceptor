@@ -97,7 +97,11 @@ namespace Castle.DynamicProxy
             {
                 try
                 {
-                    Task.Run(async () => await task.ConfigureAwait(false)).Wait();
+                    bool completed = Task.Run(async () => await task.ConfigureAwait(false)).Wait(2000);
+                    if (!completed)
+                    {
+                        throw new Exception("I got sick of waiting 1.");
+                    }
                 }
                 catch (AggregateException)
                 {
@@ -119,7 +123,11 @@ namespace Castle.DynamicProxy
             {
                 try
                 {
-                    Task.Run(async () => await task.ConfigureAwait(false)).Wait();
+                    bool completed = Task.Run(async () => await task.ConfigureAwait(false)).Wait(2000);
+                    if (!completed)
+                    {
+                        throw new Exception("I got sick of waiting 2.");
+                    }
                 }
                 catch (AggregateException)
                 {
@@ -202,8 +210,9 @@ namespace Castle.DynamicProxy
             Task ProceedWrapper(IInvocation innerInvocation)
             {
                 // "until proceed is called"
+                Task result = proceed(innerInvocation);
                 canReturnTcs.TrySetResult(null);
-                return proceed(innerInvocation);
+                return result;
             }
 
             // Will block until implementorTask's first await
@@ -212,7 +221,12 @@ namespace Castle.DynamicProxy
             // "or the implementor is finished"
             implementorTask.ContinueWith(_ => canReturnTcs.TrySetResult(null));
 
-            canReturnTcs.Task.Wait();
+            bool completed = canReturnTcs.Task.Wait(2000);
+            if (!completed)
+            {
+                throw new Exception("I got sick of waiting 3.");
+            }
+
             return implementorTask;
         }
 
@@ -225,8 +239,9 @@ namespace Castle.DynamicProxy
             Task<TResult> ProceedWrapper(IInvocation innerInvocation)
             {
                 // "until proceed is called"
+                Task<TResult> result = proceed(innerInvocation);
                 canReturnTcs.TrySetResult(null);
-                return proceed(innerInvocation);
+                return result;
             }
 
             // Will block until implementorTask's first await
@@ -235,7 +250,12 @@ namespace Castle.DynamicProxy
             // "or the implementor is finished"
             implementorTask.ContinueWith(_ => canReturnTcs.TrySetResult(null));
 
-            canReturnTcs.Task.Wait();
+            bool completed = canReturnTcs.Task.Wait(2000);
+            if (!completed)
+            {
+                throw new Exception("I got sick of waiting 4.");
+            }
+
             return implementorTask;
         }
     }

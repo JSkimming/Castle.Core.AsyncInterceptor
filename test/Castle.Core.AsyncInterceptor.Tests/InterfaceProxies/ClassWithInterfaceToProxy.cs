@@ -11,14 +11,14 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class ClassWithInterfaceToProxy : IInterfaceToProxy
     {
-        private readonly List<string> _log;
+        private readonly ListLogger _log;
 
-        public ClassWithInterfaceToProxy(List<string> log)
+        public ClassWithInterfaceToProxy(ListLogger log)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public IReadOnlyList<string> Log => _log;
+        public IReadOnlyList<string> Log => _log.GetLog();
 
         public void SynchronousVoidMethod()
         {
