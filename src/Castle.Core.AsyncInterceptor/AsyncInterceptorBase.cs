@@ -190,8 +190,9 @@ namespace Castle.DynamicProxy
             Task ProceedWrapper(IInvocation innerInvocation)
             {
                 // "until proceed is called"
+                var result = proceed(innerInvocation);
                 canReturnTcs.TrySetResult(null);
-                return proceed(innerInvocation);
+                return result;
             }
 
             // Will block until implementorTask's first await
@@ -213,8 +214,9 @@ namespace Castle.DynamicProxy
             Task<TResult> ProceedWrapper(IInvocation innerInvocation)
             {
                 // "until proceed is called"
+                var result = proceed(innerInvocation);
                 canReturnTcs.TrySetResult(null);
-                return proceed(innerInvocation);
+                return result;
             }
 
             // Will block until implementorTask's first await
