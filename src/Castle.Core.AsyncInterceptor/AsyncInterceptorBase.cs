@@ -92,15 +92,15 @@ namespace Castle.DynamicProxy
         {
             Task task = me.InterceptAsyncWrapper(invocation, ProceedSynchronous);
 
-            // If the intercept task has yet to complete, wait for it.
-            if (!task.IsCompleted)
+            try
             {
-                Task.Run(() => task).Wait();
+                task.GetAwaiter().GetResult();
             }
-
-            if (task.IsFaulted)
+            catch (AggregateException ae)
             {
-                throw task.Exception.InnerException;
+                // Synchronous method with asynchronous interception... not clear what behavior is expected.
+                // if the method throws, we expect it's exception. but if the interceptor throws, we expect AggregateException (async-style)
+                throw ae.InnerException;
             }
         }
 
@@ -108,15 +108,15 @@ namespace Castle.DynamicProxy
         {
             Task<TResult> task = me.InterceptAsyncWrapper(invocation, ProceedSynchronous<TResult>);
 
-            // If the intercept task has yet to complete, wait for it.
-            if (!task.IsCompleted)
+            try
             {
-                Task.Run(() => task).Wait();
+                task.GetAwaiter().GetResult();
             }
-
-            if (task.IsFaulted)
+            catch (AggregateException ae)
             {
-                throw task.Exception.InnerException;
+                // Synchronous method with asynchronous interception... not clear what behavior is expected.
+                // if the method throws, we expect it's exception. but if the interceptor throws, we expect AggregateException (async-style)
+                throw ae.InnerException;
             }
         }
 

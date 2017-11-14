@@ -18,7 +18,7 @@ namespace Castle.DynamicProxy
 
         protected WhenExceptionInterceptingSynchronousVoidMethodsBase(int msDelay)
         {
-            // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
+            // The delay is used to simulate work by the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
         }
@@ -299,21 +299,21 @@ namespace Castle.DynamicProxy
         }
 
         [Fact]
-        public void ShouldReturnAFaultedTask()
+        public async Task ShouldReturnAFaultedTask()
         {
             // Arrange
             MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
 
             // Act
             Task result = sut.Test1();
-
+            
             // Assert
-            Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+                () => sut.Test1());
         }
 
         [Fact]
-        public void ShouldReturnAFaultedTaskResult()
+        public async Task ShouldReturnAFaultedTaskResult()
         {
             // Arrange
             MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
@@ -322,8 +322,8 @@ namespace Castle.DynamicProxy
             Task<object> result = sut.Test2();
 
             // Assert
-            Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+                () => sut.Test1());
         }
     }
 }
