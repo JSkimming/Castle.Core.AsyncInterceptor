@@ -58,7 +58,7 @@ dotnet_sort_system_directives_first = true
 [*.cs]
 
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#newline
-csharp_new_line_before_open_brace = methods, properties, control_blocks, types
+csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
 csharp_new_line_before_catch = true
 csharp_new_line_before_finally = true
