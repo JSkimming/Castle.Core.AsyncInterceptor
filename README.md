@@ -215,7 +215,7 @@ public void InterceptSynchronous(IInvocation invocation)
 #### `InterceptAsynchronous(IInvocation invocation)`
 
 `InterceptAsynchronous(IInvocation invocation)` is called for methods that return `Task` but not the generic
-`TaskT<Result>`.
+`Task<TResult>`.
 
 Implementing `InterceptAsynchronous(IInvocation invocation)` could look something like this:
 
@@ -239,7 +239,7 @@ private async Task InternalInterceptAsynchronous(IInvocation invocation)
 
 #### `InterceptAsynchronous<TResult>(IInvocation invocation)`
 
-`InterceptAsynchronous<TResult>(IInvocation invocation)` is called for methods that return the generic `TaskT<Result>`.
+`InterceptAsynchronous<TResult>(IInvocation invocation)` is called for methods that return the generic `Task<TResult>`.
 
 Implementing `InterceptAsynchronous<TResult>(IInvocation invocation)` could look something like this:
 
