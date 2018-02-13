@@ -14,8 +14,8 @@ RUN dotnet restore
 
 COPY . .
 
-# Run restore again, this ensures any temporary files from the local file system don't break the build.
-RUN dotnet restore && dotnet build -f netcoreapp2.0 -c Debug ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+# Build to ensure the tests are their own distinct step
+RUN dotnet build --no-restore -f netcoreapp2.0 -c Debug ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 
 # Run unit tests
 RUN dotnet test --no-restore --no-build -c Debug -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj

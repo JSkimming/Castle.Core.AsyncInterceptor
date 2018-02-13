@@ -25,6 +25,10 @@ branches:
 # Operating system (build VM template)
 image: Visual Studio 2017
 
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: wlbvgdxuXKnICUGjPqGoQF35j+AKryMfPyUg+YC44hcF72KnOL+ON4WkPMSvedBb
+
 # scripts that are called at very beginning, before repo cloning
 init:
   # This gives the login details for the build instance so you can RDP to it.
@@ -65,6 +69,10 @@ test_script:
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "test\TestResults\Test.Coverage.xml"
+
+after_test: |
+  FOR /r %%F IN (*coveralls.net.exe) DO SET coveralls_exe=%%F
+  %coveralls_exe% --opencover test\TestResults\Test.Coverage.xml
 
 #---------------------------------#
 #     deployment configuration    #
