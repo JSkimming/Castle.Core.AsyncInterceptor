@@ -7,11 +7,9 @@ matrix:
 
   include:
     - os: linux
-      dist: trusty
       dotnet: 2.0.0
       mono: none
     - os: osx
-      osx_image: xcode8.2
       dotnet: 2.0.0
       mono: none
 
