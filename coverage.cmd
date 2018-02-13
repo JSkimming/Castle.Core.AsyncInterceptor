@@ -44,25 +44,26 @@
 
 @IF NOT EXIST "%results_path%" MD "%results_path%"
 
-@echo dotnet restore "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
-@dotnet restore "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
+@echo dotnet build --configuration %config% "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
+@dotnet build --configuration %config% "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
+@IF ERRORLEVEL 1 (
+   echo Error building the test project
+   EXIT /B 2
+)
 
 cd "%~dp0test\Castle.Core.AsyncInterceptor.Tests"
 
-::@echo dotnet.exe xunit -configuration %config% -noshadow -html %xunit_results%
-::@dotnet.exe xunit -configuration %config% -noshadow -html %xunit_results%
+::@echo dotnet.exe xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%
+::@dotnet.exe xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%
 
-@echo "%cover_exe%" -register:user "-target:dotnet.exe" "-targetargs:xunit -configuration %config% -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
-@"%cover_exe%" -register:user "-target:dotnet.exe" "-targetargs:xunit -configuration %config% -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
+@echo "%cover_exe%" -register:user "-target:dotnet.exe" "-targetargs:xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
+@"%cover_exe%" -register:user "-target:dotnet.exe" "-targetargs:xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
 @IF ERRORLEVEL 1 (
    echo Error executing the xunit tests
    EXIT /B 2
 )
 
 cd "%~dp0"
-
-@echo "%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%" -reporttypes:XmlSummary
-@"%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%" -reporttypes:XmlSummary
 
 @echo "%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
 @"%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
