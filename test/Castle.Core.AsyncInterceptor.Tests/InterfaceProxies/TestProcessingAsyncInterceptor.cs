@@ -18,14 +18,14 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         public string RandomValue { get; }
 
-        protected override string StartingInvocation(IInvocation invocation)
+        protected override string StartingInvocation(IAsyncInvocation invocation)
         {
             base.StartingInvocation(invocation);
             _log.Add($"{invocation.Method.Name}:StartingInvocation:{RandomValue}");
             return RandomValue;
         }
 
-        protected override void CompletedInvocation(IInvocation invocation, string state)
+        protected override void CompletedInvocation(IAsyncInvocation invocation, string state)
         {
             base.CompletedInvocation(invocation, state);
             _log.Add($"{invocation.Method.Name}:CompletedInvocation:{RandomValue}");

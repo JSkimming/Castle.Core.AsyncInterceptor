@@ -19,12 +19,12 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         public Stopwatch Stopwatch { get; private set; }
 
-        protected override void StartingTiming(IInvocation invocation)
+        protected override void StartingTiming(IAsyncInvocation invocation)
         {
             _log.Add($"{invocation.Method.Name}:StartingTiming");
         }
 
-        protected override void CompletedTiming(IInvocation invocation, Stopwatch stopwatch)
+        protected override void CompletedTiming(IAsyncInvocation invocation, Stopwatch stopwatch)
         {
             _log.Add($"{invocation.Method.Name}:CompletedTiming:{stopwatch.Elapsed:g}");
             Stopwatch = stopwatch;

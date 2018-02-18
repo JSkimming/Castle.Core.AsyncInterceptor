@@ -17,7 +17,7 @@ namespace Castle.DynamicProxy
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
         /// <returns>The <see cref="Stopwatch"/> to time the method <paramref name="invocation"/>.</returns>
-        protected sealed override Stopwatch StartingInvocation(IInvocation invocation)
+        protected override sealed Stopwatch StartingInvocation(IAsyncInvocation invocation)
         {
             StartingTiming(invocation);
             var stopwatch = new Stopwatch();
@@ -32,7 +32,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         /// <param name="stopwatch">The <see cref="Stopwatch"/> returned by <see cref="StartingInvocation"/> to time
         /// the method <paramref name="invocation"/>.</param>
-        protected sealed override void CompletedInvocation(IInvocation invocation, Stopwatch stopwatch)
+        protected override sealed void CompletedInvocation(IAsyncInvocation invocation, Stopwatch stopwatch)
         {
             stopwatch.Stop();
             CompletedTiming(invocation, stopwatch);
@@ -42,7 +42,7 @@ namespace Castle.DynamicProxy
         /// Override in derived classes to receive signals prior method <paramref name="invocation"/> timing.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        protected abstract void StartingTiming(IInvocation invocation);
+        protected abstract void StartingTiming(IAsyncInvocation invocation);
 
         /// <summary>
         /// Override in derived classes to receive signals after method <paramref name="invocation"/> timing.
@@ -50,6 +50,6 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         /// <param name="stopwatch">A <see cref="Stopwatch"/> used to time the method <paramref name="invocation"/>.
         /// </param>
-        protected abstract void CompletedTiming(IInvocation invocation, Stopwatch stopwatch);
+        protected abstract void CompletedTiming(IAsyncInvocation invocation, Stopwatch stopwatch);
     }
 }

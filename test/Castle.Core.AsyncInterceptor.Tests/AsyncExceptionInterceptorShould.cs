@@ -280,14 +280,15 @@ namespace Castle.DynamicProxy
     {
         private class MyInterceptorBase : AsyncInterceptorBase
         {
-            protected override Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+
+            public override Task InterceptAsyncAction(IAsyncActionInvocation invocation)
             {
-                return proceed(invocation);
+                return invocation.Proceed();
             }
 
-            protected override Task<TResult> InterceptAsync<TResult>(IInvocation invocation, Func<IInvocation, Task<TResult>> proceed)
+            public override Task<TResult> InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
             {
-                return proceed(invocation);
+                return invocation.Proceed();
             }
         }
 

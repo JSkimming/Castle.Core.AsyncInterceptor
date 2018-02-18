@@ -5,7 +5,6 @@ namespace Castle.DynamicProxy.InterfaceProxies
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     public class TestAsyncInterceptor : IAsyncInterceptor
@@ -17,50 +16,45 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public void InterceptSynchronous(IInvocation invocation)
-        {
-            LogInterceptStart(invocation);
-            invocation.Proceed();
-            LogInterceptEnd(invocation);
-        }
-
-        public void InterceptAsynchronous(IInvocation invocation)
-        {
-            invocation.ReturnValue = LogInterceptAsynchronous(invocation);
-        }
-
-        public void InterceptAsynchronous<TResult>(IInvocation invocation)
-        {
-            invocation.ReturnValue = LogInterceptAsynchronous<TResult>(invocation);
-        }
-
-        private async Task LogInterceptAsynchronous(IInvocation invocation)
-        {
-            LogInterceptStart(invocation);
-            invocation.Proceed();
-            var task = (Task)invocation.ReturnValue;
-            await task.ConfigureAwait(false);
-            LogInterceptEnd(invocation);
-        }
-
-        private async Task<TResult> LogInterceptAsynchronous<TResult>(IInvocation invocation)
-        {
-            LogInterceptStart(invocation);
-            invocation.Proceed();
-            var task = (Task<TResult>)invocation.ReturnValue;
-            TResult result = await task.ConfigureAwait(false);
-            LogInterceptEnd(invocation);
-            return result;
-        }
-
-        private void LogInterceptStart(IInvocation invocation)
+        private void LogInterceptStart(IAsyncInvocation invocation)
         {
             _log.Add($"{invocation.Method.Name}:InterceptStart");
         }
 
-        private void LogInterceptEnd(IInvocation invocation)
+        private void LogInterceptEnd(IAsyncInvocation invocation)
         {
             _log.Add($"{invocation.Method.Name}:InterceptEnd");
+        }
+
+        public void InterceptAction(IActionInvocation invocation)
+        {
+            LogInterceptStart(invocation);
+            invocation.Proceed();
+            LogInterceptEnd(invocation);
+        }
+
+        public TResult InterceptFunction<TResult>(IFunctionInvocation<TResult> invocation)
+        {
+            LogInterceptStart(invocation);
+            TResult result = invocation.Proceed();
+            LogInterceptEnd(invocation);
+            return result;
+        }
+
+        public async Task InterceptAsyncAction(IAsyncActionInvocation invocation)
+        {
+            LogInterceptStart(invocation);
+            Task task = invocation.Proceed();
+            await task.ConfigureAwait(false);
+            LogInterceptEnd(invocation);
+        }
+
+        public async Task<TResult> InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
+        {
+            LogInterceptStart(invocation);
+            TResult result = await invocation.Proceed().ConfigureAwait(false);
+            LogInterceptEnd(invocation);
+            return result;
         }
     }
 }

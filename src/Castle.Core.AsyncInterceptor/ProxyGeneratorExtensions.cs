@@ -19,7 +19,7 @@ namespace Castle.DynamicProxy
         /// <returns>The <see cref="IInterceptor"/> for the supplied <paramref name="interceptor"/>.</returns>
         public static IInterceptor ToInterceptor(this IAsyncInterceptor interceptor)
         {
-            return new AsyncDeterminationInterceptor(interceptor);
+            return new InterceptorAdapter(interceptor);
         }
 
         /// <summary>

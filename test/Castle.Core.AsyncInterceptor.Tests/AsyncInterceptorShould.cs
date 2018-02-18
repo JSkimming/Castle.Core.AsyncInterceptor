@@ -11,17 +11,6 @@ namespace Castle.DynamicProxy
     using Moq;
     using Xunit;
 
-    public class AsyncDeterminationInterceptorShould
-    {
-        [Fact]
-        public void Implement_IInterceptor()
-        {
-            var sut = new AsyncDeterminationInterceptor(new Mock<IAsyncInterceptor>().Object);
-
-            Assert.IsAssignableFrom<IInterceptor>(sut);
-        }
-    }
-
     public static class ProxyGen
     {
         public static readonly IProxyGenerator Generator = new ProxyGenerator();
@@ -31,7 +20,7 @@ namespace Castle.DynamicProxy
             // Arrange
             var classWithInterfaceToProxy = new ClassWithInterfaceToProxy(log);
 
-            var proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
+            IInterfaceToProxy proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
                 classWithInterfaceToProxy,
                 interceptor);
 
