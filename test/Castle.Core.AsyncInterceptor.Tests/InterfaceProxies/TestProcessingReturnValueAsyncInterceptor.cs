@@ -22,9 +22,13 @@ namespace Castle.DynamicProxy.InterfaceProxies
             return null;
         }
 
+        protected override void CompletedInvocation(IAsyncInvocation invocation, object state)
+        {
+            _log.Add($"{invocation.Method.Name}:CompletedInvocation:(no return value)");
+        }
+
         protected override void CompletedInvocation(IAsyncInvocation invocation, object state, object returnValue)
         {
-            base.CompletedInvocation(invocation, state, returnValue);
             _log.Add($"{invocation.Method.Name}:CompletedInvocation:{returnValue ?? "(no return value)"}");
         }
     }
