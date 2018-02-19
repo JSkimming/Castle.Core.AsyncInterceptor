@@ -296,12 +296,19 @@ namespace Castle.DynamicProxy
         {
             public virtual Task Test1()
             {
-                throw new ArgumentOutOfRangeException();
+                return CreateFaultedTask();
             }
 
             public virtual Task<object> Test2()
             {
-                throw new ArgumentOutOfRangeException();
+                return CreateFaultedTask();
+            }
+
+            private static Task<object> CreateFaultedTask()
+            {
+                var tcs = new TaskCompletionSource<object>();
+                tcs.SetException(new ArgumentOutOfRangeException());
+                return tcs.Task;
             }
         }
 
