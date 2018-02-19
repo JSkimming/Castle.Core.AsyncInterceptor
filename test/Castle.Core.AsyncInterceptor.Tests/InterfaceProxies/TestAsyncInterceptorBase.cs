@@ -5,6 +5,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class TestAsyncInterceptorBase : AsyncInterceptorBase
@@ -16,6 +17,48 @@ namespace Castle.DynamicProxy.InterfaceProxies
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _msDeley = msDeley;
+        }
+
+        public override void InterceptAction(IActionInvocation invocation)
+        {
+            try
+            {
+                _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
+
+                invocation.Proceed();
+
+                if (_msDeley > 0)
+                    Thread.Sleep(_msDeley);
+
+                _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
+            }
+            catch (Exception e)
+            {
+                _log.Add($"{invocation.Method.Name}:VoidExceptionThrown:{e.Message}");
+                throw;
+            }
+        }
+
+        public override TResult InterceptFunction<TResult>(
+            IFunctionInvocation<TResult> invocation)
+        {
+            try
+            {
+                _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
+
+                TResult result = invocation.Proceed();
+
+                if (_msDeley > 0)
+                    Thread.Sleep(_msDeley);
+
+                _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
+                return result;
+            }
+            catch (Exception e)
+            {
+                _log.Add($"{invocation.Method.Name}:ResultExceptionThrown:{e.Message}");
+                throw;
+            }
         }
 
         public override async Task InterceptAsyncAction(IAsyncActionInvocation invocation)
