@@ -26,13 +26,13 @@ namespace Castle.DynamicProxy
         /// <inheritdoc cref="IAsyncInterceptor"/>
         public virtual Task<TResult> InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
         {
-            return invocation.Proceed();
+            return invocation.ProceedAsync();
         }
 
         /// <inheritdoc cref="IAsyncInterceptor"/>
         public virtual Task InterceptAsyncAction(IAsyncActionInvocation invocation)
         {
-            return invocation.Proceed();
+            return invocation.ProceedAsync();
         }
     }
 }

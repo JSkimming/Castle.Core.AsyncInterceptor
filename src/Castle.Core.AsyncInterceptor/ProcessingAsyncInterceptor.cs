@@ -37,7 +37,7 @@ namespace Castle.DynamicProxy
         public async Task InterceptAsyncAction(IAsyncActionInvocation invocation)
         {
             TState state = StartingInvocation(invocation);
-            await invocation.Proceed().ConfigureAwait(false);
+            await invocation.ProceedAsync().ConfigureAwait(false);
             CompletedInvocation(invocation, state);
         }
 
@@ -45,7 +45,7 @@ namespace Castle.DynamicProxy
         public async Task<TResult> InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
         {
             TState state = StartingInvocation(invocation);
-            TResult result = await invocation.Proceed().ConfigureAwait(false);
+            TResult result = await invocation.ProceedAsync().ConfigureAwait(false);
             CompletedInvocation(invocation, state, result);
             return result;
         }

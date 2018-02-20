@@ -67,7 +67,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             {
                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
-                await invocation.Proceed().ConfigureAwait(false);
+                await invocation.ProceedAsync().ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
@@ -88,7 +88,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             {
                 _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 
-                TResult result = await invocation.Proceed().ConfigureAwait(false);
+                TResult result = await invocation.ProceedAsync().ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);

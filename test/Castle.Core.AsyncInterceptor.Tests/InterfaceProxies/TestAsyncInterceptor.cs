@@ -44,7 +44,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
         public async Task InterceptAsyncAction(IAsyncActionInvocation invocation)
         {
             LogInterceptStart(invocation);
-            Task task = invocation.Proceed();
+            Task task = invocation.ProceedAsync();
             await task.ConfigureAwait(false);
             LogInterceptEnd(invocation);
         }
@@ -52,7 +52,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
         public async Task<TResult> InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
         {
             LogInterceptStart(invocation);
-            TResult result = await invocation.Proceed().ConfigureAwait(false);
+            TResult result = await invocation.ProceedAsync().ConfigureAwait(false);
             LogInterceptEnd(invocation);
             return result;
         }

@@ -283,12 +283,12 @@ namespace Castle.DynamicProxy
 
             public override Task InterceptAsyncAction(IAsyncActionInvocation invocation)
             {
-                return invocation.Proceed();
+                return invocation.ProceedAsync();
             }
 
             public override Task<TResult> InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
             {
-                return invocation.Proceed();
+                return invocation.ProceedAsync();
             }
         }
 

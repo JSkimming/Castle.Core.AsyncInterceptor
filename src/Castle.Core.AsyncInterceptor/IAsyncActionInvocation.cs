@@ -20,6 +20,6 @@ namespace Castle.DynamicProxy
         ///   <see cref = "NotImplementedException" /> will be thrown.
         /// </remarks>
         /// <returns>The asynchronous task</returns>
-        Task Proceed();
+        Task ProceedAsync();
     }
 }
