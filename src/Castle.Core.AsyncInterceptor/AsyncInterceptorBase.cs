@@ -11,28 +11,68 @@ namespace Castle.DynamicProxy
     /// </summary>
     public abstract class AsyncInterceptorBase : IAsyncInterceptor
     {
+#if !NETSTANDARD2_0
+        /// <summary>
+        /// A completed <see cref="Task"/>.
+        /// </summary>
+        private static readonly Task CompletedTask = Task.FromResult(0);
+#endif
+
         /// <inheritdoc cref="IAsyncInterceptor"/>
-        public virtual void InterceptAction(IActionInvocation invocation)
+        void IAsyncInterceptor.InterceptAction(IActionInvocation invocation)
         {
-            invocation.Proceed();
+            Task.Run(
+                () => InterceptAsync(
+                    invocation,
+                    () =>
+                    {
+                        invocation.Proceed();
+#if NETSTANDARD2_0
+                        return Task.CompletedTask;
+#else
+                        return CompletedTask;
+#endif
+                    })).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="IAsyncInterceptor"/>
-        public virtual TResult InterceptFunction<TResult>(IFunctionInvocation<TResult> invocation)
+        TResult IAsyncInterceptor.InterceptFunction<TResult>(IFunctionInvocation<TResult> invocation)
         {
-            return invocation.Proceed();
+            return Task.Run(
+                () => InterceptAsync(
+                    invocation,
+                    () => Task.FromResult(invocation.Proceed()))).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc cref="IAsyncInterceptor"/>
-        public virtual Task<TResult> InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
+        Task<TResult> IAsyncInterceptor.InterceptAsyncFunction<TResult>(IAsyncFunctionInvocation<TResult> invocation)
         {
-            return invocation.ProceedAsync();
+            return InterceptAsync(invocation, () => invocation.ProceedAsync());
         }
 
         /// <inheritdoc cref="IAsyncInterceptor"/>
-        public virtual Task InterceptAsyncAction(IAsyncActionInvocation invocation)
+        Task IAsyncInterceptor.InterceptAsyncAction(IAsyncActionInvocation invocation)
         {
-            return invocation.ProceedAsync();
+            return InterceptAsync(invocation, () => invocation.ProceedAsync());
         }
+
+        /// <summary>
+        /// Override in derived classes to intercept method invocations.
+        /// </summary>
+        /// <param name="invocation">The method invocation.</param>
+        /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+        /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
+        protected abstract Task InterceptAsync(IAsyncInvocation invocation, Func<Task> proceed);
+
+        /// <summary>
+        /// Override in derived classes to intercept method invocations.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the <see cref="Task{T}"/> <see cref="Task{T}.Result"/>.</typeparam>
+        /// <param name="invocation">The method invocation.</param>
+        /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+        /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
+        protected abstract Task<TResult> InterceptAsync<TResult>(
+            IAsyncInvocation invocation,
+            Func<Task<TResult>> proceed);
     }
 }

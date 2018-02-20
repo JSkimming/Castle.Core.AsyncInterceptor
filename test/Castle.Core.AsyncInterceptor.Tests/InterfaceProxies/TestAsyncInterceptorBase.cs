@@ -5,7 +5,6 @@ namespace Castle.DynamicProxy.InterfaceProxies
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
 
     public class TestAsyncInterceptorBase : AsyncInterceptorBase
@@ -19,55 +18,13 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _msDeley = msDeley;
         }
 
-        public override void InterceptAction(IActionInvocation invocation)
+        protected override async Task InterceptAsync(IAsyncInvocation invocation, Func<Task> proceed)
         {
             try
             {
                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
-                invocation.Proceed();
-
-                if (_msDeley > 0)
-                    Thread.Sleep(_msDeley);
-
-                _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
-            }
-            catch (Exception e)
-            {
-                _log.Add($"{invocation.Method.Name}:VoidExceptionThrown:{e.Message}");
-                throw;
-            }
-        }
-
-        public override TResult InterceptFunction<TResult>(
-            IFunctionInvocation<TResult> invocation)
-        {
-            try
-            {
-                _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
-
-                TResult result = invocation.Proceed();
-
-                if (_msDeley > 0)
-                    Thread.Sleep(_msDeley);
-
-                _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
-                return result;
-            }
-            catch (Exception e)
-            {
-                _log.Add($"{invocation.Method.Name}:ResultExceptionThrown:{e.Message}");
-                throw;
-            }
-        }
-
-        public override async Task InterceptAsyncAction(IAsyncActionInvocation invocation)
-        {
-            try
-            {
-                _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
-
-                await invocation.ProceedAsync().ConfigureAwait(false);
+                await proceed().ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
@@ -81,14 +38,15 @@ namespace Castle.DynamicProxy.InterfaceProxies
             }
         }
 
-        public override async Task<TResult> InterceptAsyncFunction<TResult>(
-            IAsyncFunctionInvocation<TResult> invocation)
+        protected override async Task<TResult> InterceptAsync<TResult>(
+            IAsyncInvocation invocation,
+            Func<Task<TResult>> proceed)
         {
             try
             {
                 _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 
-                TResult result = await invocation.ProceedAsync().ConfigureAwait(false);
+                TResult result = await proceed().ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);

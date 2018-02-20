@@ -1,0 +1,17 @@
+diff a/test/Castle.Core.AsyncInterceptor.Tests/InterfaceProxies/TestAsyncInterceptorBase.cs b/test/Castle.Core.AsyncInterceptor.Tests/InterfaceProxies/TestAsyncInterceptorBase.cs	(rejected hunks)
+@@ -18,13 +18,13 @@
+             _msDeley = msDeley;
+         }
+ 
+-        protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
++        public override async Task InterceptAsyncAction(IAsyncActionInvocation invocation)
+         {
+             try
+             {
+                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
+ 
+-                await proceed(invocation).ConfigureAwait(false);
++                await invocation.Proceed().ConfigureAwait(false);
+ 
+                 if (_msDeley > 0)
+                     await Task.Delay(_msDeley).ConfigureAwait(false);
