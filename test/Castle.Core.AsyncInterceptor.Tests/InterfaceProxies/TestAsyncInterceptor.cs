@@ -16,16 +16,6 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        private void LogInterceptStart(IAsyncInvocation invocation)
-        {
-            _log.Add($"{invocation.Method.Name}:InterceptStart");
-        }
-
-        private void LogInterceptEnd(IAsyncInvocation invocation)
-        {
-            _log.Add($"{invocation.Method.Name}:InterceptEnd");
-        }
-
         public void InterceptAction(IActionInvocation invocation)
         {
             LogInterceptStart(invocation);
@@ -55,6 +45,16 @@ namespace Castle.DynamicProxy.InterfaceProxies
             TResult result = await invocation.ProceedAsync().ConfigureAwait(false);
             LogInterceptEnd(invocation);
             return result;
+        }
+
+        private void LogInterceptStart(IAsyncInvocation invocation)
+        {
+            _log.Add($"{invocation.Method.Name}:InterceptStart");
+        }
+
+        private void LogInterceptEnd(IAsyncInvocation invocation)
+        {
+            _log.Add($"{invocation.Method.Name}:InterceptEnd");
         }
     }
 }

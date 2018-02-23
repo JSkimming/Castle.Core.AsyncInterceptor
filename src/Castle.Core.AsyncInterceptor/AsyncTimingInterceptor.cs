@@ -17,7 +17,7 @@ namespace Castle.DynamicProxy
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
         /// <returns>The <see cref="Stopwatch"/> to time the method <paramref name="invocation"/>.</returns>
-        protected override sealed Stopwatch StartingInvocation(IAsyncInvocation invocation)
+        protected sealed override Stopwatch StartingInvocation(IAsyncInvocation invocation)
         {
             StartingTiming(invocation);
             var stopwatch = new Stopwatch();
@@ -32,7 +32,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         /// <param name="stopwatch">The <see cref="Stopwatch"/> returned by <see cref="StartingInvocation"/> to time
         /// the method <paramref name="invocation"/>.</param>
-        protected override sealed void CompletedInvocation(IAsyncInvocation invocation, Stopwatch stopwatch)
+        protected sealed override void CompletedInvocation(IAsyncInvocation invocation, Stopwatch stopwatch)
         {
             stopwatch.Stop();
             CompletedTiming(invocation, stopwatch);
