@@ -13,13 +13,13 @@ namespace Castle.DynamicProxy
 
     using Xunit;
 
-    public class InvocatiobBaseShould
+    public class InvocationBaseShould
     {
         private InvocationBase _invocationBase;
 
         private Mock<IInvocation> _invocationMock;
 
-        public InvocatiobBaseShould()
+        public InvocationBaseShould()
         {
             _invocationMock = new Mock<IInvocation>();
             _invocationBase = new ActionInvocation(_invocationMock.Object);
