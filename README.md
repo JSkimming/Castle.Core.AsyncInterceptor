@@ -327,6 +327,16 @@ public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<object>
 }
 ```
 
+## Using AsyncInterceptor with non-overloaded `ProxyGenerator` methods
+
+While AsyncInterceptor offers convenient overloads for the most common `ProxyGenerator` methods, some methods do not (yet) have such overloads. In this case, the extension method `IAsyncInterceptor.ToInterceptor()` can be used to obtain a regular `IInterceptor` implementation.
+
+```csharp
+var generator = new ProxyGenerator();
+var interceptor = new MyInterceptorWithoutTarget<T>();
+generator.CreateInterfaceProxyWithoutTarget(typeof(T), interceptor.ToInterceptor());
+```
+
 ## Method invocation timing using `AsyncTimingInterceptor`
 
 A common use-case for method invocation interception is to time how long a method takes to execute. For this reason
