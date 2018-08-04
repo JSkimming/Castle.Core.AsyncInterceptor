@@ -17,6 +17,14 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>
   </PropertyGroup>
+  
+  <!-- Strong name signing -->
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)SharedKey.snk</AssemblyOriginatorKeyFile>
+    <!-- Explanation for the condition https://github.com/dotnet/cli/issues/6911#issuecomment-309647478 and https://github.com/dotnet/cli/issues/6911#issuecomment-310099022 -->
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+  </PropertyGroup>
 
   <!--
   Force the net45 build to generate non Portable PDB until such time that OpenCover supports Portable PDBs
