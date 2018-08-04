@@ -12,13 +12,8 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         public TestProcessingAsyncInterceptor(List<string> log, string randomValue)
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
-            if (randomValue == null)
-                throw new ArgumentNullException(nameof(randomValue));
-
-            _log = log;
-            RandomValue = randomValue;
+            _log = log ?? throw new ArgumentNullException(nameof(log));
+            RandomValue = randomValue ?? throw new ArgumentNullException(nameof(randomValue));
         }
 
         public string RandomValue { get; }

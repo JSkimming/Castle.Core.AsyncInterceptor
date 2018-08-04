@@ -12,11 +12,11 @@ namespace Castle.DynamicProxy
 
     public class ProxyGeneratorExtensionsShould
     {
-        private static readonly ProxyGenerator Generator = new ProxyGenerator();
+        private static readonly IProxyGenerator Generator = new ProxyGenerator();
 
         public static IEnumerable<object[]> InterfaceProxyFactories()
         {
-            Func<ProxyGenerator, List<string>, IInterfaceToProxy>[] proxyFactories =
+            Func<IProxyGenerator, List<string>, IInterfaceToProxy>[] proxyFactories =
             {
                 (gen, log) => gen.CreateInterfaceProxyWithTarget<IInterfaceToProxy>(
                     new ClassWithInterfaceToProxy(log),
@@ -80,12 +80,12 @@ namespace Castle.DynamicProxy
         [Theory]
         [MemberData(nameof(InterfaceProxyFactories))]
         public async Task ExtendInterfaceProxyGenerator(
-            Func<ProxyGenerator, List<string>, IInterfaceToProxy> proxyFactory,
+            Func<IProxyGenerator, List<string>, IInterfaceToProxy> proxyFactory,
             List<string> log)
         {
             // Act
             IInterfaceToProxy proxy = proxyFactory(Generator, log);
-            Guid result = await proxy.AsynchronousResultMethod();
+            Guid result = await proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             const string methodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
@@ -97,7 +97,7 @@ namespace Castle.DynamicProxy
 
         public static IEnumerable<object[]> ClassProxyFactories()
         {
-            Func<ProxyGenerator, List<string>, ClassWithVirtualMethodToProxy>[] proxyFactories =
+            Func<IProxyGenerator, List<string>, ClassWithVirtualMethodToProxy>[] proxyFactories =
             {
                 (gen, log) => gen.CreateClassProxyWithTarget(
                     new ClassWithVirtualMethodToProxy(log),
@@ -187,12 +187,12 @@ namespace Castle.DynamicProxy
         [Theory]
         [MemberData(nameof(ClassProxyFactories))]
         public async Task ExtendClassProxyGenerator(
-            Func<ProxyGenerator, List<string>, ClassWithVirtualMethodToProxy> proxyFactory,
+            Func<IProxyGenerator, List<string>, ClassWithVirtualMethodToProxy> proxyFactory,
             List<string> log)
         {
             // Act
             ClassWithVirtualMethodToProxy proxy = proxyFactory(Generator, log);
-            Guid result = await proxy.AsynchronousResultMethod();
+            Guid result = await proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             const string methodName = nameof(ClassWithVirtualMethodToProxy.AsynchronousResultMethod);

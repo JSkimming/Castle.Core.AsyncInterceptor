@@ -24,7 +24,7 @@ namespace Castle.DynamicProxy
 
     public static class ProxyGen
     {
-        public static readonly ProxyGenerator Generator = new ProxyGenerator();
+        public static readonly IProxyGenerator Generator = new ProxyGenerator();
 
         public static IInterfaceToProxy CreateProxy(List<string> log, IAsyncInterceptor interceptor)
         {
@@ -139,7 +139,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldLog4Entries()
         {
             // Act
-            await _proxy.AsynchronousVoidMethod();
+            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal(4, _log.Count);
@@ -149,7 +149,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowInterceptionPriorToInvocation()
         {
             // Act
-            await _proxy.AsynchronousVoidMethod();
+            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:InterceptStart", _log[0]);
@@ -159,7 +159,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowInterceptionAfterInvocation()
         {
             // Act
-            await _proxy.AsynchronousVoidMethod();
+            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:InterceptEnd", _log[3]);
@@ -181,7 +181,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldLog4Entries()
         {
             // Act
-            Guid result = await _proxy.AsynchronousResultMethod();
+            Guid result = await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             Assert.NotEqual(Guid.Empty, result);
@@ -192,7 +192,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowInterceptionPriorToInvocation()
         {
             // Act
-            await _proxy.AsynchronousResultMethod();
+            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:InterceptStart", _log[0]);
@@ -202,7 +202,7 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowInterceptionAfterInvocation()
         {
             // Act
-            await _proxy.AsynchronousResultMethod();
+            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             Assert.Equal($"{MethodName}:InterceptEnd", _log[3]);

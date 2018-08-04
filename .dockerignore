@@ -1,0 +1,6 @@
+**/obj
+**/bin
+.vs
+*.sh
+.git
+.gitignore

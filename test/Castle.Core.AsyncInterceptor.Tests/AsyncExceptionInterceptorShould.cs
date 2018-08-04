@@ -158,7 +158,8 @@ namespace Castle.DynamicProxy
         {
             // Act
             InvalidOperationException ex =
-                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousVoidExceptionMethod);
+                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousVoidExceptionMethod)
+                    .ConfigureAwait(false);
 
             // Assert
             Assert.Equal(3, _log.Count);
@@ -171,7 +172,8 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowProcessingPriorToInvocation()
         {
             // Act
-            await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousVoidExceptionMethod);
+            await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousVoidExceptionMethod)
+                .ConfigureAwait(false);
 
             // Assert
             Assert.Equal(MethodName + ":StartingVoidInvocation", _log[0]);
@@ -182,7 +184,8 @@ namespace Castle.DynamicProxy
         {
             // Act
             InvalidOperationException ex =
-                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousVoidExceptionMethod);
+                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousVoidExceptionMethod)
+                    .ConfigureAwait(false);
 
             // Assert
             Assert.Equal(MethodName + ":VoidExceptionThrown:" + ex.Message, _log[2]);
@@ -223,7 +226,8 @@ namespace Castle.DynamicProxy
         {
             // Act
             InvalidOperationException ex =
-                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousResultExceptionMethod);
+                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousResultExceptionMethod)
+                    .ConfigureAwait(false);
 
             // Assert
             Assert.Equal(3, _log.Count);
@@ -236,7 +240,8 @@ namespace Castle.DynamicProxy
         public async Task ShouldAllowProcessingPriorToInvocation()
         {
             // Act
-            await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousResultExceptionMethod);
+            await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousResultExceptionMethod)
+                .ConfigureAwait(false);
 
             // Assert
             Assert.Equal(MethodName + ":StartingResultInvocation", _log[0]);
@@ -247,7 +252,8 @@ namespace Castle.DynamicProxy
         {
             // Act
             InvalidOperationException ex =
-                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousResultExceptionMethod);
+                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousResultExceptionMethod)
+                    .ConfigureAwait(false);
 
             // Assert
             Assert.Equal(MethodName + ":ResultExceptionThrown:" + ex.Message, _log[2]);
