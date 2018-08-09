@@ -15,17 +15,21 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        protected override object StartingInvocation(IInvocation invocation)
+        protected override object StartingInvocation(IAsyncInvocation invocation)
         {
             base.StartingInvocation(invocation);
             _log.Add($"{invocation.Method.Name}:StartingInvocation");
             return null;
         }
 
-        protected override void CompletedInvocation(IInvocation invocation, object state, object returnValue)
+        protected override void CompletedInvocation(IAsyncInvocation invocation, object state, object returnValue)
         {
-            base.CompletedInvocation(invocation, state, returnValue);
             _log.Add($"{invocation.Method.Name}:CompletedInvocation:{returnValue ?? "(no return value)"}");
+        }
+
+        protected override void CompletedInvocation(IAsyncInvocation invocation, object state)
+        {
+            _log.Add($"{invocation.Method.Name}:CompletedInvocation:(no return value)");
         }
     }
 }

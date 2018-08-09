@@ -276,18 +276,22 @@ namespace Castle.DynamicProxy
         }
     }
 
+    /// <summary>
+    /// The intention of this tests to validate the correct behavior when a synchronous exception is thrown from an
+    /// asynchronous method, by this it means a method that returns Task or Task<TResult> not the async/await pattern.
+    /// </summary>
     public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronousException
     {
         private class MyInterceptorBase : AsyncInterceptorBase
         {
-            protected override Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+            protected override Task InterceptAsync(IAsyncInvocation invocation, Func<Task> proceed)
             {
-                return proceed(invocation);
+                return proceed();
             }
 
-            protected override Task<TResult> InterceptAsync<TResult>(IInvocation invocation, Func<IInvocation, Task<TResult>> proceed)
+            protected override Task<TResult> InterceptAsync<TResult>(IAsyncInvocation invocation, Func<Task<TResult>> proceed)
             {
-                return proceed(invocation);
+                return proceed();
             }
         }
 
@@ -305,31 +309,29 @@ namespace Castle.DynamicProxy
         }
 
         [Fact]
-        public void ShouldReturnAFaultedTask()
+        public void ShouldThrowTheUnderlyingExceptionAndNotAFaultedTask()
         {
             // Arrange
             MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
 
             // Act
-            Task result = sut.Test1();
+            Action action = () => sut.Test1();
 
             // Assert
-            Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+            Assert.Throws<ArgumentOutOfRangeException>(action);
         }
 
         [Fact]
-        public void ShouldReturnAFaultedTaskResult()
+        public void ShouldThrowTheUnderlyingExceptionAndNotAFaultedResult()
         {
             // Arrange
             MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
 
             // Act
-            Task<object> result = sut.Test2();
+            Action action = () => sut.Test2();
 
             // Assert
-            Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+            Assert.Throws<ArgumentOutOfRangeException>(action);
         }
     }
 }

@@ -25,27 +25,27 @@ namespace Castle.DynamicProxy
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     default(Type[]),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     default(Type[]),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
@@ -56,22 +56,22 @@ namespace Castle.DynamicProxy
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     default(Type[]),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     default(Type[]),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
-                    new TestAsyncInterceptor(log)),
+                    new TestAsyncInterceptor(log))
             };
 
             return proxyFactories.Select(p => new object[] { p, new List<string>() });
@@ -197,6 +197,52 @@ namespace Castle.DynamicProxy
             // Assert
             const string methodName = nameof(ClassWithVirtualMethodToProxy.AsynchronousResultMethod);
             Assert.NotEqual(Guid.Empty, result);
+            Assert.Equal($"{methodName}:InterceptStart", log.First());
+            Assert.Equal($"{methodName}:InterceptEnd", log.Last());
+        }
+
+        public static IEnumerable<object[]> InterfaceProxyWithoutTargetFactories()
+        {
+            Func<IProxyGenerator, List<string>, IInterfaceToProxy>[] proxyFactories =
+            {
+                (gen, log) => gen.CreateInterfaceProxyWithoutTarget<IInterfaceToProxy>(
+                    new TestAsyncInterceptor(log, false)),
+                (gen, log) => gen.CreateInterfaceProxyWithoutTarget<IInterfaceToProxy>(
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log, false)),
+                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithoutTarget(
+                    typeof(IInterfaceToProxy),
+                    new TestAsyncInterceptor(log, false)),
+                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithoutTarget(
+                    typeof(IInterfaceToProxy),
+                    default(Type[]),
+                    new TestAsyncInterceptor(log, false)),
+                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithoutTarget(
+                    typeof(IInterfaceToProxy),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log, false)),
+                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithoutTarget(
+                    typeof(IInterfaceToProxy),
+                    default(Type[]),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log, false))
+            };
+            return proxyFactories.Select(p => new object[] { p, new List<string>() });
+        }
+
+        [Theory]
+        [MemberData(nameof(InterfaceProxyWithoutTargetFactories))]
+        public async Task ExtendInterfaceWithoutTargetProxyGenerator(
+            Func<IProxyGenerator, List<string>, IInterfaceToProxy> proxyFactory,
+            List<string> log)
+        {
+            // Act
+            IInterfaceToProxy proxy = proxyFactory(Generator, log);
+            await proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+
+            // Assert
+            const string methodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
+            Assert.Equal(2, log.Count);
             Assert.Equal($"{methodName}:InterceptStart", log.First());
             Assert.Equal($"{methodName}:InterceptEnd", log.Last());
         }
