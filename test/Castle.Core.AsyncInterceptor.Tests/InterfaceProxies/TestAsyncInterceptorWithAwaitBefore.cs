@@ -9,6 +9,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class TestAsyncInterceptorWithAwaitBefore : AsyncInterceptorBase
     {
+
         private readonly int _msDeley;
         private readonly ICollection<string> _log;
 
@@ -25,6 +26,13 @@ namespace Castle.DynamicProxy.InterfaceProxies
                 _log.Add($"{invocation.Method.Name}:CallAwaitBeforeInvocation");
 
                 await Task.Delay(_msDeley);
+
+#if !NETSTANDARD2_0
+                await Task.FromResult(0);
+#else 
+                await Task.CompletedTask;
+#endif
+
 
                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
@@ -48,6 +56,12 @@ namespace Castle.DynamicProxy.InterfaceProxies
                 _log.Add($"{invocation.Method.Name}:CallAwaitBeforeInvocation");
 
                 await Task.Delay(_msDeley);
+
+#if !NETSTANDARD2_0
+                await Task.FromResult(0);
+#else 
+                await Task.CompletedTask;
+#endif
 
                 _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 

@@ -50,7 +50,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous(IInvocation invocation)
         {
-            Task task = InterceptAsync(invocation, ProceedAsynchronous);
+            Task task = Task.Factory.StartNew(() => InterceptAsync(invocation, ProceedAsynchronous)).Unwrap();
 
             // prevent exception propagation
             try
@@ -71,7 +71,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            Task<TResult> task = InterceptAsync(invocation, ProceedAsynchronous<TResult>);
+            Task<TResult> task = Task.Factory.StartNew(() => InterceptAsync(invocation, ProceedAsynchronous<TResult>)).Unwrap();
 
             // prevent exception propagation
             try

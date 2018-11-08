@@ -37,7 +37,7 @@ namespace Castle.DynamicProxy
         {
             TState state = Proceed(invocation);
 
-            Task task = SignalWhenComplete(invocation, state);
+            Task task = Task.Factory.StartNew(() => SignalWhenComplete(invocation, state)).Unwrap();
 
             // prevent exception propagation
             try
@@ -60,7 +60,7 @@ namespace Castle.DynamicProxy
         {
             TState state = Proceed(invocation);
 
-            Task<TResult> task = SignalWhenComplete<TResult>(invocation, state);
+            Task<TResult> task = Task.Factory.StartNew(() => SignalWhenComplete<TResult>(invocation, state)).Unwrap();
 
             // prevent exception propagation
             try
