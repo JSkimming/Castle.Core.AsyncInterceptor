@@ -76,5 +76,6 @@ namespace Castle.DynamicProxy.InterfaceProxies
             await Task.Delay(10).ConfigureAwait(false);
             throw new InvalidOperationException(nameof(AsynchronousResultExceptionMethod) + ":Exception");
         }
+
     }
 }

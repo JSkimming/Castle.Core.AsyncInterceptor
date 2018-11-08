@@ -3,6 +3,7 @@
 
 namespace Castle.DynamicProxy
 {
+    using System;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -35,7 +36,19 @@ namespace Castle.DynamicProxy
         public void InterceptAsynchronous(IInvocation invocation)
         {
             TState state = Proceed(invocation);
-            invocation.ReturnValue = SignalWhenComplete(invocation, state);
+
+            Task task = SignalWhenComplete(invocation, state);
+
+            // prevent exception propagation
+            try
+            {
+                task.GetAwaiter().GetResult();
+            }
+            catch (Exception)
+            {
+            }
+
+            invocation.ReturnValue = task;
         }
 
         /// <summary>
@@ -46,7 +59,19 @@ namespace Castle.DynamicProxy
         public void InterceptAsynchronous<TResult>(IInvocation invocation)
         {
             TState state = Proceed(invocation);
-            invocation.ReturnValue = SignalWhenComplete<TResult>(invocation, state);
+
+            Task<TResult> task = SignalWhenComplete<TResult>(invocation, state);
+
+            // prevent exception propagation
+            try
+            {
+                task.GetAwaiter().GetResult();
+            }
+            catch (Exception)
+            {
+            }
+
+            invocation.ReturnValue = task;
         }
 
         /// <summary>

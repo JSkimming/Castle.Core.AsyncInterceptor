@@ -50,7 +50,18 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous);
+            Task task = InterceptAsync(invocation, ProceedAsynchronous);
+
+            // prevent exception propagation
+            try
+            {
+                task.GetAwaiter().GetResult();
+            }
+            catch (Exception)
+            {
+            }
+
+            invocation.ReturnValue = task;
         }
 
         /// <summary>
@@ -60,7 +71,18 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous<TResult>);
+            Task<TResult> task = InterceptAsync(invocation, ProceedAsynchronous<TResult>);
+
+            // prevent exception propagation
+            try
+            {
+                task.GetAwaiter().GetResult();
+            }
+            catch (Exception)
+            {
+            }
+
+            invocation.ReturnValue = task;
         }
 
         /// <summary>

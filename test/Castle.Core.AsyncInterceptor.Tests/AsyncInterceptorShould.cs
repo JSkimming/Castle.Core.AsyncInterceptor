@@ -31,7 +31,7 @@ namespace Castle.DynamicProxy
             // Arrange
             var classWithInterfaceToProxy = new ClassWithInterfaceToProxy(log);
 
-            var proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
+            IInterfaceToProxy proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
                 classWithInterfaceToProxy,
                 interceptor);
 
@@ -129,10 +129,13 @@ namespace Castle.DynamicProxy
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
         private readonly List<string> _log = new List<string>();
         private readonly IInterfaceToProxy _proxy;
+        private readonly IInterfaceToProxy _proxyWithAwaitBefore;
 
         public WhenInterceptingAsynchronousVoidMethods()
         {
             _proxy = ProxyGen.CreateProxy(_log, new TestAsyncInterceptor(_log));
+            _proxyWithAwaitBefore = ProxyGen.CreateProxy(_log, new TestAsyncInterceptorWithAwaitBefore(_log, 200));
+
         }
 
         [Fact]
@@ -164,6 +167,23 @@ namespace Castle.DynamicProxy
             // Assert
             Assert.Equal($"{MethodName}:InterceptEnd", _log[3]);
         }
+
+
+        [Fact]
+        public async Task ShouldInterceptAsynchronousMethodsWithAnAsyncOperationsPriorToCallingProceed()
+        {
+            await _proxyWithAwaitBefore.AsynchronousVoidMethod().ConfigureAwait(false);
+
+            // Assert
+            // Assert
+            Assert.Equal(5, _log.Count);
+
+            Assert.Equal("AsynchronousVoidMethod:CallAwaitBeforeInvocation", _log[0]);
+            Assert.Equal("AsynchronousVoidMethod:StartingVoidInvocation", _log[1]);
+            Assert.Equal("AsynchronousVoidMethod:Start", _log[2]);
+            Assert.Equal("AsynchronousVoidMethod:End", _log[3]);
+            Assert.Equal("AsynchronousVoidMethod:CompletedVoidInvocation", _log[4]);
+        }
     }
 
     public class WhenInterceptingAsynchronousResultMethods
@@ -171,10 +191,12 @@ namespace Castle.DynamicProxy
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
         private readonly List<string> _log = new List<string>();
         private readonly IInterfaceToProxy _proxy;
+        private readonly IInterfaceToProxy _proxyWithAwaitBefore;
 
         public WhenInterceptingAsynchronousResultMethods()
         {
             _proxy = ProxyGen.CreateProxy(_log, new TestAsyncInterceptor(_log));
+            _proxyWithAwaitBefore = ProxyGen.CreateProxy(_log, new TestAsyncInterceptorWithAwaitBefore(_log, 200));
         }
 
         [Fact]
@@ -207,5 +229,25 @@ namespace Castle.DynamicProxy
             // Assert
             Assert.Equal($"{MethodName}:InterceptEnd", _log[3]);
         }
+
+
+
+        [Fact]
+        public async Task ShouldInterceptAsynchronousMethodsWithAnAsyncOperationsPriorToCallingProceed()
+        {
+            await _proxyWithAwaitBefore.AsynchronousVoidMethod().ConfigureAwait(false);
+
+            // Assert
+            Assert.Equal(5, _log.Count);
+
+            Assert.Equal("AsynchronousVoidMethod:CallAwaitBeforeInvocation", _log[0]);
+            Assert.Equal("AsynchronousVoidMethod:StartingVoidInvocation", _log[1]);
+            Assert.Equal("AsynchronousVoidMethod:Start", _log[2]);
+            Assert.Equal("AsynchronousVoidMethod:End", _log[3]);
+            Assert.Equal("AsynchronousVoidMethod:CompletedVoidInvocation", _log[4]);
+
+        }
+
     }
+
 }
