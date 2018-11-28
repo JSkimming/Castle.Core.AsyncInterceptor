@@ -50,7 +50,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous(IInvocation invocation)
         {
-            Task task = Task.Factory.StartNew(() => InterceptAsync(invocation, ProceedAsynchronous)).Unwrap();
+            Task task = Task.Run(() => InterceptAsync(invocation, ProceedAsynchronous));
 
             // prevent exception propagation
             try
@@ -71,7 +71,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            Task<TResult> task = Task.Factory.StartNew(() => InterceptAsync(invocation, ProceedAsynchronous<TResult>)).Unwrap();
+            Task task = Task.Run(() => InterceptAsync(invocation, ProceedAsynchronous<TResult>));
 
             // prevent exception propagation
             try
@@ -112,76 +112,44 @@ namespace Castle.DynamicProxy
 
         private static void InterceptSynchronousVoid(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task task = me.InterceptAsync(invocation, ProceedSynchronous);
-
-            // If the intercept task has yet to complete, wait for it.
-            if (!task.IsCompleted)
+            try
             {
-                Task.Run(() => task).Wait();
+                Task task = Task.Run(() => me.InterceptAsync(invocation, ProceedSynchronous));
+                task.GetAwaiter().GetResult();
             }
-
-            if (task.IsFaulted)
+            catch (Exception ex)
             {
-                throw task.Exception.InnerException;
+                throw ex;
             }
         }
 
         private static void InterceptSynchronousResult<TResult>(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
-
-            // If the intercept task has yet to complete, wait for it.
-            if (!task.IsCompleted)
+            try
             {
-                Task.Run(() => task).Wait();
+                Task<TResult> task = Task.Run(() => me.InterceptAsync(invocation, ProceedSynchronous<TResult>));
+                invocation.ReturnValue = task.GetAwaiter().GetResult();
             }
-
-            if (task.IsFaulted)
+            catch (Exception ex)
             {
-                throw task.Exception.InnerException;
+                throw ex;
             }
         }
 
         private static Task ProceedSynchronous(IInvocation invocation)
         {
-            try
-            {
-                invocation.Proceed();
+            invocation.Proceed();
 #if NETSTANDARD2_0
-                return Task.CompletedTask;
+            return Task.CompletedTask;
 #else
-                return CompletedTask;
+            return CompletedTask;
 #endif
-            }
-            catch (Exception e)
-            {
-#if NETSTANDARD2_0
-                return Task.FromException(e);
-#else
-                var tcs = new TaskCompletionSource<int>();
-                tcs.SetException(e);
-                return tcs.Task;
-#endif
-            }
         }
 
         private static Task<TResult> ProceedSynchronous<TResult>(IInvocation invocation)
         {
-            try
-            {
-                invocation.Proceed();
-                return Task.FromResult((TResult)invocation.ReturnValue);
-            }
-            catch (Exception e)
-            {
-#if NETSTANDARD2_0
-                return Task.FromException<TResult>(e);
-#else
-                var tcs = new TaskCompletionSource<TResult>();
-                tcs.SetException(e);
-                return tcs.Task;
-#endif
-            }
+            invocation.Proceed();
+            return Task.FromResult((TResult)invocation.ReturnValue);
         }
 
         private static async Task ProceedAsynchronous(IInvocation invocation)
