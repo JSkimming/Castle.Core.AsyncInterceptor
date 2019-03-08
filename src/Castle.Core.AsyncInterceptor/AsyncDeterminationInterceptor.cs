@@ -23,14 +23,12 @@ namespace Castle.DynamicProxy
         private static readonly ConcurrentDictionary<Type, GenericAsyncHandler> GenericAsyncHandlers =
             new ConcurrentDictionary<Type, GenericAsyncHandler>();
 
-        private readonly IAsyncInterceptor _asyncInterceptor;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncDeterminationInterceptor"/> class.
         /// </summary>
         public AsyncDeterminationInterceptor(IAsyncInterceptor asyncInterceptor)
         {
-            _asyncInterceptor = asyncInterceptor;
+            AsyncInterceptor = asyncInterceptor;
         }
 
         private delegate void GenericAsyncHandler(IInvocation invocation, IAsyncInterceptor asyncInterceptor);
@@ -41,6 +39,11 @@ namespace Castle.DynamicProxy
             AsyncAction,
             AsyncFunction,
         }
+
+        /// <summary>
+        /// Gets the underlying async interceptor
+        /// </summary>
+        public IAsyncInterceptor AsyncInterceptor { get; }
 
         /// <summary>
         /// Intercepts a method <paramref name="invocation"/>.
@@ -54,13 +57,13 @@ namespace Castle.DynamicProxy
             switch (methodType)
             {
                 case MethodType.AsyncAction:
-                    _asyncInterceptor.InterceptAsynchronous(invocation);
+                    AsyncInterceptor.InterceptAsynchronous(invocation);
                     return;
                 case MethodType.AsyncFunction:
-                    GetHandler(invocation.Method.ReturnType).Invoke(invocation, _asyncInterceptor);
+                    GetHandler(invocation.Method.ReturnType).Invoke(invocation, AsyncInterceptor);
                     return;
                 default:
-                    _asyncInterceptor.InterceptSynchronous(invocation);
+                    AsyncInterceptor.InterceptSynchronous(invocation);
                     return;
             }
         }
