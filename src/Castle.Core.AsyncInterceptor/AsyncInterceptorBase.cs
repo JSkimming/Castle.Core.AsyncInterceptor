@@ -22,8 +22,9 @@ namespace Castle.DynamicProxy
 #endif
 
         private static readonly MethodInfo InterceptSynchronousMethodInfo =
-            typeof(AsyncInterceptorBase)
-                .GetMethod(nameof(InterceptSynchronousResult), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(AsyncInterceptorBase).GetMethod(
+                nameof(InterceptSynchronousResult),
+                BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly ConcurrentDictionary<Type, GenericSynchronousHandler> GenericSynchronousHandlers =
             new ConcurrentDictionary<Type, GenericSynchronousHandler>
@@ -50,7 +51,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous);
+            invocation.ReturnValue = InterceptAsync(invocation.GetProceedInfo(), ProceedAsynchronous);
         }
 
         /// <summary>
@@ -60,27 +61,29 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous<TResult>);
+            invocation.ReturnValue = InterceptAsync(invocation.GetProceedInfo(), ProceedAsynchronous<TResult>);
         }
 
         /// <summary>
         /// Override in derived classes to intercept method invocations.
         /// </summary>
-        /// <param name="invocation">The method invocation.</param>
-        /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+        /// <param name="proceedInfo">The <see cref="IInvocationProceedInfo"/>.</param>
+        /// <param name="proceed">The function to proceed the <paramref name="proceedInfo"/>.</param>
         /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
-        protected abstract Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed);
+        protected abstract Task InterceptAsync(
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocationProceedInfo, Task> proceed);
 
         /// <summary>
         /// Override in derived classes to intercept method invocations.
         /// </summary>
         /// <typeparam name="TResult">The type of the <see cref="Task{T}"/> <see cref="Task{T}.Result"/>.</typeparam>
-        /// <param name="invocation">The method invocation.</param>
-        /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+        /// <param name="proceedInfo">The <see cref="IInvocationProceedInfo"/>.</param>
+        /// <param name="proceed">The function to proceed the <paramref name="proceedInfo"/>.</param>
         /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
         protected abstract Task<TResult> InterceptAsync<TResult>(
-            IInvocation invocation,
-            Func<IInvocation, Task<TResult>> proceed);
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocationProceedInfo, Task<TResult>> proceed);
 
         private static GenericSynchronousHandler CreateHandler(Type returnType)
         {
@@ -90,12 +93,15 @@ namespace Castle.DynamicProxy
 
         private static void InterceptSynchronousVoid(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task task = me.InterceptAsync(invocation, ProceedSynchronous);
+            Task task = me.InterceptAsync(invocation.GetProceedInfo(), ProceedSynchronous);
 
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
             {
-                Task.Run(() => task).Wait();
+                // Need to use Task.Run() to prevent deadlock in .NET Framework ASP.NET requests.
+                // GetAwaiter().GetResult() prevents a thrown exception being wrapped in a AggregateException.
+                // See https://stackoverflow.com/a/17284612
+                Task.Run(() => task).GetAwaiter().GetResult();
             }
 
             if (task.IsFaulted)
@@ -106,12 +112,15 @@ namespace Castle.DynamicProxy
 
         private static void InterceptSynchronousResult<TResult>(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
+            Task<TResult> task = me.InterceptAsync(invocation.GetProceedInfo(), ProceedSynchronous<TResult>);
 
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
             {
-                Task.Run(() => task).Wait();
+                // Need to use Task.Run() to prevent deadlock in .NET Framework ASP.NET requests.
+                // GetAwaiter().GetResult() prevents a thrown exception being wrapped in a AggregateException.
+                // See https://stackoverflow.com/a/17284612
+                Task.Run(() => task).GetAwaiter().GetResult();
             }
 
             if (task.IsFaulted)
@@ -120,11 +129,11 @@ namespace Castle.DynamicProxy
             }
         }
 
-        private static Task ProceedSynchronous(IInvocation invocation)
+        private static Task ProceedSynchronous(IInvocationProceedInfo proceedInfo)
         {
             try
             {
-                invocation.Proceed();
+                proceedInfo.Invoke();
 #if NETSTANDARD2_0
                 return Task.CompletedTask;
 #else
@@ -143,12 +152,12 @@ namespace Castle.DynamicProxy
             }
         }
 
-        private static Task<TResult> ProceedSynchronous<TResult>(IInvocation invocation)
+        private static Task<TResult> ProceedSynchronous<TResult>(IInvocationProceedInfo proceedInfo)
         {
             try
             {
-                invocation.Proceed();
-                return Task.FromResult((TResult)invocation.ReturnValue);
+                proceedInfo.Invoke();
+                return Task.FromResult((TResult)proceedInfo.Invocation.ReturnValue);
             }
             catch (Exception e)
             {
@@ -162,22 +171,22 @@ namespace Castle.DynamicProxy
             }
         }
 
-        private static async Task ProceedAsynchronous(IInvocation invocation)
+        private static async Task ProceedAsynchronous(IInvocationProceedInfo proceedInfo)
         {
-            invocation.Proceed();
+            proceedInfo.Invoke();
 
             // Get the task to await.
-            var originalReturnValue = (Task)invocation.ReturnValue;
+            var originalReturnValue = (Task)proceedInfo.Invocation.ReturnValue;
 
             await originalReturnValue.ConfigureAwait(false);
         }
 
-        private static async Task<TResult> ProceedAsynchronous<TResult>(IInvocation invocation)
+        private static async Task<TResult> ProceedAsynchronous<TResult>(IInvocationProceedInfo proceedInfo)
         {
-            invocation.Proceed();
+            proceedInfo.Invoke();
 
             // Get the task to await.
-            var originalReturnValue = (Task<TResult>)invocation.ReturnValue;
+            var originalReturnValue = (Task<TResult>)proceedInfo.Invocation.ReturnValue;
 
             TResult result = await originalReturnValue.ConfigureAwait(false);
             return result;

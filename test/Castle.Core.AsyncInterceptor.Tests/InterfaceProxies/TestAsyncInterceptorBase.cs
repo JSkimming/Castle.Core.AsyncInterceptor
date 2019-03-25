@@ -18,46 +18,46 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _msDeley = msDeley;
         }
 
-        protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+        protected override async Task InterceptAsync(IInvocationProceedInfo proceedInfo, Func<IInvocationProceedInfo, Task> proceed)
         {
             try
             {
-                _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
+                _log.Add($"{proceedInfo.Invocation.Method.Name}:StartingVoidInvocation");
 
                 await Task.Yield();
-                await proceed(invocation).ConfigureAwait(false);
+                await proceed(proceedInfo).ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
 
-                _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
+                _log.Add($"{proceedInfo.Invocation.Method.Name}:CompletedVoidInvocation");
             }
             catch (Exception e)
             {
-                _log.Add($"{invocation.Method.Name}:VoidExceptionThrown:{e.Message}");
+                _log.Add($"{proceedInfo.Invocation.Method.Name}:VoidExceptionThrown:{e.Message}");
                 throw;
             }
         }
 
         protected override async Task<TResult> InterceptAsync<TResult>(
-            IInvocation invocation,
-            Func<IInvocation, Task<TResult>> proceed)
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocationProceedInfo, Task<TResult>> proceed)
         {
             try
             {
-                _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
+                _log.Add($"{proceedInfo.Invocation.Method.Name}:StartingResultInvocation");
 
-                TResult result = await proceed(invocation).ConfigureAwait(false);
+                TResult result = await proceed(proceedInfo).ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
 
-                _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
+                _log.Add($"{proceedInfo.Invocation.Method.Name}:CompletedResultInvocation");
                 return result;
             }
             catch (Exception e)
             {
-                _log.Add($"{invocation.Method.Name}:ResultExceptionThrown:{e.Message}");
+                _log.Add($"{proceedInfo.Invocation.Method.Name}:ResultExceptionThrown:{e.Message}");
                 throw;
             }
         }
