@@ -9,22 +9,19 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class ClassWithVirtualMethodToProxy
     {
-        private readonly List<string> _log;
+        private readonly ListLogger _log;
 
         protected ClassWithVirtualMethodToProxy()
-            : this(new List<string>())
+            : this(new ListLogger())
         {
         }
 
-        public ClassWithVirtualMethodToProxy(List<string> log)
+        public ClassWithVirtualMethodToProxy(ListLogger log)
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
-
-            _log = log;
+            _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public IReadOnlyList<string> Log => _log;
+        public IReadOnlyList<string> Log => _log.GetLog();
 
         public virtual async Task<Guid> AsynchronousResultMethod()
         {

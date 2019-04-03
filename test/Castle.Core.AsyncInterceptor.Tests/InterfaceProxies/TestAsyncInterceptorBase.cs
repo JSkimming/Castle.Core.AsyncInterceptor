@@ -10,9 +10,9 @@ namespace Castle.DynamicProxy.InterfaceProxies
     public class TestAsyncInterceptorBase : AsyncInterceptorBase
     {
         private readonly int _msDeley;
-        private readonly ICollection<string> _log;
+        private readonly ListLogger _log;
 
-        public TestAsyncInterceptorBase(List<string> log, int msDeley)
+        public TestAsyncInterceptorBase(ListLogger log, int msDeley)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _msDeley = msDeley;
