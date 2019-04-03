@@ -22,8 +22,9 @@ namespace Castle.DynamicProxy
 #endif
 
         private static readonly MethodInfo InterceptSynchronousMethodInfo =
-            typeof(AsyncInterceptorBase)
-                .GetMethod(nameof(InterceptSynchronousResult), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(AsyncInterceptorBase).GetMethod(
+                nameof(InterceptSynchronousResult),
+                BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly ConcurrentDictionary<Type, GenericSynchronousHandler> GenericSynchronousHandlers =
             new ConcurrentDictionary<Type, GenericSynchronousHandler>
@@ -95,7 +96,10 @@ namespace Castle.DynamicProxy
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
             {
-                Task.Run(() => task).Wait();
+                // Need to use Task.Run() to prevent deadlock in .NET Framework ASP.NET requests.
+                // GetAwaiter().GetResult() prevents a thrown exception being wrapped in a AggregateException.
+                // See https://stackoverflow.com/a/17284612
+                Task.Run(() => task).GetAwaiter().GetResult();
             }
 
             if (task.IsFaulted)
@@ -106,12 +110,15 @@ namespace Castle.DynamicProxy
 
         private static void InterceptSynchronousResult<TResult>(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
+            Task<TResult> task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
 
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
             {
-                Task.Run(() => task).Wait();
+                // Need to use Task.Run() to prevent deadlock in .NET Framework ASP.NET requests.
+                // GetAwaiter().GetResult() prevents a thrown exception being wrapped in a AggregateException.
+                // See https://stackoverflow.com/a/17284612
+                Task.Run(() => task).GetAwaiter().GetResult();
             }
 
             if (task.IsFaulted)
