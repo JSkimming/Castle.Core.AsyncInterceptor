@@ -58,7 +58,8 @@ build_script:
 
 artifacts:
   - path: src\**\*.nupkg
-  - path: test\TestResults
+  - path: TestResults_*.7z
+    name: TestResults
 
 #---------------------------------#
 #       tests configuration       #
@@ -69,6 +70,7 @@ test_script:
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "test\TestResults\Test.Coverage.xml"
+  - 7z a -t7z -mx9 -bd TestResults_%APPVEYOR_BUILD_VERSION%.7z .\test\TestResults\*
 
 after_test: |
   FOR /r %%F IN (*coveralls.net.exe) DO SET coveralls_exe=%%F
