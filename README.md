@@ -39,7 +39,7 @@ public void Intercept(IInvocation invocation)
 
 ## What's not simple about asynchronous method interception?
 
-When implementing `IInterceptor` the underlying the method is invoked like this:
+When implementing `IInterceptor` the underlying method is invoked like this:
 
 ```csharp
 public void Intercept(IInvocation invocation)
