@@ -67,8 +67,7 @@ artifacts:
 
 test_script:
   - coverage.cmd %CONFIGURATION%
-  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
-  - pip install codecov
+  - choco install codecov
   - codecov -f "test\TestResults\Test.Coverage.xml"
   - 7z a -t7z -mx9 -bd TestResults_%APPVEYOR_BUILD_VERSION%.7z .\test\TestResults\*
 
