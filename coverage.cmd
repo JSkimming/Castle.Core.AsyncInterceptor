@@ -37,7 +37,16 @@
 )
 ::@echo %report_exe%
 
+@FOR /r %%F IN (*xunit.console.exe) DO @SET xunit_exe=%%F
+@IF NOT EXIST "%xunit_exe%" (
+   echo Unable to find xUnit console runner.
+   EXIT /B 2
+)
+::@echo %xunit_exe%
+
 @SET results_path=%~dp0test\TestResults
+@SET test_assemblies=%~dp0test\Castle.Core.AsyncInterceptor.Tests\bin\%config%\net47\Castle.Core.AsyncInterceptor.Tests.dll
+::@SET test_assemblies=%test_assemblies% %~dp0test\More.Tests\bin\%config%\net47\More.Tests.dll
 @SET xunit_results=%results_path%\Xunit.Tests.html
 @SET coverage_filter=+[Castle.Core.AsyncInterceptor*]* -[*.Tests]*
 @SET coverage_results=%results_path%\Test.Coverage.xml
@@ -51,19 +60,15 @@
    EXIT /B 2
 )
 
-cd "%~dp0test\Castle.Core.AsyncInterceptor.Tests"
+::@echo "%xunit_exe%" %test_assemblies% -noshadow -html "%xunit_results%"
+::@"%xunit_exe%" %test_assemblies% -noshadow -html "%xunit_results%"
 
-::@echo dotnet.exe xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%
-::@dotnet.exe xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%
-
-@echo "%cover_exe%" -register:user "-target:dotnet.exe" "-targetargs:xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
-@"%cover_exe%" -register:user "-target:dotnet.exe" "-targetargs:xunit -framework net47 -configuration %config% -nobuild -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
+@echo "%cover_exe%" -register:user "-target:%xunit_exe%" "-targetargs:%test_assemblies% -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
+@"%cover_exe%" -register:user "-target:%xunit_exe%" "-targetargs:%test_assemblies% -noshadow -html %xunit_results%" -returntargetcode -filter:^"%coverage_filter%^" "-output:%coverage_results%"
 @IF ERRORLEVEL 1 (
    echo Error executing the xunit tests
    EXIT /B 2
 )
-
-cd "%~dp0"
 
 @echo "%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
 @"%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
