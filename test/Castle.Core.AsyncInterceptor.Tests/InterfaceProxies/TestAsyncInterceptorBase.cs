@@ -18,14 +18,17 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _msDeley = msDeley;
         }
 
-        protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+        protected override async Task InterceptAsync(
+            IInvocation invocation,
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocation, IInvocationProceedInfo, Task> proceed)
         {
             try
             {
                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
                 await Task.Yield();
-                await proceed(invocation).ConfigureAwait(false);
+                await proceed(invocation, proceedInfo).ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
@@ -41,13 +44,14 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         protected override async Task<TResult> InterceptAsync<TResult>(
             IInvocation invocation,
-            Func<IInvocation, Task<TResult>> proceed)
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
         {
             try
             {
                 _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 
-                TResult result = await proceed(invocation).ConfigureAwait(false);
+                TResult result = await proceed(invocation, proceedInfo).ConfigureAwait(false);
 
                 if (_msDeley > 0)
                     await Task.Delay(_msDeley).ConfigureAwait(false);
