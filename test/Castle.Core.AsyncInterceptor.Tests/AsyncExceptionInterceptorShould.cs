@@ -13,7 +13,7 @@ namespace Castle.DynamicProxy
     public abstract class WhenExceptionInterceptingSynchronousVoidMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidExceptionMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         protected WhenExceptionInterceptingSynchronousVoidMethodsBase(int msDelay)
@@ -78,7 +78,7 @@ namespace Castle.DynamicProxy
     public abstract class WhenExceptionInterceptingSynchronousResultMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultExceptionMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         protected WhenExceptionInterceptingSynchronousResultMethodsBase(int msDelay)
@@ -143,7 +143,7 @@ namespace Castle.DynamicProxy
     public abstract class WhenExceptionInterceptingAsynchronousVoidMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidExceptionMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         protected WhenExceptionInterceptingAsynchronousVoidMethodsBase(int msDelay)
@@ -211,7 +211,7 @@ namespace Castle.DynamicProxy
     public abstract class WhenExceptionInterceptingAsynchronousResultMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultExceptionMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         protected WhenExceptionInterceptingAsynchronousResultMethodsBase(int msDelay)

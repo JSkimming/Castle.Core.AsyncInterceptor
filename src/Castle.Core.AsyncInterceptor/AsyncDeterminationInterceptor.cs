@@ -41,7 +41,7 @@ namespace Castle.DynamicProxy
         }
 
         /// <summary>
-        /// Gets the underlying async interceptor
+        /// Gets the underlying async interceptor.
         /// </summary>
         public IAsyncInterceptor AsyncInterceptor { get; }
 

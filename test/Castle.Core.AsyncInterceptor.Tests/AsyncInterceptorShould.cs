@@ -26,7 +26,7 @@ namespace Castle.DynamicProxy
     {
         public static readonly IProxyGenerator Generator = new ProxyGenerator();
 
-        public static IInterfaceToProxy CreateProxy(List<string> log, IAsyncInterceptor interceptor)
+        public static IInterfaceToProxy CreateProxy(ListLogger log, IAsyncInterceptor interceptor)
         {
             // Arrange
             var classWithInterfaceToProxy = new ClassWithInterfaceToProxy(log);
@@ -42,7 +42,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousVoidMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         public WhenInterceptingSynchronousVoidMethods()
@@ -84,7 +84,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousResultMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         public WhenInterceptingSynchronousResultMethods()
@@ -127,7 +127,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousVoidMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         public WhenInterceptingAsynchronousVoidMethods()
@@ -169,7 +169,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousResultMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log = new ListLogger();
         private readonly IInterfaceToProxy _proxy;
 
         public WhenInterceptingAsynchronousResultMethods()

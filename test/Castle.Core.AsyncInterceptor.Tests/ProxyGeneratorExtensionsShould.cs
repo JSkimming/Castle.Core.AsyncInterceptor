@@ -16,7 +16,7 @@ namespace Castle.DynamicProxy
 
         public static IEnumerable<object[]> InterfaceProxyFactories()
         {
-            Func<IProxyGenerator, List<string>, IInterfaceToProxy>[] proxyFactories =
+            Func<IProxyGenerator, ListLogger, IInterfaceToProxy>[] proxyFactories =
             {
                 (gen, log) => gen.CreateInterfaceProxyWithTarget<IInterfaceToProxy>(
                     new ClassWithInterfaceToProxy(log),
@@ -74,14 +74,14 @@ namespace Castle.DynamicProxy
                     new TestAsyncInterceptor(log)),
             };
 
-            return proxyFactories.Select(p => new object[] { p, new List<string>() });
+            return proxyFactories.Select(p => new object[] { p, new ListLogger() });
         }
 
         [Theory]
         [MemberData(nameof(InterfaceProxyFactories))]
         public async Task ExtendInterfaceProxyGenerator(
-            Func<IProxyGenerator, List<string>, IInterfaceToProxy> proxyFactory,
-            List<string> log)
+            Func<IProxyGenerator, ListLogger, IInterfaceToProxy> proxyFactory,
+            ListLogger log)
         {
             // Act
             IInterfaceToProxy proxy = proxyFactory(Generator, log);
@@ -97,7 +97,7 @@ namespace Castle.DynamicProxy
 
         public static IEnumerable<object[]> ClassProxyFactories()
         {
-            Func<IProxyGenerator, List<string>, ClassWithVirtualMethodToProxy>[] proxyFactories =
+            Func<IProxyGenerator, ListLogger, ClassWithVirtualMethodToProxy>[] proxyFactories =
             {
                 (gen, log) => gen.CreateClassProxyWithTarget(
                     new ClassWithVirtualMethodToProxy(log),
@@ -181,14 +181,14 @@ namespace Castle.DynamicProxy
                     new TestAsyncInterceptor(log)),
             };
 
-            return proxyFactories.Select(p => new object[] { p, new List<string>() });
+            return proxyFactories.Select(p => new object[] { p, new ListLogger() });
         }
 
         [Theory]
         [MemberData(nameof(ClassProxyFactories))]
         public async Task ExtendClassProxyGenerator(
-            Func<IProxyGenerator, List<string>, ClassWithVirtualMethodToProxy> proxyFactory,
-            List<string> log)
+            Func<IProxyGenerator, ListLogger, ClassWithVirtualMethodToProxy> proxyFactory,
+            ListLogger log)
         {
             // Act
             ClassWithVirtualMethodToProxy proxy = proxyFactory(Generator, log);

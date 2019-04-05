@@ -10,9 +10,9 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class TestAsyncTimingInterceptor : AsyncTimingInterceptor
     {
-        private readonly ICollection<string> _log;
+        private readonly ListLogger _log;
 
-        public TestAsyncTimingInterceptor(List<string> log)
+        public TestAsyncTimingInterceptor(ListLogger log)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }

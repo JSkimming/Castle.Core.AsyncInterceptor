@@ -7,7 +7,7 @@ namespace Castle.DynamicProxy
 
     /// <summary>
     /// A base type for an <see cref="IAsyncInterceptor"/> which executes only minimal processing when intercepting a
-    /// method <see cref="IInvocation"/>
+    /// method <see cref="IInvocation"/>.
     /// </summary>
     /// <typeparam name="TState">
     /// The type of the custom object used to maintain state between <see cref="StartingInvocation"/> and
