@@ -9,15 +9,18 @@ namespace Castle.DynamicProxy
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
     using Xunit;
+    using Xunit.Abstractions;
 
     public abstract class WhenInterceptingSynchronousVoidMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        protected WhenInterceptingSynchronousVoidMethodsBase(int msDelay)
+        protected WhenInterceptingSynchronousVoidMethodsBase(ITestOutputHelper output, int msDelay)
         {
+            _log = new ListLogger(output);
+
             // The delay is used to simulate work by the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
@@ -57,7 +60,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousVoidMethodsWithNoDelay
         : WhenInterceptingSynchronousVoidMethodsBase
     {
-        public WhenInterceptingSynchronousVoidMethodsWithNoDelay() : base(0)
+        public WhenInterceptingSynchronousVoidMethodsWithNoDelay(ITestOutputHelper output) : base(output, 0)
         {
         }
     }
@@ -65,7 +68,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousVoidMethodsWithADelay
         : WhenInterceptingSynchronousVoidMethodsBase
     {
-        public WhenInterceptingSynchronousVoidMethodsWithADelay() : base(10)
+        public WhenInterceptingSynchronousVoidMethodsWithADelay(ITestOutputHelper output) : base(output, 10)
         {
         }
     }
@@ -73,11 +76,13 @@ namespace Castle.DynamicProxy
     public abstract class WhenInterceptingSynchronousResultMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        protected WhenInterceptingSynchronousResultMethodsBase(int msDelay)
+        protected WhenInterceptingSynchronousResultMethodsBase(ITestOutputHelper output, int msDelay)
         {
+            _log = new ListLogger(output);
+
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
@@ -117,7 +122,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousResultMethodsWithNoDelay
         : WhenInterceptingSynchronousResultMethodsBase
     {
-        public WhenInterceptingSynchronousResultMethodsWithNoDelay() : base(0)
+        public WhenInterceptingSynchronousResultMethodsWithNoDelay(ITestOutputHelper output) : base(output, 0)
         {
         }
     }
@@ -125,7 +130,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousResultMethodsWithADelay
         : WhenInterceptingSynchronousResultMethodsBase
     {
-        public WhenInterceptingSynchronousResultMethodsWithADelay() : base(10)
+        public WhenInterceptingSynchronousResultMethodsWithADelay(ITestOutputHelper output) : base(output, 10)
         {
         }
     }
@@ -133,11 +138,13 @@ namespace Castle.DynamicProxy
     public abstract class WhenInterceptingAsynchronousVoidMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        protected WhenInterceptingAsynchronousVoidMethodsBase(int msDelay)
+        protected WhenInterceptingAsynchronousVoidMethodsBase(ITestOutputHelper output, int msDelay)
         {
+            _log = new ListLogger(output);
+
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
@@ -177,7 +184,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousVoidMethodsWithNoDelay
         : WhenInterceptingAsynchronousVoidMethodsBase
     {
-        public WhenInterceptingAsynchronousVoidMethodsWithNoDelay() : base(0)
+        public WhenInterceptingAsynchronousVoidMethodsWithNoDelay(ITestOutputHelper output) : base(output, 0)
         {
         }
     }
@@ -185,7 +192,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousVoidMethodsWithADelay
         : WhenInterceptingAsynchronousVoidMethodsBase
     {
-        public WhenInterceptingAsynchronousVoidMethodsWithADelay() : base(10)
+        public WhenInterceptingAsynchronousVoidMethodsWithADelay(ITestOutputHelper output) : base(output, 10)
         {
         }
     }
@@ -193,11 +200,13 @@ namespace Castle.DynamicProxy
     public abstract class WhenInterceptingAsynchronousResultMethodsBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        protected WhenInterceptingAsynchronousResultMethodsBase(int msDelay)
+        protected WhenInterceptingAsynchronousResultMethodsBase(ITestOutputHelper output, int msDelay)
         {
+            _log = new ListLogger(output);
+
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, msDelay);
             _proxy = ProxyGen.CreateProxy(_log, interceptor);
@@ -238,7 +247,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousResultMethodsWithNoDelay
         : WhenInterceptingAsynchronousResultMethodsBase
     {
-        public WhenInterceptingAsynchronousResultMethodsWithNoDelay() : base(0)
+        public WhenInterceptingAsynchronousResultMethodsWithNoDelay(ITestOutputHelper output) : base(output, 0)
         {
         }
     }
@@ -246,7 +255,7 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousResultMethodsWithADelay
         : WhenInterceptingAsynchronousResultMethodsBase
     {
-        public WhenInterceptingAsynchronousResultMethodsWithADelay() : base(10)
+        public WhenInterceptingAsynchronousResultMethodsWithADelay(ITestOutputHelper output) : base(output, 10)
         {
         }
     }

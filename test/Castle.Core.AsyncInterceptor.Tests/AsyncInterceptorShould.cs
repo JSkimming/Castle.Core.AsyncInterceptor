@@ -10,6 +10,7 @@ namespace Castle.DynamicProxy
     using Castle.DynamicProxy.InterfaceProxies;
     using Moq;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class AsyncDeterminationInterceptorShould
     {
@@ -31,7 +32,7 @@ namespace Castle.DynamicProxy
             // Arrange
             var classWithInterfaceToProxy = new ClassWithInterfaceToProxy(log);
 
-            var proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
+            IInterfaceToProxy proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
                 classWithInterfaceToProxy,
                 interceptor);
 
@@ -42,11 +43,12 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousVoidMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenInterceptingSynchronousVoidMethods()
+        public WhenInterceptingSynchronousVoidMethods(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _proxy = ProxyGen.CreateProxy(_log, new TestAsyncInterceptor(_log));
         }
 
@@ -84,11 +86,12 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingSynchronousResultMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenInterceptingSynchronousResultMethods()
+        public WhenInterceptingSynchronousResultMethods(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _proxy = ProxyGen.CreateProxy(_log, new TestAsyncInterceptor(_log));
         }
 
@@ -127,11 +130,12 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousVoidMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenInterceptingAsynchronousVoidMethods()
+        public WhenInterceptingAsynchronousVoidMethods(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _proxy = ProxyGen.CreateProxy(_log, new TestAsyncInterceptor(_log));
         }
 
@@ -169,11 +173,12 @@ namespace Castle.DynamicProxy
     public class WhenInterceptingAsynchronousResultMethods
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
-        private readonly ListLogger _log = new ListLogger();
+        private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenInterceptingAsynchronousResultMethods()
+        public WhenInterceptingAsynchronousResultMethods(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _proxy = ProxyGen.CreateProxy(_log, new TestAsyncInterceptor(_log));
         }
 

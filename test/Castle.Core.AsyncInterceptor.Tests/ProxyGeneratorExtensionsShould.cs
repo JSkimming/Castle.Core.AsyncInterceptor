@@ -9,10 +9,17 @@ namespace Castle.DynamicProxy
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class ProxyGeneratorExtensionsShould
     {
         private static readonly IProxyGenerator Generator = new ProxyGenerator();
+        private readonly ListLogger _log;
+
+        public ProxyGeneratorExtensionsShould(ITestOutputHelper output)
+        {
+            _log = new ListLogger(output);
+        }
 
         public static IEnumerable<object[]> InterfaceProxyFactories()
         {
@@ -74,25 +81,24 @@ namespace Castle.DynamicProxy
                     new TestAsyncInterceptor(log)),
             };
 
-            return proxyFactories.Select(p => new object[] { p, new ListLogger() });
+            return proxyFactories.Select(p => new object[] { p });
         }
 
         [Theory]
         [MemberData(nameof(InterfaceProxyFactories))]
         public async Task ExtendInterfaceProxyGenerator(
-            Func<IProxyGenerator, ListLogger, IInterfaceToProxy> proxyFactory,
-            ListLogger log)
+            Func<IProxyGenerator, ListLogger, IInterfaceToProxy> proxyFactory)
         {
             // Act
-            IInterfaceToProxy proxy = proxyFactory(Generator, log);
+            IInterfaceToProxy proxy = proxyFactory(Generator, _log);
             Guid result = await proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             const string methodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
             Assert.NotEqual(Guid.Empty, result);
-            Assert.Equal(4, log.Count);
-            Assert.Equal($"{methodName}:InterceptStart", log[0]);
-            Assert.Equal($"{methodName}:InterceptEnd", log[3]);
+            Assert.Equal(4, _log.Count);
+            Assert.Equal($"{methodName}:InterceptStart", _log[0]);
+            Assert.Equal($"{methodName}:InterceptEnd", _log[3]);
         }
 
         public static IEnumerable<object[]> ClassProxyFactories()
@@ -181,24 +187,25 @@ namespace Castle.DynamicProxy
                     new TestAsyncInterceptor(log)),
             };
 
-            return proxyFactories.Select(p => new object[] { p, new ListLogger() });
+            return proxyFactories.Select(p => new object[] { p });
         }
 
         [Theory]
         [MemberData(nameof(ClassProxyFactories))]
         public async Task ExtendClassProxyGenerator(
-            Func<IProxyGenerator, ListLogger, ClassWithVirtualMethodToProxy> proxyFactory,
-            ListLogger log)
+            Func<IProxyGenerator, ListLogger, ClassWithVirtualMethodToProxy> proxyFactory)
         {
             // Act
-            ClassWithVirtualMethodToProxy proxy = proxyFactory(Generator, log);
+            ClassWithVirtualMethodToProxy proxy = proxyFactory(Generator, _log);
+            proxy.PostConstructorInitialize(_log);
+
             Guid result = await proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
             // Assert
             const string methodName = nameof(ClassWithVirtualMethodToProxy.AsynchronousResultMethod);
             Assert.NotEqual(Guid.Empty, result);
-            Assert.Equal($"{methodName}:InterceptStart", log.First());
-            Assert.Equal($"{methodName}:InterceptEnd", log.Last());
+            Assert.Equal($"{methodName}:InterceptStart", _log.First());
+            Assert.Equal($"{methodName}:InterceptEnd", _log.Last());
         }
     }
 }

@@ -6,12 +6,20 @@ namespace Castle.DynamicProxy
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Xunit.Abstractions;
 
     public class ListLogger
     {
         private readonly List<string> _log = new List<string>(8);
 
         private readonly object _lock = new object();
+
+        private readonly ITestOutputHelper _output;
+
+        public ListLogger(ITestOutputHelper output)
+        {
+            _output = output ?? throw new ArgumentNullException(nameof(output));
+        }
 
         public int Count
         {
@@ -53,6 +61,7 @@ namespace Castle.DynamicProxy
 
         public void Add(string message)
         {
+            _output.WriteLine(message);
             lock (_lock)
             {
                 _log.Add(message);
