@@ -51,7 +51,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous);
+            invocation.ReturnValue = InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedAsynchronous);
         }
 
         /// <summary>
@@ -61,27 +61,34 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         void IAsyncInterceptor.InterceptAsynchronous<TResult>(IInvocation invocation)
         {
-            invocation.ReturnValue = InterceptAsync(invocation, ProceedAsynchronous<TResult>);
+            invocation.ReturnValue =
+                InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedAsynchronous<TResult>);
         }
 
         /// <summary>
         /// Override in derived classes to intercept method invocations.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+        /// <param name="proceedInfo">The <see cref="IInvocationProceedInfo"/>.</param>
+        /// <param name="proceed">The function to proceed the <paramref name="proceedInfo"/>.</param>
         /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
-        protected abstract Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed);
+        protected abstract Task InterceptAsync(
+            IInvocation invocation,
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocation, IInvocationProceedInfo, Task> proceed);
 
         /// <summary>
         /// Override in derived classes to intercept method invocations.
         /// </summary>
         /// <typeparam name="TResult">The type of the <see cref="Task{T}"/> <see cref="Task{T}.Result"/>.</typeparam>
         /// <param name="invocation">The method invocation.</param>
-        /// <param name="proceed">The function to proceed the <paramref name="invocation"/>.</param>
+        /// <param name="proceedInfo">The <see cref="IInvocationProceedInfo"/>.</param>
+        /// <param name="proceed">The function to proceed the <paramref name="proceedInfo"/>.</param>
         /// <returns>A <see cref="Task" /> object that represents the asynchronous operation.</returns>
         protected abstract Task<TResult> InterceptAsync<TResult>(
             IInvocation invocation,
-            Func<IInvocation, Task<TResult>> proceed);
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed);
 
         private static GenericSynchronousHandler CreateHandler(Type returnType)
         {
@@ -91,7 +98,7 @@ namespace Castle.DynamicProxy
 
         private static void InterceptSynchronousVoid(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task task = me.InterceptAsync(invocation, ProceedSynchronous);
+            Task task = me.InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedSynchronous);
 
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
@@ -110,7 +117,7 @@ namespace Castle.DynamicProxy
 
         private static void InterceptSynchronousResult<TResult>(AsyncInterceptorBase me, IInvocation invocation)
         {
-            Task<TResult> task = me.InterceptAsync(invocation, ProceedSynchronous<TResult>);
+            Task<TResult> task = me.InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedSynchronous<TResult>);
 
             // If the intercept task has yet to complete, wait for it.
             if (!task.IsCompleted)
@@ -127,11 +134,11 @@ namespace Castle.DynamicProxy
             }
         }
 
-        private static Task ProceedSynchronous(IInvocation invocation)
+        private static Task ProceedSynchronous(IInvocation invocation, IInvocationProceedInfo proceedInfo)
         {
             try
             {
-                invocation.Proceed();
+                proceedInfo.Invoke();
 #if NETSTANDARD2_0
                 return Task.CompletedTask;
 #else
@@ -150,11 +157,13 @@ namespace Castle.DynamicProxy
             }
         }
 
-        private static Task<TResult> ProceedSynchronous<TResult>(IInvocation invocation)
+        private static Task<TResult> ProceedSynchronous<TResult>(
+            IInvocation invocation,
+            IInvocationProceedInfo proceedInfo)
         {
             try
             {
-                invocation.Proceed();
+                proceedInfo.Invoke();
                 return Task.FromResult((TResult)invocation.ReturnValue);
             }
             catch (Exception e)
@@ -169,9 +178,9 @@ namespace Castle.DynamicProxy
             }
         }
 
-        private static async Task ProceedAsynchronous(IInvocation invocation)
+        private static async Task ProceedAsynchronous(IInvocation invocation, IInvocationProceedInfo proceedInfo)
         {
-            invocation.Proceed();
+            proceedInfo.Invoke();
 
             // Get the task to await.
             var originalReturnValue = (Task)invocation.ReturnValue;
@@ -179,9 +188,11 @@ namespace Castle.DynamicProxy
             await originalReturnValue.ConfigureAwait(false);
         }
 
-        private static async Task<TResult> ProceedAsynchronous<TResult>(IInvocation invocation)
+        private static async Task<TResult> ProceedAsynchronous<TResult>(
+            IInvocation invocation,
+            IInvocationProceedInfo proceedInfo)
         {
-            invocation.Proceed();
+            proceedInfo.Invoke();
 
             // Get the task to await.
             var originalReturnValue = (Task<TResult>)invocation.ReturnValue;

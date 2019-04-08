@@ -8,16 +8,22 @@ namespace Castle.DynamicProxy
     using System.Linq;
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
-    using Moq;
     using Xunit;
     using Xunit.Abstractions;
 
     public class AsyncDeterminationInterceptorShould
     {
+        private readonly ITestOutputHelper _output;
+
+        public AsyncDeterminationInterceptorShould(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void Implement_IInterceptor()
         {
-            var sut = new AsyncDeterminationInterceptor(new Mock<IAsyncInterceptor>().Object);
+            var sut = new AsyncDeterminationInterceptor(new TestAsyncInterceptor(new ListLogger(_output)));
 
             Assert.IsAssignableFrom<IInterceptor>(sut);
         }
@@ -29,13 +35,13 @@ namespace Castle.DynamicProxy
 
         public static IInterfaceToProxy CreateProxy(ListLogger log, IAsyncInterceptor interceptor)
         {
-            // Arrange
-            var classWithInterfaceToProxy = new ClassWithInterfaceToProxy(log);
+            return CreateProxy(() => new ClassWithInterfaceToProxy(log), interceptor);
+        }
 
-            IInterfaceToProxy proxy = Generator.CreateInterfaceProxyWithTargetInterface<IInterfaceToProxy>(
-                classWithInterfaceToProxy,
-                interceptor);
-
+        public static IInterfaceToProxy CreateProxy(Func<IInterfaceToProxy> factory, IAsyncInterceptor interceptor)
+        {
+            IInterfaceToProxy implementation = factory();
+            IInterfaceToProxy proxy = Generator.CreateInterfaceProxyWithTargetInterface(implementation, interceptor);
             return proxy;
         }
     }
