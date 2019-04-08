@@ -9,13 +9,15 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class TestAsyncInterceptorBase : AsyncInterceptorBase
     {
-        private readonly int _msDeley;
         private readonly ListLogger _log;
+        private readonly bool _asyncB4Proceed;
+        private readonly int _msDelayAfterProceed;
 
-        public TestAsyncInterceptorBase(ListLogger log, int msDeley)
+        public TestAsyncInterceptorBase(ListLogger log, bool asyncB4Proceed, int msDelayAfterProceed)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
-            _msDeley = msDeley;
+            _asyncB4Proceed = asyncB4Proceed;
+            _msDelayAfterProceed = msDelayAfterProceed;
         }
 
         protected override async Task InterceptAsync(
@@ -27,11 +29,13 @@ namespace Castle.DynamicProxy.InterfaceProxies
             {
                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
-                await Task.Yield();
+                if (_asyncB4Proceed)
+                    await Task.Yield();
+
                 await proceed(invocation, proceedInfo).ConfigureAwait(false);
 
-                if (_msDeley > 0)
-                    await Task.Delay(_msDeley).ConfigureAwait(false);
+                if (_msDelayAfterProceed > 0)
+                    await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
 
                 _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
             }
@@ -51,10 +55,13 @@ namespace Castle.DynamicProxy.InterfaceProxies
             {
                 _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 
+                if (_asyncB4Proceed)
+                    await Task.Yield();
+
                 TResult result = await proceed(invocation, proceedInfo).ConfigureAwait(false);
 
-                if (_msDeley > 0)
-                    await Task.Delay(_msDeley).ConfigureAwait(false);
+                if (_msDelayAfterProceed > 0)
+                    await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
 
                 _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
                 return result;
