@@ -8,16 +8,22 @@ namespace Castle.DynamicProxy
     using System.Linq;
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
-    using Moq;
     using Xunit;
     using Xunit.Abstractions;
 
     public class AsyncDeterminationInterceptorShould
     {
+        private readonly ITestOutputHelper _output;
+
+        public AsyncDeterminationInterceptorShould(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void Implement_IInterceptor()
         {
-            var sut = new AsyncDeterminationInterceptor(new Mock<IAsyncInterceptor>().Object);
+            var sut = new AsyncDeterminationInterceptor(new TestAsyncInterceptor(new ListLogger(_output)));
 
             Assert.IsAssignableFrom<IInterceptor>(sut);
         }
