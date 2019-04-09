@@ -1,0 +1,40 @@
+version: 2.1
+
+orbs:
+
+  build:
+    jobs:
+      run-build:
+        executor: dotnet-build-executor
+        steps:
+          - checkout
+          - run:
+              name: Restore
+              command: dotnet restore
+          - run:
+              name: Build
+              command: dotnet build --no-restore -f netcoreapp2.0 -c Debug ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+          - run:
+              name: Test
+              command: dotnet test --no-restore --no-build -c Debug -f netcoreapp2.0 ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+
+    executors:
+      dotnet-build-executor:
+        parameters:
+          tag:
+            type: string
+            default: "2.2"
+        docker:
+          - image: mcr.microsoft.com/dotnet/core/sdk:<<parameters.tag>>
+
+workflows:
+
+  "Build All Frameworks":
+    jobs:
+      - build/run-build:
+          name: "Build .NET Core 2.2"
+          filters:
+            branches:
+              only:
+                - master
+                - /pull\/.*/
