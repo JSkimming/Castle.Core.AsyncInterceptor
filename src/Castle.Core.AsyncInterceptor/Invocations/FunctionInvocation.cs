@@ -3,8 +3,6 @@
 
 namespace Castle.DynamicProxy.Invocations
 {
-    using System.Collections.Generic;
-
     /// <inheritdoc cref="IFunctionInvocation{TResult}" />
     internal class FunctionInvocation<TResult> : InvocationBase, IFunctionInvocation<TResult>
     {
@@ -22,8 +20,7 @@ namespace Castle.DynamicProxy.Invocations
         /// <inheritdoc />
         public TResult Proceed()
         {
-            Invocation.Proceed();
-            return (TResult)Invocation.ReturnValue;
+            return (TResult)InvokeProceed();
         }
     }
 }

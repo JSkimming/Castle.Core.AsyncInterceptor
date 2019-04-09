@@ -23,8 +23,7 @@ namespace Castle.DynamicProxy.Invocations
         /// <inheritdoc />
         public Task<TResult> ProceedAsync()
         {
-            Invocation.Proceed();
-            return (Task<TResult>)Invocation.ReturnValue;
+            return (Task<TResult>)InvokeProceed();
         }
     }
 }

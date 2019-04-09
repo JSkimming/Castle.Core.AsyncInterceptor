@@ -10,6 +10,9 @@ namespace Castle.DynamicProxy.Invocations
     /// <inheritdoc />
     internal abstract class InvocationBase : IAsyncInvocation
     {
+        private readonly IInvocationProceedInfo _proceedInfo;
+        private readonly IInvocation _invocation;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InvocationBase"/> class.
         /// </summary>
@@ -18,49 +21,54 @@ namespace Castle.DynamicProxy.Invocations
         /// </param>
         protected InvocationBase(IInvocation invocation)
         {
-            Invocation = invocation;
+            _invocation = invocation;
+            _proceedInfo = invocation.CaptureProceedInfo();
         }
 
         /// <inheritdoc />
-        public object[] Arguments => Invocation.Arguments;
+        public object[] Arguments => _invocation.Arguments;
 
         /// <inheritdoc />
-        public Type[] GenericArguments => Invocation.GenericArguments;
+        public Type[] GenericArguments => _invocation.GenericArguments;
 
         /// <inheritdoc />
-        public object InvocationTarget => Invocation.InvocationTarget;
+        public object InvocationTarget => _invocation.InvocationTarget;
 
         /// <inheritdoc />
-        public MethodInfo Method => Invocation.Method;
+        public MethodInfo Method => _invocation.Method;
 
         /// <inheritdoc />
-        public MethodInfo MethodInvocationTarget => Invocation.MethodInvocationTarget;
+        public MethodInfo MethodInvocationTarget => _invocation.MethodInvocationTarget;
 
         /// <inheritdoc />
-        public object Proxy => Invocation.Proxy;
+        public object Proxy => _invocation.Proxy;
 
         /// <inheritdoc />
-        public Type TargetType => Invocation.TargetType;
+        public Type TargetType => _invocation.TargetType;
+
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public object GetArgumentValue(int index) => _invocation.GetArgumentValue(index);
+
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public MethodInfo GetConcreteMethod() => _invocation.GetConcreteMethod();
+
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public MethodInfo GetConcreteMethodInvocationTarget() => _invocation.GetConcreteMethodInvocationTarget();
+
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetArgumentValue(int index, object value) => _invocation.SetArgumentValue(index, value);
 
         /// <summary>
-        /// Gets the Castle's invocation
+        /// Invokes proceed.
         /// </summary>
-        protected IInvocation Invocation { get; }
-
-        /// <inheritdoc />
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public object GetArgumentValue(int index) => Invocation.GetArgumentValue(index);
-
-        /// <inheritdoc />
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public MethodInfo GetConcreteMethod() => Invocation.GetConcreteMethod();
-
-        /// <inheritdoc />
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public MethodInfo GetConcreteMethodInvocationTarget() => Invocation.GetConcreteMethodInvocationTarget();
-
-        /// <inheritdoc />
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetArgumentValue(int index, object value) => Invocation.SetArgumentValue(index, value);
+        protected object InvokeProceed()
+        {
+            _proceedInfo.Invoke();
+            return _invocation.ReturnValue;
+        }
     }
 }

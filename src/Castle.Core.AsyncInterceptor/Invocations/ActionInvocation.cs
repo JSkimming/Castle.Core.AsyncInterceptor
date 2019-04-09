@@ -22,7 +22,7 @@ namespace Castle.DynamicProxy.Invocations
         /// <inheritdoc />
         public void Proceed()
         {
-            Invocation.Proceed();
+            InvokeProceed();
         }
     }
 }
