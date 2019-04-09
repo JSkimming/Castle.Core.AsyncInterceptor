@@ -7,6 +7,7 @@ namespace Castle.DynamicProxy
     using System.Collections.Concurrent;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Castle.DynamicProxy.NoCoverage;
 
     /// <summary>
     /// A base type for an <see cref="IAsyncInterceptor"/> to provided a simplified solution of method
@@ -109,10 +110,7 @@ namespace Castle.DynamicProxy
                 Task.Run(() => task).GetAwaiter().GetResult();
             }
 
-            if (task.IsFaulted)
-            {
-                throw task.Exception.InnerException;
-            }
+            task.RethrowIfFaulted();
         }
 
         private static void InterceptSynchronousResult<TResult>(AsyncInterceptorBase me, IInvocation invocation)
@@ -128,10 +126,7 @@ namespace Castle.DynamicProxy
                 Task.Run(() => task).GetAwaiter().GetResult();
             }
 
-            if (task.IsFaulted)
-            {
-                throw task.Exception.InnerException;
-            }
+            task.RethrowIfFaulted();
         }
 
         private static Task ProceedSynchronous(IInvocation invocation, IInvocationProceedInfo proceedInfo)
