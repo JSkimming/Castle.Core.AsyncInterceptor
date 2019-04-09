@@ -3,6 +3,7 @@
 [![NuGet Version](https://img.shields.io/nuget/v/Castle.Core.AsyncInterceptor.svg)](https://www.nuget.org/packages/Castle.Core.AsyncInterceptor "NuGet Version")
 [![Build status](https://img.shields.io/appveyor/ci/JSkimming/castle-core-asyncinterceptor/master.svg?label=Windows)](https://ci.appveyor.com/project/JSkimming/castle-core-asyncinterceptor "AppVeyor build status")
 [![Travis build Status](https://img.shields.io/travis/JSkimming/Castle.Core.AsyncInterceptor/master.svg?label=Linux/Mac)](https://travis-ci.org/JSkimming/Castle.Core.AsyncInterceptor "Travis build status")
+[![CircleCI build Status](https://img.shields.io/circleci/project/github/JSkimming/Castle.Core.AsyncInterceptor/master.svg?label=CircleCI)](https://circleci.com/gh/JSkimming/Castle.Core.AsyncInterceptor/tree/master "CircleCI build Status")
 [![codecov](https://img.shields.io/codecov/c/github/JSkimming/Castle.Core.AsyncInterceptor/master.svg)](https://codecov.io/gh/JSkimming/Castle.Core.AsyncInterceptor "Code coverage")
 [![Latest release](https://img.shields.io/github/release/JSkimming/Castle.Core.AsyncInterceptor.svg)](https://github.com/JSkimming/Castle.Core.AsyncInterceptor/releases "Latest release")
 <!--[![Coverity Scan Status](https://img.shields.io/coverity/scan/4829.svg)](https://scan.coverity.com/projects/4829 "Coverity Scan Status")-->
