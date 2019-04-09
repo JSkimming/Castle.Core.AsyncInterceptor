@@ -13,6 +13,9 @@ orbs:
           build-config:
             description: The build configuration, either Debug or Release.
             type: string
+          framework:
+            description: The .NET Core App framework target.
+            type: string
         executor:
           name: dotnet-build-executor
           tag: << parameters.image-tag >>
@@ -23,10 +26,10 @@ orbs:
               command: dotnet restore
           - run:
               name: Build
-              command: dotnet build --no-restore -f netcoreapp2.0 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+              command: dotnet build --no-restore -f << parameters.framework >> -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
           - run:
               name: Test
-              command: dotnet test --no-restore --no-build -f netcoreapp2.0 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+              command: dotnet test --no-restore --no-build -f << parameters.framework >> -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 
       # The --no-restore parameter was added in .NET Core 2, so add a dedicated job for building .NET Core 1.1
       run-build-1-1:
@@ -73,15 +76,19 @@ workflows:
           name: 2.1 Debug Build
           image-tag: "2.1"
           build-config: Debug
+          framework: netcoreapp2.0
       - build/run-build:
           name: 2.1 Release Build
           image-tag: "2.1"
           build-config: Release
+          framework: netcoreapp2.0
       - build/run-build:
           name: 2.2 Debug Build
           image-tag: "2.2"
           build-config: Debug
+          framework: netcoreapp2.0
       - build/run-build:
           name: 2.2 Release Build
           image-tag: "2.2"
           build-config: Release
+          framework: netcoreapp2.0
