@@ -8,9 +8,9 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class TestProcessingReturnValueAsyncInterceptor : ProcessingAsyncInterceptor<object>
     {
-        private readonly ICollection<string> _log;
+        private readonly ListLogger _log;
 
-        public TestProcessingReturnValueAsyncInterceptor(List<string> log)
+        public TestProcessingReturnValueAsyncInterceptor(ListLogger log)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }

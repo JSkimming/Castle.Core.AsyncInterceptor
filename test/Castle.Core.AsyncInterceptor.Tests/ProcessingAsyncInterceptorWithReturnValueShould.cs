@@ -9,16 +9,18 @@ namespace Castle.DynamicProxy
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
     using Xunit;
+    using Xunit.Abstractions;
 
     public class WhenProcessingSynchronousVoidMethodsWithTheReturnValue
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log;
         private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenProcessingSynchronousVoidMethodsWithTheReturnValue()
+        public WhenProcessingSynchronousVoidMethodsWithTheReturnValue(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
@@ -57,12 +59,13 @@ namespace Castle.DynamicProxy
     public class WhenProcessingSynchronousResultMethodsWithTheReturnValue
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log;
         private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenProcessingSynchronousResultMethodsWithTheReturnValue()
+        public WhenProcessingSynchronousResultMethodsWithTheReturnValue(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
@@ -101,12 +104,13 @@ namespace Castle.DynamicProxy
     public class WhenProcessingAsynchronousVoidMethodsWithTheReturnValue
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log;
         private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenProcessingAsynchronousVoidMethodsWithTheReturnValue()
+        public WhenProcessingAsynchronousVoidMethodsWithTheReturnValue(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
@@ -145,12 +149,13 @@ namespace Castle.DynamicProxy
     public class WhenProcessingAsynchronousResultMethodsWithTheReturnValue
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
-        private readonly List<string> _log = new List<string>();
+        private readonly ListLogger _log;
         private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
         private readonly IInterfaceToProxy _proxy;
 
-        public WhenProcessingAsynchronousResultMethodsWithTheReturnValue()
+        public WhenProcessingAsynchronousResultMethodsWithTheReturnValue(ITestOutputHelper output)
         {
+            _log = new ListLogger(output);
             _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }

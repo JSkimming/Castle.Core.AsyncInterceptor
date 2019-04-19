@@ -9,7 +9,7 @@
 #---------------------------------#
 
 # version format
-version: 1.6.{build}
+version: 2.0.{build}-alpha
 pull_requests:
   do_not_increment_build_number: true
 
@@ -58,7 +58,8 @@ build_script:
 
 artifacts:
   - path: src\**\*.nupkg
-  - path: test\TestResults
+  - path: TestResults_*.7z
+    name: TestResults
 
 #---------------------------------#
 #       tests configuration       #
@@ -66,13 +67,13 @@ artifacts:
 
 test_script:
   - coverage.cmd %CONFIGURATION%
-  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
-  - pip install codecov
-  - codecov -f "test\TestResults\Test.Coverage.xml"
 
-after_test: |
-  FOR /r %%F IN (*coveralls.net.exe) DO SET coveralls_exe=%%F
-  %coveralls_exe% --opencover test\TestResults\Test.Coverage.xml
+after_test:
+  - choco install codecov
+  - codecov -f "test\TestResults\Test.Coverage.xml"
+  - dotnet tool install -g coveralls.net --version 1.0.0
+  - IF DEFINED COVERALLS_REPO_TOKEN csmacnz.coveralls --opencover -i "./test/TestResults/Test.Coverage.xml" --treatUploadErrorsAsWarnings
+  - 7z a -t7z -mx9 -bd TestResults_%APPVEYOR_BUILD_VERSION%.7z .\test\TestResults\*
 
 #---------------------------------#
 #     deployment configuration    #

@@ -17,7 +17,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>
   </PropertyGroup>
-  
+
   <!-- Strong name signing -->
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -35,8 +35,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Core" Version="4.2.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="Castle.Core" Version="4.4.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-rc.114">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

@@ -9,25 +9,33 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class TestAsyncInterceptorBase : AsyncInterceptorBase
     {
-        private readonly int _msDeley;
-        private readonly ICollection<string> _log;
+        private readonly ListLogger _log;
+        private readonly bool _asyncB4Proceed;
+        private readonly int _msDelayAfterProceed;
 
-        public TestAsyncInterceptorBase(List<string> log, int msDeley)
+        public TestAsyncInterceptorBase(ListLogger log, bool asyncB4Proceed, int msDelayAfterProceed)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
-            _msDeley = msDeley;
+            _asyncB4Proceed = asyncB4Proceed;
+            _msDelayAfterProceed = msDelayAfterProceed;
         }
 
-        protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+        protected override async Task InterceptAsync(
+            IInvocation invocation,
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocation, IInvocationProceedInfo, Task> proceed)
         {
             try
             {
                 _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
 
-                await proceed(invocation).ConfigureAwait(false);
+                if (_asyncB4Proceed)
+                    await Task.Yield();
 
-                if (_msDeley > 0)
-                    await Task.Delay(_msDeley).ConfigureAwait(false);
+                await proceed(invocation, proceedInfo).ConfigureAwait(false);
+
+                if (_msDelayAfterProceed > 0)
+                    await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
 
                 _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
             }
@@ -40,16 +48,20 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         protected override async Task<TResult> InterceptAsync<TResult>(
             IInvocation invocation,
-            Func<IInvocation, Task<TResult>> proceed)
+            IInvocationProceedInfo proceedInfo,
+            Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
         {
             try
             {
                 _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 
-                TResult result = await proceed(invocation).ConfigureAwait(false);
+                if (_asyncB4Proceed)
+                    await Task.Yield();
 
-                if (_msDeley > 0)
-                    await Task.Delay(_msDeley).ConfigureAwait(false);
+                TResult result = await proceed(invocation, proceedInfo).ConfigureAwait(false);
+
+                if (_msDelayAfterProceed > 0)
+                    await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
 
                 _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
                 return result;
