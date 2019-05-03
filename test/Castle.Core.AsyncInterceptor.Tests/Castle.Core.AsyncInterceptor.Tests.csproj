@@ -2,11 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net47;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>Castle.DynamicProxy</RootNamespace>
+    <IsPackable>false</IsPackable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.msbuild" Version="2.6.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.analyzers" Version="0.10.0" />
