@@ -29,7 +29,10 @@ orbs:
               command: dotnet build --no-restore -f << parameters.framework >> -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
           - run:
               name: Test
-              command: dotnet test --no-restore --no-build -f << parameters.framework >> -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+              command: dotnet test --no-restore --no-build -f << parameters.framework >> -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj /p:CollectCoverage=true /p:Include="[Castle.Core.AsyncInterceptor]*" /p:Exclude="[*.Tests]*"
+          - store_artifacts:
+              path: ./test/Castle.Core.AsyncInterceptor.Tests/coverage.json
+              destination: coverage.json
 
       # The --no-restore parameter was added in .NET Core 2, so add a dedicated job for building .NET Core 1.1
       run-build-1-1:
@@ -50,7 +53,7 @@ orbs:
               command: dotnet build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
           - run:
               name: Test
-              command: dotnet test --no-build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+              command: dotnet test --no-build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj /p:CollectCoverage=true /p:Include="[Castle.Core.AsyncInterceptor]*" /p:Exclude="[*.Tests]*"
 
     executors:
 
