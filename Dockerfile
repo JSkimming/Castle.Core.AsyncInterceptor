@@ -20,7 +20,7 @@ COPY . .
 RUN dotnet build -f netcoreapp1.1 -c Debug ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 
 # Run unit tests
-RUN dotnet test --no-build -c Debug -f netcoreapp1.1 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+RUN dotnet test --no-build -c Debug -f netcoreapp1.1 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj /p:CollectCoverage=true /p:Include="[Castle.Core.AsyncInterceptor]*" /p:Exclude="[*.Tests]*"
 
 ########################################################################################################################
 # .NET Core 2.1
@@ -44,7 +44,7 @@ COPY . .
 RUN dotnet build --no-restore -f netcoreapp2.0 -c Debug ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 
 # Run unit tests
-RUN dotnet test --no-restore --no-build -c Debug -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+RUN dotnet test --no-restore --no-build -c Debug -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj /p:CollectCoverage=true /p:Include="[Castle.Core.AsyncInterceptor]*" /p:Exclude="[*.Tests]*"
 
 ########################################################################################################################
 # .NET Core 2.2
@@ -68,4 +68,4 @@ COPY . .
 RUN dotnet build --no-restore -f netcoreapp2.0 -c Debug ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 
 # Run unit tests
-RUN dotnet test --no-restore --no-build -c Debug -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+RUN dotnet test --no-restore --no-build -c Debug -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj /p:CollectCoverage=true /p:Include="[Castle.Core.AsyncInterceptor]*" /p:Exclude="[*.Tests]*"
