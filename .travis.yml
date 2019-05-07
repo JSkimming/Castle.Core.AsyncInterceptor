@@ -7,14 +7,15 @@ matrix:
 
   include:
     - os: linux
-      dotnet: 2.0.0
+      dotnet: 2.1
       mono: none
     - os: osx
-      dotnet: 2.0.0
+      dotnet: 2.1.506
       mono: none
 
 branches:
   only:
   - master
+
 script:
-  - dotnet test -c Release -f netcoreapp2.0 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+  - ./coverage.sh netcoreapp2.1 Release
