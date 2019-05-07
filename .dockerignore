@@ -1,8 +1,8 @@
 **/obj
 **/bin
 .vs
-*.sh
 .git
 .gitignore
 .circleci
 Dockerfile
+**/TestResults
