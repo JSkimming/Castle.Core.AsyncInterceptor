@@ -45,16 +45,16 @@
 ::@echo %xunit_exe%
 
 @SET results_path=%~dp0test\TestResults
-@SET test_assemblies=%~dp0test\Castle.Core.AsyncInterceptor.Tests\bin\%config%\net47\Castle.Core.AsyncInterceptor.Tests.dll
-::@SET test_assemblies=%test_assemblies% %~dp0test\More.Tests\bin\%config%\net47\More.Tests.dll
+@SET test_assemblies=%~dp0test\Castle.Core.AsyncInterceptor.Tests\bin\%config%\net472\Castle.Core.AsyncInterceptor.Tests.dll
+::@SET test_assemblies=%test_assemblies% %~dp0test\More.Tests\bin\%config%\net472\More.Tests.dll
 @SET xunit_results=%results_path%\Xunit.Tests.html
 @SET coverage_filter=+[Castle.Core.AsyncInterceptor*]* -[*.Tests]*
 @SET coverage_results=%results_path%\Test.Coverage.xml
 
 @IF NOT EXIST "%results_path%" MD "%results_path%"
 
-@echo dotnet build --configuration %config% "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
-@dotnet build --configuration %config% "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
+@echo dotnet build --framework net472 --configuration %config% "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
+@dotnet build --framework net472 --configuration %config% "%~dp0test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj"
 @IF ERRORLEVEL 1 (
    echo Error building the test project
    EXIT /B 2
@@ -70,5 +70,5 @@
    EXIT /B 2
 )
 
-@echo "%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
-@"%report_exe%" -verbosity:Error "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
+@echo "%report_exe%" -verbosity:Info "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
+@"%report_exe%" -verbosity:Info "-reports:%coverage_results%" "-targetdir:%results_path%\Report" -reporttypes:Html
