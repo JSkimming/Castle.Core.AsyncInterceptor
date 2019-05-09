@@ -57,7 +57,7 @@ orbs:
               command: dotnet build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
           - run:
               name: Test
-              command: dotnet test --no-build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj /p:CollectCoverage=true /p:Include="[Castle.Core.AsyncInterceptor]*" /p:Exclude="[*.Tests]*"
+              command: dotnet test --no-build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 
     executors:
 
