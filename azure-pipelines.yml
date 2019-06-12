@@ -1,0 +1,100 @@
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+jobs:
+
+- job: ShellBuild
+  displayName: "Build"
+  continueOnError: true
+  strategy:
+    matrix:
+      "Linux 2.1 Debug":
+        sdkVersion: "2.1.x"
+        config: Debug
+        imageName: ubuntu-latest
+        framework: netcoreapp2.1
+      "Linux 2.1 Release":
+        sdkVersion: "2.1.x"
+        config: Release
+        imageName: ubuntu-latest
+        framework: netcoreapp2.1
+      "Linux 2.2 Debug":
+        sdkVersion: "2.2.x"
+        config: Debug
+        imageName: ubuntu-latest
+        framework: netcoreapp2.1
+      "Linux 2.2 Release":
+        sdkVersion: "2.2.x"
+        config: Release
+        imageName: ubuntu-latest
+        framework: netcoreapp2.1
+      "MacOS 2.1 Debug":
+        sdkVersion: "2.1.x"
+        config: Debug
+        imageName: macOS-latest
+        framework: netcoreapp2.1
+      "MacOS 2.1 Release":
+        sdkVersion: "2.1.x"
+        config: Release
+        imageName: macOS-latest
+        framework: netcoreapp2.1
+      "MacOS 2.2 Debug":
+        sdkVersion: "2.2.x"
+        config: Debug
+        imageName: macOS-latest
+        framework: netcoreapp2.1
+      "MacOS 2.2 Release":
+        sdkVersion: "2.2.x"
+        config: Release
+        imageName: macOS-latest
+        framework: netcoreapp2.1
+  pool:
+    vmImage: $(imageName)
+  steps:
+
+  - task: UseDotNet@2
+    inputs:
+      version: $(sdkVersion)
+    displayName: Install .NET Core SDK
+
+  - task: ShellScript@2
+    inputs:
+      scriptPath: ./coverage.sh
+      args: "$(framework) $(config)"
+    displayName: Test Coverage
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: VSTest
+      testResultsFiles: "**/*.trx"
+      failTaskOnFailedTests: true
+      buildConfiguration: $(config)
+      publishRunAttachments: true
+    displayName: Publish test results
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: ./test/TestResults/output/coverage.cobertura.xml
+    displayName: Publish code coverage
+
+- job: CmdBuild
+  displayName: "Build"
+  continueOnError: true
+  strategy:
+    matrix:
+      "Windows .NET Framework Debug":
+        config: Debug
+      "Windows .NET Framework Release":
+        config: Release
+  pool:
+    vmImage: windows-latest
+  steps:
+
+  - task: BatchScript@1
+    inputs:
+      filename: ./coverage.cmd
+      arguments: "$(config)"
+    displayName: Test Coverage
