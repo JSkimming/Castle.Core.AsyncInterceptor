@@ -27,14 +27,8 @@ orbs:
               name: Test Coverage
               command: ./coverage.sh << parameters.framework >> << parameters.build-config >>
           - store_artifacts:
-              path: ./test/TestResults/coverage.json
-              destination: coverage.json
-          - store_artifacts:
-              path: ./test/TestResults/coverage.opencover.xml
-              destination: coverage.opencover.xml
-          - store_artifacts:
-              path: ./test/TestResults/Report/
-              destination: report
+              path: ./test/TestResults/output/
+              destination: /
           - store_test_results:
               path: ./test/TestResults/output/
 
