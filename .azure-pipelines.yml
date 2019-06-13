@@ -7,49 +7,52 @@ jobs:
 
 - job: ShellBuild
   displayName: "Build"
-  continueOnError: true
+  continueOnError: "true"
+  timeoutInMinutes: 5
+  variables:
+    buildFramework: netcoreapp2.1
   strategy:
     matrix:
       "Linux 2.1 Debug":
         sdkVersion: "2.1.x"
         config: Debug
         imageName: ubuntu-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
       "Linux 2.1 Release":
         sdkVersion: "2.1.x"
         config: Release
         imageName: ubuntu-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
       "Linux 2.2 Debug":
         sdkVersion: "2.2.x"
         config: Debug
         imageName: ubuntu-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
       "Linux 2.2 Release":
         sdkVersion: "2.2.x"
         config: Release
         imageName: ubuntu-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
       "MacOS 2.1 Debug":
         sdkVersion: "2.1.x"
         config: Debug
         imageName: macOS-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
       "MacOS 2.1 Release":
         sdkVersion: "2.1.x"
         config: Release
         imageName: macOS-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
       "MacOS 2.2 Debug":
         sdkVersion: "2.2.x"
         config: Debug
         imageName: macOS-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
       "MacOS 2.2 Release":
         sdkVersion: "2.2.x"
         config: Release
         imageName: macOS-latest
-        framework: netcoreapp2.1
+        framework: $(buildFramework)
   pool:
     vmImage: $(imageName)
   steps:
@@ -82,7 +85,7 @@ jobs:
 
 - job: CmdBuild
   displayName: "Build"
-  continueOnError: true
+  continueOnError: "true"
   strategy:
     matrix:
       "Windows .NET Framework Debug":
