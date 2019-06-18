@@ -38,7 +38,15 @@ namespace Castle.DynamicProxy
             {
                 lock (_lock)
                 {
-                    return _log[index];
+                    if (index >= 0 && index < _log.Count)
+                    {
+                        return _log[index];
+                    }
+
+                    throw new ArgumentOutOfRangeException(
+                        nameof(index),
+                        $"There are '{_log.Count} logs but the index '{index}' was expected. " +
+                        $"{string.Join(Environment.NewLine, _log.Prepend("Logs:"))}");
                 }
             }
         }
@@ -47,7 +55,7 @@ namespace Castle.DynamicProxy
         {
             lock (_lock)
             {
-                return _log[0];
+                return this[0];
             }
         }
 
@@ -55,7 +63,7 @@ namespace Castle.DynamicProxy
         {
             lock (_lock)
             {
-                return _log[_log.Count - 1];
+                return this[_log.Count - 1];
             }
         }
 
