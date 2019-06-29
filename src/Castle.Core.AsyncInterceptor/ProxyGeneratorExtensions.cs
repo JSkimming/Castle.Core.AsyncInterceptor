@@ -147,7 +147,6 @@ namespace Castle.DynamicProxy
             this IProxyGenerator proxyGenerator,
             TInterface target,
             params IAsyncInterceptor[] interceptors)
-            where TInterface : class
         {
             return proxyGenerator.CreateInterfaceProxyWithTargetInterface(target, interceptors.ToInterceptors());
         }
@@ -160,7 +159,6 @@ namespace Castle.DynamicProxy
             TInterface target,
             ProxyGenerationOptions options,
             params IAsyncInterceptor[] interceptors)
-            where TInterface : class
         {
             return proxyGenerator.CreateInterfaceProxyWithTargetInterface(
                 target,
