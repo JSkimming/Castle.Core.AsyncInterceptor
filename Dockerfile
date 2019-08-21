@@ -40,7 +40,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.1-alpine
 
 ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
-RUN apk add --update dos2unix && rm -rf /var/cache/apk/*
+RUN apk add --no-cache --update dos2unix
 
 WORKDIR /work
 
@@ -64,7 +64,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
 
 ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
-RUN apk add --update dos2unix && rm -rf /var/cache/apk/*
+RUN apk add --no-cache --update dos2unix
 
 WORKDIR /work
 
