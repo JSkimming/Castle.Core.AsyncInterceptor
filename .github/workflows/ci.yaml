@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+
+  pull_request:
+    branches:
+    - master
+
+jobs:
+
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+        - ubuntu-16.04
+        - ubuntu-18.04
+        config:
+        - Debug
+        - Release
+        dotnet:
+        - "2.1.801"
+        - "2.2.401"
+    name: ${{ matrix.os }} ${{ matrix.dotnet }} ${{ matrix.config }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1.0.2
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+    - name: Test Coverage
+      run: ./coverage.sh netcoreapp2.1 ${{ matrix.config }}
