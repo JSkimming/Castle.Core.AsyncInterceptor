@@ -14,12 +14,14 @@ namespace Castle.DynamicProxy
 
         private readonly object _lock = new object();
 
-        private readonly ITestOutputHelper _output;
-
         public ListLogger(ITestOutputHelper output)
         {
-            _output = output ?? throw new ArgumentNullException(nameof(output));
+            Output = output ?? throw new ArgumentNullException(nameof(output));
         }
+
+        public ITestOutputHelper Output { get; }
+
+        public bool Disabled { get; private set; }
 
         public int Count
         {
@@ -51,13 +53,17 @@ namespace Castle.DynamicProxy
             }
         }
 
-        public string First()
+        public bool Disable(bool disable = true)
         {
             lock (_lock)
             {
-                return this[0];
+                bool oldValue = Disabled;
+                Disabled = disable;
+                return oldValue;
             }
         }
+
+        public string First() => this[0];
 
         public string Last()
         {
@@ -69,9 +75,12 @@ namespace Castle.DynamicProxy
 
         public void Add(string message)
         {
-            _output.WriteLine(message);
             lock (_lock)
             {
+                if (Disabled)
+                    return;
+
+                Output.WriteLine(message);
                 _log.Add(message);
             }
         }

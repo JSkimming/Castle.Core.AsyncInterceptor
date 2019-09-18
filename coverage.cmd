@@ -48,7 +48,7 @@
 @SET test_assemblies=%~dp0test\Castle.Core.AsyncInterceptor.Tests\bin\%config%\net472\Castle.Core.AsyncInterceptor.Tests.dll
 ::@SET test_assemblies=%test_assemblies% %~dp0test\More.Tests\bin\%config%\net472\More.Tests.dll
 @SET xunit_results=%results_path%\Xunit.Tests.html
-@SET coverage_filter=+[Castle.Core.AsyncInterceptor*]* -[*.Tests]*
+@SET coverage_filter=+[Castle.Core.AsyncInterceptor*]* -[Castle.Core.AsyncInterceptor*]*.NoCoverage.* -[*.Tests]*
 @SET coverage_results=%results_path%\Test.Coverage.xml
 
 @IF NOT EXIST "%results_path%" MD "%results_path%"

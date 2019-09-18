@@ -11,22 +11,51 @@ namespace Castle.DynamicProxy
     using Xunit;
     using Xunit.Abstractions;
 
-    public abstract class WhenExceptionInterceptingSynchronousVoidMethodsBase
+    public abstract class InterceptExceptionBase
+    {
+        private readonly ITestOutputHelper _output;
+
+        protected InterceptExceptionBase(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        public void CompareStackTrace(Exception noneInterceptedException, Exception interceptedException)
+        {
+            string noneInterceptedSt = noneInterceptedException.StackTrace;
+            string interceptedSt = interceptedException.StackTrace;
+
+            _output.WriteLine(
+                $"None Intercepted Stack Trace:{Environment.NewLine}{noneInterceptedSt}");
+            _output.WriteLine($"Intercepted Stack Trace:{Environment.NewLine}{interceptedSt}");
+
+            string[] separator = { Environment.NewLine };
+            string expected = noneInterceptedSt.Split(separator, StringSplitOptions.RemoveEmptyEntries)[0];
+            string actual = interceptedSt.Split(separator, StringSplitOptions.RemoveEmptyEntries)[0];
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+    }
+
+    public abstract class WhenExceptionInterceptingSynchronousVoidMethodsBase : InterceptExceptionBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidExceptionMethod);
         private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
+        private readonly ClassWithInterfaceToProxy _target;
 
         protected WhenExceptionInterceptingSynchronousVoidMethodsBase(
             ITestOutputHelper output,
             bool asyncB4Proceed,
             int msDelayAfterProceed)
+            : base(output)
         {
             _log = new ListLogger(output);
 
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed, msDelayAfterProceed);
-            _proxy = ProxyGen.CreateProxy(_log, interceptor);
+            _proxy = ProxyGen.CreateProxy(_log, interceptor, out _target);
         }
 
         [Fact]
@@ -62,6 +91,25 @@ namespace Castle.DynamicProxy
 
             // Assert
             Assert.Equal(MethodName + ":VoidExceptionThrown:" + ex.Message, _log[2]);
+        }
+
+        [Fact]
+        public void ShouldPreserveTheStackTrace()
+        {
+            // Arrange - This test does not care about the internal logging, so disable it to remove the noise.
+            _log.Disable();
+
+            // Act
+            InvalidOperationException interceptedException =
+                Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousVoidExceptionMethod());
+
+            // Assert
+
+            // Get the exception without being intercepted, this is used to compare against the intercepted exception.
+            InvalidOperationException noneInterceptedException =
+                Assert.Throws<InvalidOperationException>(() => _target.SynchronousVoidExceptionMethod());
+
+            CompareStackTrace(noneInterceptedException, interceptedException);
         }
     }
 
@@ -101,22 +149,24 @@ namespace Castle.DynamicProxy
         }
     }
 
-    public abstract class WhenExceptionInterceptingSynchronousResultMethodsBase
+    public abstract class WhenExceptionInterceptingSynchronousResultMethodsBase : InterceptExceptionBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultExceptionMethod);
         private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
+        private readonly ClassWithInterfaceToProxy _target;
 
         protected WhenExceptionInterceptingSynchronousResultMethodsBase(
             ITestOutputHelper output,
             bool asyncB4Proceed,
             int msDelayAfterProceed)
+            : base(output)
         {
             _log = new ListLogger(output);
 
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed, msDelayAfterProceed);
-            _proxy = ProxyGen.CreateProxy(_log, interceptor);
+            _proxy = ProxyGen.CreateProxy(_log, interceptor, out _target);
         }
 
         [Fact]
@@ -152,6 +202,25 @@ namespace Castle.DynamicProxy
 
             // Assert
             Assert.Equal(MethodName + ":ResultExceptionThrown:" + ex.Message, _log[2]);
+        }
+
+        [Fact]
+        public void ShouldPreserveTheStackTrace()
+        {
+            // Arrange - This test does not care about the internal logging, so disable it to remove the noise.
+            _log.Disable();
+
+            // Act
+            InvalidOperationException interceptedException =
+                Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousResultExceptionMethod());
+
+            // Assert
+
+            // Get the exception without being intercepted, this is used to compare against the intercepted exception.
+            InvalidOperationException noneInterceptedException =
+                Assert.Throws<InvalidOperationException>(() => _target.SynchronousResultExceptionMethod());
+
+            CompareStackTrace(noneInterceptedException, interceptedException);
         }
     }
 
@@ -191,22 +260,24 @@ namespace Castle.DynamicProxy
         }
     }
 
-    public abstract class WhenExceptionInterceptingAsynchronousVoidMethodsBase
+    public abstract class WhenExceptionInterceptingAsynchronousVoidMethodsBase : InterceptExceptionBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidExceptionMethod);
         private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
+        private readonly ClassWithInterfaceToProxy _target;
 
         protected WhenExceptionInterceptingAsynchronousVoidMethodsBase(
             ITestOutputHelper output,
             bool asyncB4Proceed,
             int msDelayAfterProceed)
+            : base(output)
         {
             _log = new ListLogger(output);
 
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed, msDelayAfterProceed);
-            _proxy = ProxyGen.CreateProxy(_log, interceptor);
+            _proxy = ProxyGen.CreateProxy(_log, interceptor, out _target);
         }
 
         [Fact]
@@ -246,6 +317,27 @@ namespace Castle.DynamicProxy
             // Assert
             Assert.Equal(MethodName + ":VoidExceptionThrown:" + ex.Message, _log[2]);
         }
+
+        [Fact]
+        public async Task ShouldPreserveTheStackTrace()
+        {
+            // Arrange - This test does not care about the internal logging, so disable it to remove the noise.
+            _log.Disable();
+
+            // Act
+            InvalidOperationException interceptedException =
+                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousVoidExceptionMethod)
+                    .ConfigureAwait(false);
+
+            // Assert
+
+            // Get the exception without being intercepted, this is used to compare against the intercepted exception.
+            InvalidOperationException noneInterceptedException =
+                await Assert.ThrowsAsync<InvalidOperationException>(_target.AsynchronousVoidExceptionMethod)
+                    .ConfigureAwait(false);
+
+            CompareStackTrace(noneInterceptedException, interceptedException);
+        }
     }
 
     public class WhenExceptionInterceptingAsynchronousVoidMethodsWithAsyncB4AndNoDelay
@@ -284,22 +376,24 @@ namespace Castle.DynamicProxy
         }
     }
 
-    public abstract class WhenExceptionInterceptingAsynchronousResultMethodsBase
+    public abstract class WhenExceptionInterceptingAsynchronousResultMethodsBase : InterceptExceptionBase
     {
         private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultExceptionMethod);
         private readonly ListLogger _log;
         private readonly IInterfaceToProxy _proxy;
+        private readonly ClassWithInterfaceToProxy _target;
 
         protected WhenExceptionInterceptingAsynchronousResultMethodsBase(
             ITestOutputHelper output,
             bool asyncB4Proceed,
             int msDelayAfterProceed)
+            : base(output)
         {
             _log = new ListLogger(output);
 
             // The delay is used to simulate work my the interceptor, thereof not always continuing on the same thread.
             var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed, msDelayAfterProceed);
-            _proxy = ProxyGen.CreateProxy(_log, interceptor);
+            _proxy = ProxyGen.CreateProxy(_log, interceptor, out _target);
         }
 
         [Fact]
@@ -339,6 +433,27 @@ namespace Castle.DynamicProxy
             // Assert
             Assert.Equal(MethodName + ":ResultExceptionThrown:" + ex.Message, _log[2]);
         }
+
+        [Fact]
+        public async Task ShouldPreserveTheStackTrace()
+        {
+            // Arrange - This test does not care about the internal logging, so disable it to remove the noise.
+            _log.Disable();
+
+            // Act
+            InvalidOperationException interceptedException =
+                await Assert.ThrowsAsync<InvalidOperationException>(_proxy.AsynchronousResultExceptionMethod)
+                    .ConfigureAwait(false);
+
+            // Assert
+
+            // Get the exception without being intercepted, this is used to compare against the intercepted exception.
+            InvalidOperationException noneInterceptedException =
+                await Assert.ThrowsAsync<InvalidOperationException>(_target.AsynchronousResultExceptionMethod)
+                    .ConfigureAwait(false);
+
+            CompareStackTrace(noneInterceptedException, interceptedException);
+        }
     }
 
     public class WhenExceptionInterceptingAsynchronousResultMethodsWithAsyncB4AndNoDelay
@@ -377,8 +492,13 @@ namespace Castle.DynamicProxy
         }
     }
 
-    public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronousException
+    public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronousException : InterceptExceptionBase
     {
+        public WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronousException(ITestOutputHelper output)
+            : base(output)
+        {
+        }
+
         private class MyInterceptorBase : AsyncInterceptorBase
         {
             protected override Task InterceptAsync(
@@ -415,7 +535,8 @@ namespace Castle.DynamicProxy
         public void ShouldReturnAFaultedTask()
         {
             // Arrange
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
+            var target = new MyClass();
+            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
 
             // Act
             Task result = sut.Test1();
@@ -423,13 +544,19 @@ namespace Castle.DynamicProxy
             // Assert
             Assert.True(result.IsFaulted);
             Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+
+            ArgumentOutOfRangeException noneInterceptedException =
+                Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test1(); });
+
+            CompareStackTrace(noneInterceptedException, result.Exception.InnerException);
         }
 
         [Fact]
         public void ShouldReturnAFaultedTaskResult()
         {
             // Arrange
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(new MyClass(), new MyInterceptorBase());
+            var target = new MyClass();
+            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
 
             // Act
             Task<object> result = sut.Test2();
@@ -437,6 +564,11 @@ namespace Castle.DynamicProxy
             // Assert
             Assert.True(result.IsFaulted);
             Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+
+            ArgumentOutOfRangeException noneInterceptedException =
+                Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test2(); });
+
+            CompareStackTrace(noneInterceptedException, result.Exception.InnerException);
         }
     }
 }
