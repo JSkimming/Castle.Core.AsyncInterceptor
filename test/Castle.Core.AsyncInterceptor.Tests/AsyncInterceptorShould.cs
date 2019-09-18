@@ -35,7 +35,17 @@ namespace Castle.DynamicProxy
 
         public static IInterfaceToProxy CreateProxy(ListLogger log, IAsyncInterceptor interceptor)
         {
-            return CreateProxy(() => new ClassWithInterfaceToProxy(log), interceptor);
+            return CreateProxy(log, interceptor, out _);
+        }
+
+        public static IInterfaceToProxy CreateProxy(
+            ListLogger log,
+            IAsyncInterceptor interceptor,
+            out ClassWithInterfaceToProxy target)
+        {
+            var localTarget = new ClassWithInterfaceToProxy(log);
+            target = localTarget;
+            return CreateProxy(() => localTarget, interceptor);
         }
 
         public static IInterfaceToProxy CreateProxy(Func<IInterfaceToProxy> factory, IAsyncInterceptor interceptor)
