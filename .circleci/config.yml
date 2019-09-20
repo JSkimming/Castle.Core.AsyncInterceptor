@@ -32,27 +32,6 @@ orbs:
           - store_test_results:
               path: ./test/TestResults/output/
 
-      # The --no-restore parameter was added in .NET Core 2, so add a dedicated job for building .NET Core 1.1
-      run-build-1-1:
-        parameters:
-          build-config:
-            description: The build configuration, either Debug or Release.
-            type: string
-        executor:
-          name: dotnet-build-executor
-          tag: "1.1"
-        steps:
-          - checkout
-          - run:
-              name: Restore
-              command: dotnet restore
-          - run:
-              name: Build
-              command: dotnet build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
-          - run:
-              name: Test
-              command: dotnet test --no-build -f netcoreapp1.1 -c << parameters.build-config >> ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
-
     executors:
 
       dotnet-build-executor:
@@ -69,12 +48,6 @@ workflows:
     jobs:
       - shellcheck/check:
           name: shellcheck
-      - build/run-build-1-1:
-          name: 1.1 Debug Build
-          build-config: Debug
-      - build/run-build-1-1:
-          name: 1.1 Release Build
-          build-config: Release
       - build/run-build:
           name: 2.1 Debug Build
           image-tag: "2.1"
