@@ -9,7 +9,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class ClassWithVirtualMethodToProxy
     {
-        private ListLogger _log;
+        private ListLogger _log = null!;
 
         protected ClassWithVirtualMethodToProxy()
         {
@@ -24,10 +24,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         internal void PostConstructorInitialize(ListLogger log)
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
-
-            _log = _log ?? log;
+            _log ??= log ?? throw new ArgumentNullException(nameof(log));
         }
 
         public virtual async Task<Guid> AsynchronousResultMethod()

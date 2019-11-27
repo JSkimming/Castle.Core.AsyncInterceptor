@@ -20,7 +20,6 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         protected override string StartingInvocation(IInvocation invocation)
         {
-            base.StartingInvocation(invocation);
             _log.Add($"{invocation.Method.Name}:StartingInvocation:{RandomValue}");
             return RandomValue;
         }

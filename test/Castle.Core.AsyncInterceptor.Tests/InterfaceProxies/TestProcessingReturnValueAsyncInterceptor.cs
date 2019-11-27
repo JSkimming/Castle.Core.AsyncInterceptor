@@ -17,12 +17,11 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
         protected override object StartingInvocation(IInvocation invocation)
         {
-            base.StartingInvocation(invocation);
             _log.Add($"{invocation.Method.Name}:StartingInvocation");
-            return null;
+            return string.Empty;
         }
 
-        protected override void CompletedInvocation(IInvocation invocation, object state, object returnValue)
+        protected override void CompletedInvocation(IInvocation invocation, object state, object? returnValue)
         {
             base.CompletedInvocation(invocation, state, returnValue);
             _log.Add($"{invocation.Method.Name}:CompletedInvocation:{returnValue ?? "(no return value)"}");

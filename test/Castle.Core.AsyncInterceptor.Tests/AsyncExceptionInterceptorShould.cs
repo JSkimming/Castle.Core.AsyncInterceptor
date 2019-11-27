@@ -20,10 +20,10 @@ namespace Castle.DynamicProxy
             _output = output;
         }
 
-        public void CompareStackTrace(Exception noneInterceptedException, Exception interceptedException)
+        public void CompareStackTrace(Exception? noneInterceptedException, Exception? interceptedException)
         {
-            string noneInterceptedSt = noneInterceptedException.StackTrace;
-            string interceptedSt = interceptedException.StackTrace;
+            string noneInterceptedSt = noneInterceptedException?.StackTrace ?? string.Empty;
+            string interceptedSt = interceptedException?.StackTrace ?? string.Empty;
 
             _output.WriteLine(
                 $"None Intercepted Stack Trace:{Environment.NewLine}{noneInterceptedSt}");
@@ -543,12 +543,12 @@ namespace Castle.DynamicProxy
 
             // Assert
             Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+            Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
 
             ArgumentOutOfRangeException noneInterceptedException =
                 Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test1(); });
 
-            CompareStackTrace(noneInterceptedException, result.Exception.InnerException);
+            CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
         }
 
         [Fact]
@@ -563,12 +563,12 @@ namespace Castle.DynamicProxy
 
             // Assert
             Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
+            Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
 
             ArgumentOutOfRangeException noneInterceptedException =
                 Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test2(); });
 
-            CompareStackTrace(noneInterceptedException, result.Exception.InnerException);
+            CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
         }
     }
 }

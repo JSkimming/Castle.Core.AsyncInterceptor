@@ -17,7 +17,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public Stopwatch Stopwatch { get; private set; }
+        public Stopwatch Stopwatch { get; private set; } = null!;
 
         protected override void StartingTiming(IInvocation invocation)
         {

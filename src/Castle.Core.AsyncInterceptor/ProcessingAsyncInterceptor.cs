@@ -55,10 +55,7 @@ namespace Castle.DynamicProxy
         /// <param name="invocation">The method invocation.</param>
         /// <returns>The custom object used to maintain state between <see cref="StartingInvocation"/> and
         /// <see cref="CompletedInvocation(IInvocation, TState, object)"/>.</returns>
-        protected virtual TState StartingInvocation(IInvocation invocation)
-        {
-            return null;
-        }
+        protected abstract TState StartingInvocation(IInvocation invocation);
 
         /// <summary>
         /// Override in derived classes to receive signals after method <paramref name="invocation"/>.
@@ -82,7 +79,7 @@ namespace Castle.DynamicProxy
         /// The underlying return value of the <paramref name="invocation"/>; or <see langword="null"/> if the
         /// invocation did not return a value.
         /// </param>
-        protected virtual void CompletedInvocation(IInvocation invocation, TState state, object returnValue)
+        protected virtual void CompletedInvocation(IInvocation invocation, TState state, object? returnValue)
         {
             CompletedInvocation(invocation, state);
         }
