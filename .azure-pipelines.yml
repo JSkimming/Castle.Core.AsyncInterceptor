@@ -10,94 +10,65 @@ jobs:
   continueOnError: "true"
   timeoutInMinutes: 5
   variables:
-    buildFramework: netcoreapp2.1
+    buildFramework: netcoreapp3.1
   strategy:
     matrix:
-      "Linux 2.1 Debug":
-        sdkVersion: "2.1.x"
+      "Linux 3.1 Debug":
+        sdkVersion: "3.1.x"
         config: Debug
         imageName: ubuntu-latest
         framework: $(buildFramework)
-      "Linux 2.1 Release":
-        sdkVersion: "2.1.x"
+      "Linux 3.1 Release":
+        sdkVersion: "3.1.x"
         config: Release
         imageName: ubuntu-latest
         framework: $(buildFramework)
-      "Linux 2.2 Debug":
-        sdkVersion: "2.2.x"
-        config: Debug
-        imageName: ubuntu-latest
-        framework: $(buildFramework)
-      "Linux 2.2 Release":
-        sdkVersion: "2.2.x"
-        config: Release
-        imageName: ubuntu-latest
-        framework: $(buildFramework)
-      "MacOS 2.1 Debug":
-        sdkVersion: "2.1.x"
+      "MacOS 3.1 Debug":
+        sdkVersion: "3.1.x"
         config: Debug
         imageName: macOS-latest
         framework: $(buildFramework)
-      "MacOS 2.1 Release":
-        sdkVersion: "2.1.x"
+      "MacOS 3.1 Release":
+        sdkVersion: "3.1.x"
         config: Release
         imageName: macOS-latest
         framework: $(buildFramework)
-      "MacOS 2.2 Debug":
-        sdkVersion: "2.2.x"
+      "Windows .NET Framework Debug":
+        sdkVersion: "3.1.x"
         config: Debug
-        imageName: macOS-latest
+        imageName: windows-latest
         framework: $(buildFramework)
-      "MacOS 2.2 Release":
-        sdkVersion: "2.2.x"
+      "Windows .NET Framework Release":
+        sdkVersion: "3.1.x"
         config: Release
-        imageName: macOS-latest
+        imageName: windows-latest
         framework: $(buildFramework)
   pool:
     vmImage: $(imageName)
   steps:
 
   - task: UseDotNet@2
+    displayName: Install .NET Core SDK
     inputs:
       version: $(sdkVersion)
-    displayName: Install .NET Core SDK
 
   - task: ShellScript@2
+    displayName: Test Coverage
     inputs:
       scriptPath: ./coverage.sh
       args: "$(framework) $(config)"
-    displayName: Test Coverage
 
   - task: PublishTestResults@2
+    displayName: Publish test results
     inputs:
       testResultsFormat: VSTest
       testResultsFiles: "**/*.trx"
       failTaskOnFailedTests: true
       buildConfiguration: $(config)
       publishRunAttachments: true
-    displayName: Publish test results
 
   - task: PublishCodeCoverageResults@1
+    displayName: Publish code coverage
     inputs:
       codeCoverageTool: Cobertura
       summaryFileLocation: ./test/TestResults/output/coverage.cobertura.xml
-    displayName: Publish code coverage
-
-- job: CmdBuild
-  displayName: "Build"
-  continueOnError: "true"
-  strategy:
-    matrix:
-      "Windows .NET Framework Debug":
-        config: Debug
-      "Windows .NET Framework Release":
-        config: Release
-  pool:
-    vmImage: windows-latest
-  steps:
-
-  - task: BatchScript@1
-    inputs:
-      filename: ./coverage.cmd
-      arguments: "$(config)"
-    displayName: Test Coverage
