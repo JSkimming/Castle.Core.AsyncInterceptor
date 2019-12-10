@@ -4,7 +4,7 @@
 exe() { echo; echo "\$ $*" ; "$@" ; }
 
 # Parameters
-framework="${1-netcoreapp2.1}"
+framework="${1-netcoreapp3.1}"
 config="${2-Debug}"
 
 include="[Castle.Core.AsyncInterceptor]*"
@@ -32,11 +32,11 @@ exe dotnet test --no-restore --no-build -f "$framework" -c "$config" \
 --results-directory "$output/" \
 --logger "\"trx;LogFileName=$(basename "$testProj1" .csproj).trx\"" \
 --logger "\"Console;noprogress=true\"" \
-/p:CollectCoverage=true \
-/p:Include="$include" \
-/p:Exclude="$exclude" \
-/p:CoverletOutput="$output/" \
-/p:CoverletOutputFormat="\"json,opencover,cobertura\""
+-p:CollectCoverage=true \
+-p:Include="$include" \
+-p:Exclude="$exclude" \
+-p:CoverletOutput="$output/" \
+-p:CoverletOutputFormat="\"json,opencover,cobertura\""
 
 # Install trx2junit if not already installed
 if [ ! -f "$tools/trx2junit" ]

@@ -394,7 +394,7 @@ To run the tests targeting a specific runtime (which may be necessary if you don
 following command:
 
 ```
-dotnet test -f netcoreapp2.1 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
+dotnet test -f netcoreapp3.1 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 ```
 
 A docker compose file is provided to run the tests on a linux container. To execute the tests in a container run the
