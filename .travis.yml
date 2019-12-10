@@ -7,10 +7,10 @@ matrix:
 
   include:
     - os: linux
-      dotnet: 2.1
+      dotnet: 3.1
       mono: none
     - os: osx
-      dotnet: 2.1.506
+      dotnet: 3.1.100
       mono: none
 
 branches:
@@ -18,4 +18,4 @@ branches:
   - master
 
 script:
-  - ./coverage.sh netcoreapp2.1 Release
+  - ./coverage.sh netcoreapp3.1 Release
