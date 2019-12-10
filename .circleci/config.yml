@@ -49,42 +49,22 @@ workflows:
       - shellcheck/check:
           name: shellcheck
       - build/run-build:
-          name: 2.1 Debug Build
-          image-tag: "2.1"
+          name: 3.1 Debug Build
+          image-tag: "3.1"
           build-config: Debug
-          framework: netcoreapp2.1
+          framework: netcoreapp3.1
       - build/run-build:
-          name: 2.1 Alpine Debug Build
-          image-tag: "2.1-alpine"
+          name: 3.1 Alpine Debug Build
+          image-tag: "3.1-alpine"
           build-config: Debug
-          framework: netcoreapp2.1
+          framework: netcoreapp3.1
       - build/run-build:
-          name: 2.1 Release Build
-          image-tag: "2.1"
+          name: 3.1 Release Build
+          image-tag: "3.1"
           build-config: Release
-          framework: netcoreapp2.1
+          framework: netcoreapp3.1
       - build/run-build:
-          name: 2.1 Alpine Release Build
-          image-tag: "2.1-alpine"
+          name: 3.1 Alpine Release Build
+          image-tag: "3.1-alpine"
           build-config: Release
-          framework: netcoreapp2.1
-      - build/run-build:
-          name: 2.2 Debug Build
-          image-tag: "2.2"
-          build-config: Debug
-          framework: netcoreapp2.1
-      - build/run-build:
-          name: 2.2 Alpine Debug Build
-          image-tag: "2.2-alpine"
-          build-config: Debug
-          framework: netcoreapp2.1
-      - build/run-build:
-          name: 2.2 Release Build
-          image-tag: "2.2"
-          build-config: Release
-          framework: netcoreapp2.1
-      - build/run-build:
-          name: 2.2 Alpine Release Build
-          image-tag: "2.2-alpine"
-          build-config: Release
-          framework: netcoreapp2.1
+          framework: netcoreapp3.1
