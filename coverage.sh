@@ -56,6 +56,6 @@ exe "$tools/trx2junit" "$output"/*.trx
 # Generate the reports
 exe "$tools/reportgenerator" \
 "-verbosity:Info" \
-"-reports:$output/coverage.opencover.xml" \
+"-reports:$output/coverage.$framework.opencover.xml" \
 "-targetdir:$output/Report" \
 "-reporttypes:Html"
