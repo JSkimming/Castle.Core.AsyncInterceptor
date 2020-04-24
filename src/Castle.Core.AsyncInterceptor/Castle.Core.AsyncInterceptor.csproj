@@ -12,7 +12,7 @@
     <Authors>James Skimming</Authors>
     <Description>AsyncInterceptor is an extension to Castle DynamicProxy to simplify the development of interceptors for asynchronous methods.</Description>
     <Copyright>Copyright © 2016 James Skimming</Copyright>
-    <PackageLicenseUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/castleproject/Core/v4.0.0/docs/images/castle-logo.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</RepositoryUrl>
