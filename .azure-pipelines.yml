@@ -5,8 +5,8 @@ trigger:
 
 jobs:
 
-- job: ShellBuild
-  displayName: "Build"
+- job: Build
+  displayName: Build
   continueOnError: "true"
   timeoutInMinutes: 5
   variables:
@@ -14,32 +14,32 @@ jobs:
   strategy:
     matrix:
       "Linux 3.1 Debug":
-        sdkVersion: "3.1.x"
+        sdkVersion: 3.1.x
         config: Debug
         imageName: ubuntu-latest
         framework: $(buildFramework)
       "Linux 3.1 Release":
-        sdkVersion: "3.1.x"
+        sdkVersion: 3.1.x
         config: Release
         imageName: ubuntu-latest
         framework: $(buildFramework)
       "MacOS 3.1 Debug":
-        sdkVersion: "3.1.x"
+        sdkVersion: 3.1.x
         config: Debug
         imageName: macOS-latest
         framework: $(buildFramework)
       "MacOS 3.1 Release":
-        sdkVersion: "3.1.x"
+        sdkVersion: 3.1.x
         config: Release
         imageName: macOS-latest
         framework: $(buildFramework)
-      "Windows .NET Framework Debug":
-        sdkVersion: "3.1.x"
+      "Windows 3.1 Debug":
+        sdkVersion: 3.1.x
         config: Debug
         imageName: windows-latest
         framework: $(buildFramework)
-      "Windows .NET Framework Release":
-        sdkVersion: "3.1.x"
+      "Windows 3.1 Release":
+        sdkVersion: 3.1.x
         config: Release
         imageName: windows-latest
         framework: $(buildFramework)
@@ -52,11 +52,8 @@ jobs:
     inputs:
       version: $(sdkVersion)
 
-  - task: ShellScript@2
+  - bash: ./coverage.sh "$(framework)" "$(config)"
     displayName: Test Coverage
-    inputs:
-      scriptPath: ./coverage.sh
-      args: "$(framework) $(config)"
 
   - task: PublishTestResults@2
     displayName: Publish test results
@@ -72,3 +69,17 @@ jobs:
     inputs:
       codeCoverageTool: Cobertura
       summaryFileLocation: ./test/TestResults/output/coverage.$(framework).cobertura.xml
+
+  - task: BuildQualityChecks@6
+    displayName: Check code coverage levels
+    inputs:
+      showStatistics: true
+      checkCoverage: true
+      coverageFailOption: build
+      coverageType: branches
+      buildConfiguration: $(config)
+      allowCoverageVariance: false
+      coverageDeltaType: percentage
+      coveragePrecision: 2
+      includePartiallySucceeded: false
+      baseBranchRef: refs/heads/master
