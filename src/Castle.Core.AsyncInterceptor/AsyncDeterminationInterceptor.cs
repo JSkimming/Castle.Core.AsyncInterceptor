@@ -26,6 +26,7 @@ namespace Castle.DynamicProxy
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncDeterminationInterceptor"/> class.
         /// </summary>
+        /// <param name="asyncInterceptor">The underlying <see cref="AsyncInterceptor"/>.</param>
         public AsyncDeterminationInterceptor(IAsyncInterceptor asyncInterceptor)
         {
             AsyncInterceptor = asyncInterceptor;

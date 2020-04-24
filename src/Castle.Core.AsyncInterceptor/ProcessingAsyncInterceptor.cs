@@ -3,6 +3,7 @@
 
 namespace Castle.DynamicProxy
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -35,7 +36,7 @@ namespace Castle.DynamicProxy
         public void InterceptAsynchronous(IInvocation invocation)
         {
             TState state = Proceed(invocation);
-            invocation.ReturnValue = SignalWhenComplete(invocation, state);
+            invocation.ReturnValue = SignalWhenCompleteAsync(invocation, state);
         }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace Castle.DynamicProxy
         public void InterceptAsynchronous<TResult>(IInvocation invocation)
         {
             TState state = Proceed(invocation);
-            invocation.ReturnValue = SignalWhenComplete<TResult>(invocation, state);
+            invocation.ReturnValue = SignalWhenCompleteAsync<TResult>(invocation, state);
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace Castle.DynamicProxy
         /// <param name="state">
         /// The <typeparamref name="TState"/> returned by <see cref="StartingInvocation"/>.
         /// </param>
-        private async Task SignalWhenComplete(IInvocation invocation, TState state)
+        private async Task SignalWhenCompleteAsync(IInvocation invocation, TState state)
         {
             // Get the task to await.
             var returnValue = (Task)invocation.ReturnValue;
@@ -130,7 +131,7 @@ namespace Castle.DynamicProxy
         /// <param name="state">
         /// The <typeparamref name="TState"/> returned by <see cref="StartingInvocation"/>.
         /// </param>
-        private async Task<TResult> SignalWhenComplete<TResult>(IInvocation invocation, TState state)
+        private async Task<TResult> SignalWhenCompleteAsync<TResult>(IInvocation invocation, TState state)
         {
             // Get the task to await.
             var returnValue = (Task<TResult>)invocation.ReturnValue;
