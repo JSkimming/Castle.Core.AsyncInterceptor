@@ -11,21 +11,16 @@ namespace Castle.DynamicProxy.InterfaceProxies
     {
         private ListLogger _log = null!;
 
-        protected ClassWithVirtualMethodToProxy()
-        {
-        }
-
         public ClassWithVirtualMethodToProxy(ListLogger log)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public IReadOnlyList<string> Log => _log.GetLog();
-
-        internal void PostConstructorInitialize(ListLogger log)
+        protected ClassWithVirtualMethodToProxy()
         {
-            _log ??= log ?? throw new ArgumentNullException(nameof(log));
         }
+
+        public IReadOnlyList<string> Log => _log.GetLog();
 
         public virtual async Task<Guid> AsynchronousResultMethod()
         {
@@ -33,6 +28,11 @@ namespace Castle.DynamicProxy.InterfaceProxies
             await Task.Delay(10).ConfigureAwait(false);
             _log.Add($"{nameof(AsynchronousResultMethod)}:End");
             return Guid.NewGuid();
+        }
+
+        internal void PostConstructorInitialize(ListLogger log)
+        {
+            _log ??= log ?? throw new ArgumentNullException(nameof(log));
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Castle.DynamicProxy
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
@@ -499,44 +500,12 @@ namespace Castle.DynamicProxy
         {
         }
 
-        private class MyInterceptorBase : AsyncInterceptorBase
-        {
-            protected override Task InterceptAsync(
-                IInvocation invocation,
-                IInvocationProceedInfo proceedInfo,
-                Func<IInvocation, IInvocationProceedInfo, Task> proceed)
-            {
-                return proceed(invocation, proceedInfo);
-            }
-
-            protected override Task<TResult> InterceptAsync<TResult>(
-                IInvocation invocation,
-                IInvocationProceedInfo proceedInfo,
-                Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
-            {
-                return proceed(invocation, proceedInfo);
-            }
-        }
-
-        public class MyClass
-        {
-            public virtual Task Test1()
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            public virtual Task<object> Test2()
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-        }
-
         [Fact]
         public void ShouldReturnAFaultedTask()
         {
             // Arrange
-            var target = new MyClass();
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
+            var target = new AllExceptions();
+            AllExceptions sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
 
             // Act
             Task result = sut.Test1();
@@ -555,8 +524,8 @@ namespace Castle.DynamicProxy
         public void ShouldReturnAFaultedTaskResult()
         {
             // Arrange
-            var target = new MyClass();
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
+            var target = new AllExceptions();
+            AllExceptions sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
 
             // Act
             Task<object> result = sut.Test2();
@@ -569,6 +538,39 @@ namespace Castle.DynamicProxy
                 Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test2(); });
 
             CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
+        }
+
+        [SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "Just Testing.")]
+        public class AllExceptions
+        {
+            public virtual Task Test1()
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            public virtual Task<object> Test2()
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private class MyInterceptorBase : AsyncInterceptorBase
+        {
+            protected override Task InterceptAsync(
+                IInvocation invocation,
+                IInvocationProceedInfo proceedInfo,
+                Func<IInvocation, IInvocationProceedInfo, Task> proceed)
+            {
+                return proceed(invocation, proceedInfo);
+            }
+
+            protected override Task<TResult> InterceptAsync<TResult>(
+                IInvocation invocation,
+                IInvocationProceedInfo proceedInfo,
+                Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
+            {
+                return proceed(invocation, proceedInfo);
+            }
         }
     }
 }

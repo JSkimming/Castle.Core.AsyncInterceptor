@@ -5,6 +5,7 @@ namespace Castle.DynamicProxy
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
@@ -20,8 +21,9 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingSynchronousVoidMethods(ITestOutputHelper output)
         {
+            string randomValue = "randomValue_" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
             _log = new ListLogger(output);
-            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _interceptor = new TestProcessingAsyncInterceptor(_log, randomValue);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
@@ -65,8 +67,9 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingSynchronousResultMethods(ITestOutputHelper output)
         {
+            string randomValue = "randomValue_" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
             _log = new ListLogger(output);
-            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _interceptor = new TestProcessingAsyncInterceptor(_log, randomValue);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
@@ -110,8 +113,9 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingAsynchronousVoidMethods(ITestOutputHelper output)
         {
+            string randomValue = "randomValue_" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
             _log = new ListLogger(output);
-            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _interceptor = new TestProcessingAsyncInterceptor(_log, randomValue);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 
@@ -155,8 +159,9 @@ namespace Castle.DynamicProxy
 
         public WhenProcessingAsynchronousResultMethods(ITestOutputHelper output)
         {
+            string randomValue = "randomValue_" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
             _log = new ListLogger(output);
-            _interceptor = new TestProcessingAsyncInterceptor(_log, "randomValue_" + Guid.NewGuid().ToString("N"));
+            _interceptor = new TestProcessingAsyncInterceptor(_log, randomValue);
             _proxy = ProxyGen.CreateProxy(_log, _interceptor);
         }
 

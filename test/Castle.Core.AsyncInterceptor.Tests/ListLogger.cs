@@ -45,10 +45,10 @@ namespace Castle.DynamicProxy
                         return _log[index];
                     }
 
-                    throw new ArgumentOutOfRangeException(
-                        nameof(index),
+                    string message =
                         $"There are '{_log.Count} logs but the index '{index}' was expected. " +
-                        $"{string.Join(Environment.NewLine, _log.Prepend("Logs:"))}");
+                        $"{string.Join(Environment.NewLine, _log.Prepend("Logs:"))}";
+                    throw new ArgumentOutOfRangeException(nameof(index), message);
                 }
             }
         }

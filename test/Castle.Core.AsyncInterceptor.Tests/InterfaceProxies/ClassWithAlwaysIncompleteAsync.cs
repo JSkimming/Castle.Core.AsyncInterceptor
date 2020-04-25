@@ -18,6 +18,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
         }
 
         public IReadOnlyList<string> Log => _log.GetLog();
+
         public void SynchronousVoidMethod()
         {
             throw new NotImplementedException();

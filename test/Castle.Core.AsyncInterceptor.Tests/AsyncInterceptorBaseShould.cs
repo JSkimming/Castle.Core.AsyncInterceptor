@@ -153,6 +153,7 @@ namespace Castle.DynamicProxy
         {
         }
     }
+
     public class WhenInterceptingSynchronousResultMethodsWithSyncB4AndNoDelay
         : WhenInterceptingSynchronousResultMethodsBase
     {

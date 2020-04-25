@@ -32,27 +32,27 @@ namespace Castle.DynamicProxy
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     Array.Empty<Type>(),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTarget(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTarget(
                     typeof(IInterfaceToProxy),
                     Array.Empty<Type>(),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
@@ -63,21 +63,110 @@ namespace Castle.DynamicProxy
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     Array.Empty<Type>(),
                     new ClassWithInterfaceToProxy(log),
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
                     new TestAsyncInterceptor(log)),
-                (gen, log) => (IInterfaceToProxy) gen.CreateInterfaceProxyWithTargetInterface(
+                (gen, log) => (IInterfaceToProxy)gen.CreateInterfaceProxyWithTargetInterface(
                     typeof(IInterfaceToProxy),
                     Array.Empty<Type>(),
                     new ClassWithInterfaceToProxy(log),
                     ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+            };
+
+            return proxyFactories.Select(p => new object[] { p });
+        }
+
+        public static IEnumerable<object[]> ClassProxyFactories()
+        {
+            Func<IProxyGenerator, ListLogger, ClassWithVirtualMethodToProxy>[] proxyFactories =
+            {
+                (gen, log) => gen.CreateClassProxyWithTarget(
+                    new ClassWithVirtualMethodToProxy(log),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => gen.CreateClassProxyWithTarget(
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    Array.Empty<Type>(),
+                    new ClassWithVirtualMethodToProxy(log),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    Array.Empty<Type>(),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxyWithTarget(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    Array.Empty<Type>(),
+                    new ClassWithVirtualMethodToProxy(log),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => gen.CreateClassProxy<ClassWithVirtualMethodToProxy>(new TestAsyncInterceptor(log)),
+                (gen, log) => gen.CreateClassProxy<ClassWithVirtualMethodToProxy>(
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    Array.Empty<Type>(),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new object[] { log },
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    Array.Empty<Type>(),
+                    ProxyGenerationOptions.Default,
+                    new TestAsyncInterceptor(log)),
+                (gen, log) => (ClassWithVirtualMethodToProxy)gen.CreateClassProxy(
+                    typeof(ClassWithVirtualMethodToProxy),
+                    Array.Empty<Type>(),
+                    ProxyGenerationOptions.Default,
+                    new object[] { log },
                     new TestAsyncInterceptor(log)),
             };
 
@@ -99,95 +188,6 @@ namespace Castle.DynamicProxy
             Assert.Equal(4, _log.Count);
             Assert.Equal($"{methodName}:InterceptStart", _log[0]);
             Assert.Equal($"{methodName}:InterceptEnd", _log[3]);
-        }
-
-        public static IEnumerable<object[]> ClassProxyFactories()
-        {
-            Func<IProxyGenerator, ListLogger, ClassWithVirtualMethodToProxy>[] proxyFactories =
-            {
-                (gen, log) => gen.CreateClassProxyWithTarget(
-                    new ClassWithVirtualMethodToProxy(log),
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => gen.CreateClassProxyWithTarget(
-                    new ClassWithVirtualMethodToProxy(log),
-                    ProxyGenerationOptions.Default,
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    Array.Empty<Type>(),
-                    new ClassWithVirtualMethodToProxy(log),
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    new ClassWithVirtualMethodToProxy(log),
-                    ProxyGenerationOptions.Default,
-                    new object[] { log },
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    new ClassWithVirtualMethodToProxy(log),
-                    new object[] { log },
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    new ClassWithVirtualMethodToProxy(log),
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    new ClassWithVirtualMethodToProxy(log),
-                    ProxyGenerationOptions.Default,
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    Array.Empty<Type>(),
-                    new ClassWithVirtualMethodToProxy(log),
-                    ProxyGenerationOptions.Default,
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxyWithTarget(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    Array.Empty<Type>(),
-                    new ClassWithVirtualMethodToProxy(log),
-                    ProxyGenerationOptions.Default,
-                    new object[] { log },
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => gen.CreateClassProxy<ClassWithVirtualMethodToProxy>(new TestAsyncInterceptor(log)),
-                (gen, log) => gen.CreateClassProxy<ClassWithVirtualMethodToProxy>(
-                    ProxyGenerationOptions.Default,
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    Array.Empty<Type>(),
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    ProxyGenerationOptions.Default,
-                    new object[] { log },
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    new object[] { log },
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    ProxyGenerationOptions.Default,
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    Array.Empty<Type>(),
-                    ProxyGenerationOptions.Default,
-                    new TestAsyncInterceptor(log)),
-                (gen, log) => (ClassWithVirtualMethodToProxy) gen.CreateClassProxy(
-                    typeof(ClassWithVirtualMethodToProxy),
-                    Array.Empty<Type>(),
-                    ProxyGenerationOptions.Default,
-                    new object[] { log },
-                    new TestAsyncInterceptor(log)),
-            };
-
-            return proxyFactories.Select(p => new object[] { p });
         }
 
         [Theory]

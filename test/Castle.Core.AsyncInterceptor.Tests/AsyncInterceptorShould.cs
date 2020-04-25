@@ -11,24 +11,6 @@ namespace Castle.DynamicProxy
     using Xunit;
     using Xunit.Abstractions;
 
-    public class AsyncDeterminationInterceptorShould
-    {
-        private readonly ITestOutputHelper _output;
-
-        public AsyncDeterminationInterceptorShould(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
-        [Fact]
-        public void Implement_IInterceptor()
-        {
-            var sut = new AsyncDeterminationInterceptor(new TestAsyncInterceptor(new ListLogger(_output)));
-
-            Assert.IsAssignableFrom<IInterceptor>(sut);
-        }
-    }
-
     public static class ProxyGen
     {
         public static readonly IProxyGenerator Generator = new ProxyGenerator();
@@ -53,6 +35,24 @@ namespace Castle.DynamicProxy
             IInterfaceToProxy implementation = factory();
             IInterfaceToProxy proxy = Generator.CreateInterfaceProxyWithTargetInterface(implementation, interceptor);
             return proxy;
+        }
+    }
+
+    public class AsyncDeterminationInterceptorShould
+    {
+        private readonly ITestOutputHelper _output;
+
+        public AsyncDeterminationInterceptorShould(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        [Fact]
+        public void Implement_IInterceptor()
+        {
+            var sut = new AsyncDeterminationInterceptor(new TestAsyncInterceptor(new ListLogger(_output)));
+
+            Assert.IsAssignableFrom<IInterceptor>(sut);
         }
     }
 
