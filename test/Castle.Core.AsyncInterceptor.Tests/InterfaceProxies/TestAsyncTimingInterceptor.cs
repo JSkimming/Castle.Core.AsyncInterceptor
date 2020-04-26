@@ -1,6 +1,5 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
 
 namespace Castle.DynamicProxy.InterfaceProxies
 {
@@ -17,7 +16,7 @@ namespace Castle.DynamicProxy.InterfaceProxies
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public Stopwatch Stopwatch { get; private set; }
+        public Stopwatch Stopwatch { get; private set; } = null!;
 
         protected override void StartingTiming(IInvocation invocation)
         {

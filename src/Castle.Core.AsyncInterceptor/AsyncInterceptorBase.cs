@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using System.Threading.Tasks;
     using Castle.DynamicProxy.NoCoverage;
@@ -13,6 +14,10 @@ namespace Castle.DynamicProxy
     /// A base type for an <see cref="IAsyncInterceptor"/> to provided a simplified solution of method
     /// <see cref="IInvocation"/> by enforcing only two types of interception, both asynchronous.
     /// </summary>
+    [SuppressMessage(
+        "Design",
+        "CA1031:Do not catch general exception types",
+        Justification = "Must propagate the same exceptions.")]
     public abstract class AsyncInterceptorBase : IAsyncInterceptor
     {
 #if !NETSTANDARD2_0

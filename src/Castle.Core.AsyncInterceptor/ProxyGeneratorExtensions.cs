@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -32,9 +33,7 @@ namespace Castle.DynamicProxy
             return interceptors.Select(ToInterceptor).ToArray();
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator.CreateInterfaceProxyWithTarget{TInterface}(TInterface,IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTarget{TInterface}(TInterface,IInterceptor[])" />
         public static TInterface CreateInterfaceProxyWithTarget<TInterface>(
             this IProxyGenerator proxyGenerator,
             TInterface target,
@@ -44,9 +43,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateInterfaceProxyWithTarget(target, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator.CreateInterfaceProxyWithTarget{TInterface}(TInterface, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTarget{TInterface}(TInterface, IInterceptor[])" />
         public static TInterface CreateInterfaceProxyWithTarget<TInterface>(
             this IProxyGenerator proxyGenerator,
             TInterface target,
@@ -57,9 +54,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateInterfaceProxyWithTarget(target, options, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator.CreateInterfaceProxyWithTarget(Type, object, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTarget(Type, object, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -72,9 +67,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator.CreateInterfaceProxyWithTarget(Type, object, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTarget(Type, object, ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -89,9 +82,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator.CreateInterfaceProxyWithTarget(Type, Type[], object, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTarget(Type, Type[], object, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -106,9 +97,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateInterfaceProxyWithTarget(Type, Type[], object, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTarget(Type, Type[], object, ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -125,9 +114,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateInterfaceProxyWithTargetInterface(Type, object, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTargetInterface(Type, object, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTargetInterface(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -140,9 +127,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateInterfaceProxyWithTargetInterface{TInterface}(TInterface, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTargetInterface{TInterface}(TInterface, IInterceptor[])" />
         public static TInterface CreateInterfaceProxyWithTargetInterface<TInterface>(
             this IProxyGenerator proxyGenerator,
             TInterface target,
@@ -152,9 +137,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateInterfaceProxyWithTargetInterface(target, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateInterfaceProxyWithTargetInterface{TInterface}(TInterface, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTargetInterface{TInterface}(TInterface, ProxyGenerationOptions, IInterceptor[])" />
         public static TInterface CreateInterfaceProxyWithTargetInterface<TInterface>(
             this IProxyGenerator proxyGenerator,
             TInterface target,
@@ -168,9 +151,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateInterfaceProxyWithTargetInterface(Type, Type[], object, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTargetInterface(Type, Type[], object, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTargetInterface(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -185,9 +166,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateInterfaceProxyWithTargetInterface(Type, object, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTargetInterface(Type, object, ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTargetInterface(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -202,9 +181,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateInterfaceProxyWithTargetInterface(Type, Type[], object, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateInterfaceProxyWithTargetInterface(Type, Type[], object, ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateInterfaceProxyWithTargetInterface(
             this IProxyGenerator proxyGenerator,
             Type interfaceToProxy,
@@ -221,9 +198,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget{TClass}(TClass, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget{TClass}(TClass, IInterceptor[])" />
         public static TClass CreateClassProxyWithTarget<TClass>(
             this IProxyGenerator proxyGenerator,
             TClass target,
@@ -233,9 +208,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateClassProxyWithTarget(target, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget{TClass}(TClass, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget{TClass}(TClass, ProxyGenerationOptions, IInterceptor[])" />
         public static TClass CreateClassProxyWithTarget<TClass>(
             this IProxyGenerator proxyGenerator,
             TClass target,
@@ -246,9 +219,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateClassProxyWithTarget(target, options, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget(Type, Type[], object, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget(Type, Type[], object, IInterceptor[])" />
         public static object CreateClassProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -263,9 +234,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget(Type, object, ProxyGenerationOptions, object[], IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget(Type, object, ProxyGenerationOptions, object[], IInterceptor[])" />
         public static object CreateClassProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -282,9 +251,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget(Type, object, object[], IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget(Type, object, object[], IInterceptor[])" />
         public static object CreateClassProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -299,9 +266,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget(Type, object, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget(Type, object, IInterceptor[])" />
         public static object CreateClassProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -311,9 +276,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateClassProxyWithTarget(classToProxy, target, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget(Type, object, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget(Type, object, ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateClassProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -328,9 +291,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget(Type, Type[], object, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget(Type, Type[], object, ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateClassProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -347,9 +308,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxyWithTarget(Type, Type[], object, ProxyGenerationOptions, object[], IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxyWithTarget(Type, Type[], object, ProxyGenerationOptions, object[], IInterceptor[])" />
         public static object CreateClassProxyWithTarget(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -368,9 +327,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy{TClass}(IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy{TClass}(IInterceptor[])" />
         public static TClass CreateClassProxy<TClass>(
             this IProxyGenerator proxyGenerator,
             params IAsyncInterceptor[] interceptors)
@@ -379,9 +336,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateClassProxy<TClass>(interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy{TClass}(ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy{TClass}(ProxyGenerationOptions, IInterceptor[])" />
         public static TClass CreateClassProxy<TClass>(
             this IProxyGenerator proxyGenerator,
             ProxyGenerationOptions options,
@@ -391,9 +346,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateClassProxy<TClass>(options, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy(Type, Type[], IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy(Type, Type[], IInterceptor[])" />
         public static object CreateClassProxy(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -406,9 +359,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy(Type, ProxyGenerationOptions, object[], IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy(Type, ProxyGenerationOptions, object[], IInterceptor[])" />
         public static object CreateClassProxy(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -423,9 +374,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy(Type, object[], IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy(Type, object[], IInterceptor[])" />
         public static object CreateClassProxy(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -438,9 +387,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy(Type, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy(Type, IInterceptor[])" />
         public static object CreateClassProxy(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -449,9 +396,7 @@ namespace Castle.DynamicProxy
             return proxyGenerator.CreateClassProxy(classToProxy, interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy(Type, ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy(Type, ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateClassProxy(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -464,9 +409,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy(Type, Type[], ProxyGenerationOptions, IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy(Type, Type[], ProxyGenerationOptions, IInterceptor[])" />
         public static object CreateClassProxy(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,
@@ -481,9 +424,7 @@ namespace Castle.DynamicProxy
                 interceptors.ToInterceptors());
         }
 
-        /// <summary>
-        /// See the <see cref="IProxyGenerator .CreateClassProxy(Type, Type[], ProxyGenerationOptions, object[], IInterceptor[])"/> documentation.
-        /// </summary>
+        /// <inheritdoc cref="IProxyGenerator.CreateClassProxy(Type, Type[], ProxyGenerationOptions, object[], IInterceptor[])" />
         public static object CreateClassProxy(
             this IProxyGenerator proxyGenerator,
             Type classToProxy,

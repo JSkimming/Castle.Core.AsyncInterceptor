@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy.InterfaceProxies
@@ -9,26 +9,18 @@ namespace Castle.DynamicProxy.InterfaceProxies
 
     public class ClassWithVirtualMethodToProxy
     {
-        private ListLogger _log;
-
-        protected ClassWithVirtualMethodToProxy()
-        {
-        }
+        private ListLogger _log = null!;
 
         public ClassWithVirtualMethodToProxy(ListLogger log)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public IReadOnlyList<string> Log => _log.GetLog();
-
-        internal void PostConstructorInitialize(ListLogger log)
+        protected ClassWithVirtualMethodToProxy()
         {
-            if (log == null)
-                throw new ArgumentNullException(nameof(log));
-
-            _log = _log ?? log;
         }
+
+        public IReadOnlyList<string> Log => _log.GetLog();
 
         public virtual async Task<Guid> AsynchronousResultMethod()
         {
@@ -36,6 +28,11 @@ namespace Castle.DynamicProxy.InterfaceProxies
             await Task.Delay(10).ConfigureAwait(false);
             _log.Add($"{nameof(AsynchronousResultMethod)}:End");
             return Guid.NewGuid();
+        }
+
+        internal void PostConstructorInitialize(ListLogger log)
+        {
+            _log ??= log ?? throw new ArgumentNullException(nameof(log));
         }
     }
 }

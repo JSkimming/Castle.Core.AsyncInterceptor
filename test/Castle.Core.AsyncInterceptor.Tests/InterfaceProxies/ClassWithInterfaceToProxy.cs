@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy.InterfaceProxies
@@ -52,14 +52,17 @@ namespace Castle.DynamicProxy.InterfaceProxies
         public Task AsynchronousVoidMethod()
         {
             _log.Add(nameof(AsynchronousVoidMethod) + ":Start");
-            return Task.Delay(10).ContinueWith(t => _log.Add(nameof(AsynchronousVoidMethod) + ":End"));
+            return Task.Delay(10).ContinueWith(
+                t => _log.Add(nameof(AsynchronousVoidMethod) + ":End"),
+                TaskScheduler.Default);
         }
 
         public Task AsynchronousVoidExceptionMethod()
         {
             _log.Add(nameof(AsynchronousVoidExceptionMethod) + ":Start");
             return Task.Delay(10).ContinueWith(
-                t => throw new InvalidOperationException(nameof(AsynchronousVoidExceptionMethod) + ":Exception"));
+                t => throw new InvalidOperationException(nameof(AsynchronousVoidExceptionMethod) + ":Exception"),
+                TaskScheduler.Default);
         }
 
         public async Task<Guid> AsynchronousResultMethod()

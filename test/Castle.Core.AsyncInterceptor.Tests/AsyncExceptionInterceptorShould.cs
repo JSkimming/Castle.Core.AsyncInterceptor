@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using Castle.DynamicProxy.InterfaceProxies;
@@ -20,10 +21,10 @@ namespace Castle.DynamicProxy
             _output = output;
         }
 
-        public void CompareStackTrace(Exception noneInterceptedException, Exception interceptedException)
+        public void CompareStackTrace(Exception? noneInterceptedException, Exception? interceptedException)
         {
-            string noneInterceptedSt = noneInterceptedException.StackTrace;
-            string interceptedSt = interceptedException.StackTrace;
+            string noneInterceptedSt = noneInterceptedException?.StackTrace ?? string.Empty;
+            string interceptedSt = interceptedException?.StackTrace ?? string.Empty;
 
             _output.WriteLine(
                 $"None Intercepted Stack Trace:{Environment.NewLine}{noneInterceptedSt}");
@@ -499,6 +500,60 @@ namespace Castle.DynamicProxy
         {
         }
 
+        [Fact]
+        public void ShouldReturnAFaultedTask()
+        {
+            // Arrange
+            var target = new AllExceptions();
+            AllExceptions sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
+
+            // Act
+            Task result = sut.Test1();
+
+            // Assert
+            Assert.True(result.IsFaulted);
+            Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
+
+            ArgumentOutOfRangeException noneInterceptedException =
+                Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test1(); });
+
+            CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
+        }
+
+        [Fact]
+        public void ShouldReturnAFaultedTaskResult()
+        {
+            // Arrange
+            var target = new AllExceptions();
+            AllExceptions sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
+
+            // Act
+            Task<object> result = sut.Test2();
+
+            // Assert
+            Assert.True(result.IsFaulted);
+            Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
+
+            ArgumentOutOfRangeException noneInterceptedException =
+                Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test2(); });
+
+            CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
+        }
+
+        [SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "Just Testing.")]
+        public class AllExceptions
+        {
+            public virtual Task Test1()
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            public virtual Task<object> Test2()
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private class MyInterceptorBase : AsyncInterceptorBase
         {
             protected override Task InterceptAsync(
@@ -516,59 +571,6 @@ namespace Castle.DynamicProxy
             {
                 return proceed(invocation, proceedInfo);
             }
-        }
-
-        public class MyClass
-        {
-            public virtual Task Test1()
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            public virtual Task<object> Test2()
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        [Fact]
-        public void ShouldReturnAFaultedTask()
-        {
-            // Arrange
-            var target = new MyClass();
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
-
-            // Act
-            Task result = sut.Test1();
-
-            // Assert
-            Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
-
-            ArgumentOutOfRangeException noneInterceptedException =
-                Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test1(); });
-
-            CompareStackTrace(noneInterceptedException, result.Exception.InnerException);
-        }
-
-        [Fact]
-        public void ShouldReturnAFaultedTaskResult()
-        {
-            // Arrange
-            var target = new MyClass();
-            MyClass sut = ProxyGen.Generator.CreateClassProxyWithTarget(target, new MyInterceptorBase());
-
-            // Act
-            Task<object> result = sut.Test2();
-
-            // Assert
-            Assert.True(result.IsFaulted);
-            Assert.IsType<ArgumentOutOfRangeException>(result.Exception.InnerException);
-
-            ArgumentOutOfRangeException noneInterceptedException =
-                Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test2(); });
-
-            CompareStackTrace(noneInterceptedException, result.Exception.InnerException);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy
@@ -10,24 +10,6 @@ namespace Castle.DynamicProxy
     using Castle.DynamicProxy.InterfaceProxies;
     using Xunit;
     using Xunit.Abstractions;
-
-    public class AsyncDeterminationInterceptorShould
-    {
-        private readonly ITestOutputHelper _output;
-
-        public AsyncDeterminationInterceptorShould(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
-        [Fact]
-        public void Implement_IInterceptor()
-        {
-            var sut = new AsyncDeterminationInterceptor(new TestAsyncInterceptor(new ListLogger(_output)));
-
-            Assert.IsAssignableFrom<IInterceptor>(sut);
-        }
-    }
 
     public static class ProxyGen
     {
@@ -53,6 +35,24 @@ namespace Castle.DynamicProxy
             IInterfaceToProxy implementation = factory();
             IInterfaceToProxy proxy = Generator.CreateInterfaceProxyWithTargetInterface(implementation, interceptor);
             return proxy;
+        }
+    }
+
+    public class AsyncDeterminationInterceptorShould
+    {
+        private readonly ITestOutputHelper _output;
+
+        public AsyncDeterminationInterceptorShould(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        [Fact]
+        public void Implement_IInterceptor()
+        {
+            var sut = new AsyncDeterminationInterceptor(new TestAsyncInterceptor(new ListLogger(_output)));
+
+            Assert.IsAssignableFrom<IInterceptor>(sut);
         }
     }
 

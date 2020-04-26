@@ -1,6 +1,6 @@
 ########################################################################################################################
 # shellcheck - lining for bash scrips
-FROM nlknguyen/alpine-shellcheck:v0.4.6
+FROM koalaman/shellcheck-alpine:stable
 
 COPY ./ ./
 

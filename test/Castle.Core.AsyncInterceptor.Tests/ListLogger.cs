@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 James Skimming. All rights reserved.
+﻿// Copyright (c) 2016-2020 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy
@@ -45,10 +45,10 @@ namespace Castle.DynamicProxy
                         return _log[index];
                     }
 
-                    throw new ArgumentOutOfRangeException(
-                        nameof(index),
+                    string message =
                         $"There are '{_log.Count} logs but the index '{index}' was expected. " +
-                        $"{string.Join(Environment.NewLine, _log.Prepend("Logs:"))}");
+                        $"{string.Join(Environment.NewLine, _log.Prepend("Logs:"))}";
+                    throw new ArgumentOutOfRangeException(nameof(index), message);
                 }
             }
         }
