@@ -22,7 +22,7 @@ jobs:
         - Debug
         - Release
         dotnet:
-        - "3.1.100"
+        - 3.1.x
     name: ${{ matrix.os }} ${{ matrix.dotnet }} ${{ matrix.config }}
     steps:
     - uses: actions/checkout@v1
