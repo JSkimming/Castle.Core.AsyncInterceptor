@@ -36,7 +36,7 @@ exe dotnet test --no-restore --no-build -f "$framework" -c "$config" \
 -p:Include="$include" \
 -p:Exclude="$exclude" \
 -p:CoverletOutput="$output/" \
--p:CoverletOutputFormat="\"json,opencover,cobertura\""
+-p:CoverletOutputFormat="\"json,opencover,cobertura,lcov\""
 
 # Install trx2junit if not already installed
 if [ ! -f "$tools/trx2junit" ]
