@@ -43,3 +43,9 @@ jobs:
         file: ./test/TestResults/output/coverage.netcoreapp3.1.cobertura.xml
         fail_ci_if_error: true
         path_to_write_report: ./test/TestResults/output/coverage.netcoreapp3.1.cobertura.gz
+
+    - name: Upload coverage to Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.COVERALLS_TOKEN }}
+        path-to-lcov: ./test/TestResults/output/coverage.netcoreapp3.1.info
