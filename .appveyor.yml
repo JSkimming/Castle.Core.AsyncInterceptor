@@ -25,10 +25,6 @@ branches:
 # Operating system (build VM template)
 image: Visual Studio 2019
 
-environment:
-  COVERALLS_REPO_TOKEN:
-    secure: wlbvgdxuXKnICUGjPqGoQF35j+AKryMfPyUg+YC44hcF72KnOL+ON4WkPMSvedBb
-
 # scripts that are called at very beginning, before repo cloning
 init:
   # This gives the login details for the build instance so you can RDP to it.
@@ -69,10 +65,6 @@ test_script:
   - coverage.cmd %CONFIGURATION%
 
 after_test:
-  - choco install codecov
-  - codecov -f "test\TestResults\Test.Coverage.xml"
-  - dotnet tool install -g coveralls.net --version 1.0.0
-  - IF DEFINED COVERALLS_REPO_TOKEN csmacnz.coveralls --opencover -i "./test/TestResults/Test.Coverage.xml" --treatUploadErrorsAsWarnings
   - 7z a -t7z -mx9 -bd TestResults_%APPVEYOR_BUILD_VERSION%.7z .\test\TestResults\*
 
 #---------------------------------#
