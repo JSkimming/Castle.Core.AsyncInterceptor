@@ -25,10 +25,21 @@ jobs:
         - 3.1.x
     name: ${{ matrix.os }} ${{ matrix.dotnet }} ${{ matrix.config }}
     steps:
+
     - uses: actions/checkout@v1
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
+
     - name: Test Coverage
       run: ./coverage.sh netcoreapp3.1 ${{ matrix.config }}
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./test/TestResults/output/coverage.netcoreapp3.1.cobertura.xml
+        fail_ci_if_error: true
+        path_to_write_report: ./test/TestResults/output/coverage.netcoreapp3.1.cobertura.gz
