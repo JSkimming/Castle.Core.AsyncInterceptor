@@ -11,19 +11,24 @@ on:
 
 jobs:
 
-  build:
+  build-and-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
         - ubuntu-16.04
         - ubuntu-18.04
+        - ubuntu-20.04
+        - macos-latest
+        - windows-latest
         config:
         - Debug
         - Release
         dotnet:
         - 3.1.x
-    name: ${{ matrix.os }} ${{ matrix.dotnet }} ${{ matrix.config }}
+        framework:
+        - netcoreapp3.1
+    name: Test ${{ matrix.os }} ${{ matrix.dotnet }} ${{ matrix.config }}
     steps:
 
     - uses: actions/checkout@v1
@@ -34,18 +39,37 @@ jobs:
         dotnet-version: ${{ matrix.dotnet }}
 
     - name: Test Coverage
-      run: ./coverage.sh netcoreapp3.1 ${{ matrix.config }}
+      run: ./coverage.sh ${{ matrix.framework }} ${{ matrix.config }}
+
+  code-coverage:
+    runs-on: ubuntu-latest
+    name: Code coverage
+    strategy:
+      matrix:
+        framework:
+        - netcoreapp3.1
+    steps:
+
+    - uses: actions/checkout@v1
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Test Coverage
+      run: ./coverage.sh ${{ matrix.framework }} Release
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./test/TestResults/output/coverage.netcoreapp3.1.cobertura.xml
+        file: ./test/TestResults/output/coverage.${{ matrix.framework }}.cobertura.xml
         fail_ci_if_error: true
-        path_to_write_report: ./test/TestResults/output/coverage.netcoreapp3.1.cobertura.gz
+        path_to_write_report: ./test/TestResults/output/coverage.${{ matrix.framework }}.cobertura.gz
 
     - name: Upload coverage to Coveralls
       uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ secrets.COVERALLS_TOKEN }}
-        path-to-lcov: ./test/TestResults/output/coverage.netcoreapp3.1.info
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./test/TestResults/output/coverage.${{ matrix.framework }}.info
