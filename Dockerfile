@@ -16,8 +16,6 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
 
 ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
-RUN apk add --no-cache --update dos2unix
-
 WORKDIR /work
 
 # Copy just the solution and proj files to make best use of docker image caching.
@@ -29,7 +27,5 @@ COPY ./test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Test
 RUN dotnet restore
 
 COPY . .
-
-RUN dos2unix -k -q ./coverage.sh
 
 RUN ./coverage.sh netcoreapp3.1 Debug
