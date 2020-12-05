@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
@@ -14,7 +14,7 @@
     <Copyright>Copyright © 2016 James Skimming</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/castleproject/Core/v4.0.0/docs/images/castle-logo.png</PackageIconUrl>
+    <PackageIcon>castle-logo.png</PackageIcon>
     <RepositoryUrl>https://github.com/JSkimming/Castle.Core.AsyncInterceptor</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>
@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+    <None Include="..\..\docs\images\castle-logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
