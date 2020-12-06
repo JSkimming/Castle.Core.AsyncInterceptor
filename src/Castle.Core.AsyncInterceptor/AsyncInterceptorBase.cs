@@ -29,8 +29,7 @@ namespace Castle.DynamicProxy
 
         private static readonly MethodInfo InterceptSynchronousMethodInfo =
             typeof(AsyncInterceptorBase).GetMethod(
-                nameof(InterceptSynchronousResult),
-                BindingFlags.Static | BindingFlags.NonPublic);
+                nameof(InterceptSynchronousResult), BindingFlags.Static | BindingFlags.NonPublic)!;
 
         private static readonly ConcurrentDictionary<Type, GenericSynchronousHandler> GenericSynchronousHandlers =
             new ConcurrentDictionary<Type, GenericSynchronousHandler>

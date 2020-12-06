@@ -18,7 +18,7 @@ namespace Castle.DynamicProxy
     {
         private static readonly MethodInfo HandleAsyncMethodInfo =
             typeof(AsyncDeterminationInterceptor)
-                    .GetMethod(nameof(HandleAsyncWithResult), BindingFlags.Static | BindingFlags.NonPublic);
+                    .GetMethod(nameof(HandleAsyncWithResult), BindingFlags.Static | BindingFlags.NonPublic)!;
 
         private static readonly ConcurrentDictionary<Type, GenericAsyncHandler> GenericAsyncHandlers =
             new ConcurrentDictionary<Type, GenericAsyncHandler>();

@@ -20,7 +20,7 @@ namespace Castle.DynamicProxy.NoCoverage
         /// <see cref="Exception.InnerException" /> which cannot be done with the <c>throw;</c> semantics.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        public static void Rethrow(this Exception exception)
+        public static void Rethrow(this Exception? exception)
         {
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
@@ -34,7 +34,7 @@ namespace Castle.DynamicProxy.NoCoverage
         /// <paramref name="exception"/> is re-thrown.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        public static void RethrowInnerIfAggregate(this Exception exception)
+        public static void RethrowInnerIfAggregate(this Exception? exception)
         {
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
