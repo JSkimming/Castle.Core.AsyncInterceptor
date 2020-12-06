@@ -20,7 +20,7 @@ namespace Castle.DynamicProxy
         Justification = "Must propagate the same exceptions.")]
     public abstract class AsyncInterceptorBase : IAsyncInterceptor
     {
-#if !NETSTANDARD2_0
+#if !NETSTANDARD2_0 && !NET5_0
         /// <summary>
         /// A completed <see cref="Task"/>.
         /// </summary>
@@ -138,7 +138,7 @@ namespace Castle.DynamicProxy
             try
             {
                 proceedInfo.Invoke();
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NET5_0
                 return Task.CompletedTask;
 #else
                 return CompletedTask;
@@ -146,7 +146,7 @@ namespace Castle.DynamicProxy
             }
             catch (Exception e)
             {
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NET5_0
                 return Task.FromException(e);
 #else
                 var tcs = new TaskCompletionSource<int>();
@@ -167,7 +167,7 @@ namespace Castle.DynamicProxy
             }
             catch (Exception e)
             {
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NET5_0
                 return Task.FromException<TResult>(e);
 #else
                 var tcs = new TaskCompletionSource<TResult>();
@@ -177,6 +177,7 @@ namespace Castle.DynamicProxy
             }
         }
 
+        [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "The name explicitly says Asynchronous.")]
         private static async Task ProceedAsynchronous(IInvocation invocation, IInvocationProceedInfo proceedInfo)
         {
             proceedInfo.Invoke();
@@ -187,6 +188,7 @@ namespace Castle.DynamicProxy
             await originalReturnValue.ConfigureAwait(false);
         }
 
+        [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "The name explicitly says Asynchronous.")]
         private static async Task<TResult> ProceedAsynchronous<TResult>(
             IInvocation invocation,
             IInvocationProceedInfo proceedInfo)
