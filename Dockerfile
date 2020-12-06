@@ -4,17 +4,12 @@ FROM koalaman/shellcheck-alpine:stable
 
 COPY ./ ./
 
-# Convert CRLF to CR as it causes shellcheck warnings.
-RUN find . -type f -name '*.sh' -exec dos2unix {} \;
-
 # Run shell check on all the shell files.
 RUN find . -type f -name '*.sh' | wc -l && find . -type f -name '*.sh' | xargs shellcheck --external-sources
 
 ########################################################################################################################
 # .NET Core 3.1
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
-
-ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
 WORKDIR /work
 
