@@ -26,16 +26,16 @@ namespace Castle.DynamicProxy
         }
 
         /// <summary>
-        /// Signals <see cref="CompletedTiming"/> after stopping a <paramref name="stopwatch"/> to time the method
+        /// Signals <see cref="CompletedTiming"/> after stopping a <see cref="Stopwatch"/> to time the method
         /// <paramref name="invocation"/>.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        /// <param name="stopwatch">The <see cref="Stopwatch"/> returned by <see cref="StartingInvocation"/> to time
+        /// <param name="state">The <see cref="Stopwatch"/> returned by <see cref="StartingInvocation"/> to time
         /// the method <paramref name="invocation"/>.</param>
-        protected sealed override void CompletedInvocation(IInvocation invocation, Stopwatch stopwatch)
+        protected sealed override void CompletedInvocation(IInvocation invocation, Stopwatch state)
         {
-            stopwatch.Stop();
-            CompletedTiming(invocation, stopwatch);
+            state.Stop();
+            CompletedTiming(invocation, state);
         }
 
         /// <summary>

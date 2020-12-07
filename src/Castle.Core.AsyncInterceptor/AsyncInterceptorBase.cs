@@ -43,7 +43,7 @@ namespace Castle.DynamicProxy
         /// Intercepts a synchronous method <paramref name="invocation"/>.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        void IAsyncInterceptor.InterceptSynchronous(IInvocation invocation)
+        public void InterceptSynchronous(IInvocation invocation)
         {
             Type returnType = invocation.Method.ReturnType;
             GenericSynchronousHandler handler = GenericSynchronousHandlers.GetOrAdd(returnType, CreateHandler);
@@ -54,7 +54,7 @@ namespace Castle.DynamicProxy
         /// Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="Task"/>.
         /// </summary>
         /// <param name="invocation">The method invocation.</param>
-        void IAsyncInterceptor.InterceptAsynchronous(IInvocation invocation)
+        public void InterceptAsynchronous(IInvocation invocation)
         {
             invocation.ReturnValue = InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedAsynchronous);
         }
@@ -64,7 +64,7 @@ namespace Castle.DynamicProxy
         /// </summary>
         /// <typeparam name="TResult">The type of the <see cref="Task{T}"/> <see cref="Task{T}.Result"/>.</typeparam>
         /// <param name="invocation">The method invocation.</param>
-        void IAsyncInterceptor.InterceptAsynchronous<TResult>(IInvocation invocation)
+        public void InterceptAsynchronous<TResult>(IInvocation invocation)
         {
             invocation.ReturnValue =
                 InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedAsynchronous<TResult>);
