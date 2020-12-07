@@ -23,6 +23,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>
+    <ContinuousIntegrationBuild Condition=" '$(CI)' == 'true' ">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <!-- Strong name signing -->
