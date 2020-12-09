@@ -46,7 +46,7 @@ assembly_info:
 #---------------------------------#
 
 build_script:
-  - dotnet pack -c %CONFIGURATION% --include-source /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+  - dotnet pack -c %CONFIGURATION% /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 
 #---------------------------------#
 #      artifacts configuration    #
@@ -54,6 +54,7 @@ build_script:
 
 artifacts:
   - path: src\**\*.nupkg
+  - path: src\**\*.snupkg
   - path: TestResults_*.7z
     name: TestResults
 

@@ -29,3 +29,6 @@ dotnet_diagnostic.CA1303.severity = none
 
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = none
+
+# CA1711: Identifiers should not have incorrect suffix
+dotnet_diagnostic.CA1711.severity = none
