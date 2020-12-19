@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CE54F76E-8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Core.AsyncInterceptor", "src\Castle.Core.AsyncInterceptor\Castle.Core.AsyncInterceptor.csproj", "{51BA6816-5FDB-4AE7-A473-4C5CF1C1FAF4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Core.AsyncInterceptor.Benchmark", "test\Castle.Core.AsyncInterceptor.Benchmark\Castle.Core.AsyncInterceptor.Benchmark.csproj", "{DB487C80-5E23-46B1-B4BC-DD449902453B}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Castle.Core.AsyncInterceptor.Tests", "test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj", "{25AAC675-D2A0-4D20-97C8-FF1E28307E6E}"
 EndProject
 Global
@@ -21,6 +23,10 @@ Global
 		{51BA6816-5FDB-4AE7-A473-4C5CF1C1FAF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51BA6816-5FDB-4AE7-A473-4C5CF1C1FAF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51BA6816-5FDB-4AE7-A473-4C5CF1C1FAF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB487C80-5E23-46B1-B4BC-DD449902453B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB487C80-5E23-46B1-B4BC-DD449902453B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB487C80-5E23-46B1-B4BC-DD449902453B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB487C80-5E23-46B1-B4BC-DD449902453B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{25AAC675-D2A0-4D20-97C8-FF1E28307E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{25AAC675-D2A0-4D20-97C8-FF1E28307E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25AAC675-D2A0-4D20-97C8-FF1E28307E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,6 +37,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{51BA6816-5FDB-4AE7-A473-4C5CF1C1FAF4} = {F820D2E2-6C9C-4165-9C13-C77B2737A5AC}
+		{DB487C80-5E23-46B1-B4BC-DD449902453B} = {CE54F76E-8913-4BBA-ADF3-A50777F55419}
 		{25AAC675-D2A0-4D20-97C8-FF1E28307E6E} = {CE54F76E-8913-4BBA-ADF3-A50777F55419}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
