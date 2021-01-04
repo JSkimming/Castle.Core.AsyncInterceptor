@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 James Skimming. All rights reserved.
+// Copyright (c) 2016-2021 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System;
@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 #if NET45
 [assembly: AssemblyTitle("Castle.Core.AsyncInterceptor .NET Framework")]
+#elif NET5_0
+[assembly: AssemblyTitle("Castle.Core.AsyncInterceptor .NET 5.0")]
 #else
 [assembly: AssemblyTitle("Castle.Core.AsyncInterceptor .NET Standard")]
 #endif
@@ -18,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Castle.Core.AsyncInterceptor")]
-[assembly: AssemblyCopyright("Copyright © 2016-2020 James Skimming")]
+[assembly: AssemblyCopyright("Copyright (c) 2016-2021 James Skimming. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
