@@ -1,0 +1,13 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "00:00"
+    timezone: Europe/London
+  open-pull-requests-limit: 10
+  reviewers:
+  - JSkimming
+  assignees:
+  - JSkimming
