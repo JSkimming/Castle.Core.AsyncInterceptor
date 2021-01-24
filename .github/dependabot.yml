@@ -11,8 +11,3 @@ updates:
   - JSkimming
   assignees:
   - JSkimming
-  ignore:
-  - dependency-name: coverlet.msbuild
-    versions:
-    - ">= 2.6.2.a"
-    - "< 2.6.3"
