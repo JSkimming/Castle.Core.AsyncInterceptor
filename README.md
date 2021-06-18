@@ -142,12 +142,12 @@ A possible extension of `AsyncInterceptorBase` for exception handling could be i
 ```csharp
 public class ExceptionHandlingInterceptor : AsyncInterceptorBase
 {
-    protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+    protected override async Task InterceptAsync(IInvocation invocation, IInvocationProceedInfo proceedInfo, Func<IInvocation, IInvocationProceedInfo, Task> proceed)
     {
         try
         {
             // Cannot simply return the the task, as any exceptions would not be caught below.
-            await proceed(invocation).ConfigureAwait(false);
+            await proceed(invocation, proceedInfo).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -156,12 +156,12 @@ public class ExceptionHandlingInterceptor : AsyncInterceptorBase
         }
     }
 
-    protected override async Task<T> InterceptAsync<T>(IInvocation invocation, Func<IInvocation, Task<T>> proceed)
+    protected override async Task<TResult> InterceptAsync<TResult>(IInvocation invocation, IInvocationProceedInfo proceedInfo, Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
     {
         try
         {
             // Cannot simply return the the task, as any exceptions would not be caught below.
-            return await proceed(invocation).ConfigureAwait(false);
+            return await proceed(invocation, proceedInfo).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
