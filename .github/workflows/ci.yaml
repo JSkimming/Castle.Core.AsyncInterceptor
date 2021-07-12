@@ -81,3 +81,24 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ./test/TestResults/output/coverage.${{ matrix.framework }}.info
+
+  publish:
+    runs-on: windows-latest
+    name: Publish
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Setup .NET 5.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Pack
+      run: dotnet pack -c Release --include-source -p:PackageVersion=1.2.3
