@@ -40,7 +40,7 @@ orbs:
             description: The .NET Core SDK image tag to use.
             type: string
         docker:
-          - image: mcr.microsoft.com/dotnet/<<parameters.tag>>
+          - image: mcr.microsoft.com/dotnet/sdk:<<parameters.tag>>
 
 workflows:
 
@@ -49,42 +49,22 @@ workflows:
       - shellcheck/check:
           name: shellcheck
       - build/run-build:
-          name: 3.1 Debug Build
-          image-tag: "core/sdk:3.1"
+          name: .NET 6.0 Debug
+          image-tag: "6.0"
           build-config: Debug
-          framework: netcoreapp3.1
+          framework: net6.0
       - build/run-build:
-          name: 3.1 Alpine Debug Build
-          image-tag: "core/sdk:3.1-alpine"
+          name: Alpine .NET 6.0 Debug
+          image-tag: "6.0-alpine"
           build-config: Debug
-          framework: netcoreapp3.1
+          framework: net6.0
       - build/run-build:
-          name: 3.1 Release Build
-          image-tag: "core/sdk:3.1"
+          name: .NET 6.0 Release
+          image-tag: "6.0"
           build-config: Release
-          framework: netcoreapp3.1
+          framework: net6.0
       - build/run-build:
-          name: 3.1 Alpine Release Build
-          image-tag: "core/sdk:3.1-alpine"
+          name: Alpine .NET 6.0 Release
+          image-tag: "6.0-alpine"
           build-config: Release
-          framework: netcoreapp3.1
-      - build/run-build:
-          name: 5.0 Debug Build
-          image-tag: "sdk:5.0"
-          build-config: Debug
-          framework: net5.0
-      - build/run-build:
-          name: 5.0 Alpine Debug Build
-          image-tag: "sdk:5.0-alpine"
-          build-config: Debug
-          framework: net5.0
-      - build/run-build:
-          name: 5.0 Release Build
-          image-tag: "sdk:5.0"
-          build-config: Release
-          framework: net5.0
-      - build/run-build:
-          name: 5.0 Alpine Release Build
-          image-tag: "sdk:5.0-alpine"
-          build-config: Release
-          framework: net5.0
+          framework: net6.0
