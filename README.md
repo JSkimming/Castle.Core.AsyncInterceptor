@@ -3,7 +3,6 @@
 [![NuGet Version](https://img.shields.io/nuget/v/Castle.Core.AsyncInterceptor.svg)](https://www.nuget.org/packages/Castle.Core.AsyncInterceptor "NuGet Version")
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Castle.Core.AsyncInterceptor.svg)](https://www.nuget.org/packages/Castle.Core.AsyncInterceptor "NuGet Downloads")
 [![Build status](https://img.shields.io/appveyor/ci/JSkimming/castle-core-asyncinterceptor/master.svg?label=AppVeyor)](https://ci.appveyor.com/project/JSkimming/castle-core-asyncinterceptor "AppVeyor build status")
-[![Travis build Status](https://img.shields.io/travis/JSkimming/Castle.Core.AsyncInterceptor/master.svg?label=Travis)](https://travis-ci.org/JSkimming/Castle.Core.AsyncInterceptor "Travis build status")
 [![CircleCI build Status](https://img.shields.io/circleci/project/github/JSkimming/Castle.Core.AsyncInterceptor/master.svg?label=CircleCI)](https://circleci.com/gh/JSkimming/Castle.Core.AsyncInterceptor/tree/master "CircleCI build Status")
 [![codecov Coverage Status](https://img.shields.io/codecov/c/github/JSkimming/Castle.Core.AsyncInterceptor/master.svg?label=Codecov)](https://codecov.io/gh/JSkimming/Castle.Core.AsyncInterceptor "Codecov Coverage Status")
 [![Coveralls Coverage Status](https://img.shields.io/coveralls/github/JSkimming/Castle.Core.AsyncInterceptor/master.svg?label=Coveralls)](https://coveralls.io/r/JSkimming/Castle.Core.AsyncInterceptor "Coveralls Coverage Status")
@@ -319,7 +318,6 @@ The default implementation of StartingInvocation simply returns `null`. If all y
 after they are invoked, then just implement `CompletedInvocation` and ignore the `state` parameter which will be
 null. In that situation your class can be defined as:
 
-
 ```csharp
 public class MyProcessingAsyncInterceptor : ProcessingAsyncInterceptor<object>
 {
@@ -373,6 +371,7 @@ public class TestAsyncTimingInterceptor : AsyncTimingInterceptor
     }
 }
 ```
+
 ## Testing
 
 This library maintains a high level of code coverage with extensive unit tests.
@@ -383,7 +382,7 @@ There are several ways to run the tests, the most convenient is through Visual S
 
 The tests can also be executed from the command line like this:
 
-```
+```bash
 dotnet test test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 ```
 
@@ -393,14 +392,14 @@ On Windows the above command will execute the tests on all 3 runtimes, .NETFrame
 To run the tests targeting a specific runtime (which may be necessary if you don't have all them all installed) run the
 following command:
 
-```
+```bash
 dotnet test -f netcoreapp3.1 test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj
 ```
 
 A docker compose file is provided to run the tests on a linux container. To execute the tests in a container run the
 following command:
 
-```
+```bash
 docker build .
 ```
 
@@ -410,7 +409,7 @@ Code coverage uses the excellent and free [OpenCover](https://github.com/OpenCov
 
 To execute the tests with code coverage (Windows Only) run the following command:
 
-```
+```cmd
 coverage.cmd
 ```
 
