@@ -16,37 +16,37 @@ jobs:
     strategy:
       matrix:
         os:
-        - ubuntu-16.04
-        - ubuntu-18.04
-        - ubuntu-20.04
-        - macos-latest
-        - windows-latest
+          - ubuntu-16.04
+          - ubuntu-18.04
+          - ubuntu-20.04
+          - macos-latest
+          - windows-latest
         config:
-        - Debug
-        - Release
+          - Debug
+          - Release
         framework:
-        - netcoreapp3.1
-        - net5.0
+          - netcoreapp3.1
+          - net5.0
     name: Test ${{ matrix.os }} ${{ matrix.framework }} ${{ matrix.config }}
 
     steps:
 
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v1
-      if: matrix.framework == 'netcoreapp3.1'
-      with:
-        dotnet-version: 3.1.x
+      - name: Setup .NET Core 3.1
+        uses: actions/setup-dotnet@v1
+        if: matrix.framework == 'netcoreapp3.1'
+        with:
+          dotnet-version: 3.1.x
 
-    - name: Setup .NET 5.0
-      uses: actions/setup-dotnet@v1
-      if: matrix.framework == 'net5.0'
-      with:
-        dotnet-version: 5.0.x
+      - name: Setup .NET 5.0
+        uses: actions/setup-dotnet@v1
+        if: matrix.framework == 'net5.0'
+        with:
+          dotnet-version: 5.0.x
 
-    - name: Test Coverage
-      run: ./coverage.sh ${{ matrix.framework }} ${{ matrix.config }}
+      - name: Test Coverage
+        run: ./coverage.sh ${{ matrix.framework }} ${{ matrix.config }}
 
   code-coverage:
     runs-on: ubuntu-latest
@@ -54,30 +54,35 @@ jobs:
     strategy:
       matrix:
         framework:
-        - net5.0
+          - net5.0
 
     steps:
 
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Setup .NET 5.0
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
+      - name: Setup .NET 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
 
-    - name: Test Coverage
-      run: ./coverage.sh ${{ matrix.framework }} Release
+      - name: Test Coverage
+        run: ./coverage.sh ${{ matrix.framework }} Release
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./test/TestResults/output/coverage.${{ matrix.framework }}.cobertura.xml
-        fail_ci_if_error: true
-        path_to_write_report: ./test/TestResults/output/coverage.${{ matrix.framework }}.cobertura.gz
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./test/TestResults/output/coverage.${{ matrix.framework }}.cobertura.xml
+          fail_ci_if_error: true
 
-    - name: Upload coverage to Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./test/TestResults/output/coverage.${{ matrix.framework }}.info
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./test/TestResults/output/coverage.${{ matrix.framework }}.info
+
+      - name: Shellcheck
+        run: >-
+          find . -type f -name '*.sh' |
+          wc -l && find . -type f -name '*.sh' |
+          xargs shellcheck --external-sources --color=always
