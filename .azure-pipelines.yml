@@ -10,36 +10,36 @@ jobs:
   continueOnError: "true"
   timeoutInMinutes: 5
   variables:
-    buildFramework: net5.0
+    buildFramework: net6.0
   strategy:
     matrix:
-      "Linux 5.0 Debug":
-        sdkVersion: 5.0.x
+      "Linux 6.0 Debug":
+        sdkVersion: 6.0.x
         config: Debug
         imageName: ubuntu-latest
         framework: $(buildFramework)
-      "Linux 5.0 Release":
-        sdkVersion: 5.0.x
+      "Linux 6.0 Release":
+        sdkVersion: 6.0.x
         config: Release
         imageName: ubuntu-latest
         framework: $(buildFramework)
-      "MacOS 5.0 Debug":
-        sdkVersion: 5.0.x
+      "MacOS 6.0 Debug":
+        sdkVersion: 6.0.x
         config: Debug
         imageName: macOS-latest
         framework: $(buildFramework)
-      "MacOS 5.0 Release":
-        sdkVersion: 5.0.x
+      "MacOS 6.0 Release":
+        sdkVersion: 6.0.x
         config: Release
         imageName: macOS-latest
         framework: $(buildFramework)
-      "Windows 5.0 Debug":
-        sdkVersion: 5.0.x
+      "Windows 6.0 Debug":
+        sdkVersion: 6.0.x
         config: Debug
         imageName: windows-latest
         framework: $(buildFramework)
-      "Windows 5.0 Release":
-        sdkVersion: 5.0.x
+      "Windows 6.0 Release":
+        sdkVersion: 6.0.x
         config: Release
         imageName: windows-latest
         framework: $(buildFramework)
@@ -70,7 +70,7 @@ jobs:
       codeCoverageTool: Cobertura
       summaryFileLocation: ./test/TestResults/output/coverage.$(framework).cobertura.xml
 
-  - task: BuildQualityChecks@7
+  - task: BuildQualityChecks@8
     displayName: Check code coverage levels
     inputs:
       showStatistics: true

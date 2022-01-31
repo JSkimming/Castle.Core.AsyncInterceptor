@@ -23,25 +23,18 @@ jobs:
           - Debug
           - Release
         framework:
-          - netcoreapp3.1
-          - net5.0
+          - net6.0
     name: Test ${{ matrix.os }} ${{ matrix.framework }} ${{ matrix.config }}
 
     steps:
 
       - uses: actions/checkout@v2
 
-      - name: Setup .NET Core 3.1
+      - name: Setup .NET 6.0
         uses: actions/setup-dotnet@v1
-        if: matrix.framework == 'netcoreapp3.1'
+        if: matrix.framework == 'net6.0'
         with:
-          dotnet-version: 3.1.x
-
-      - name: Setup .NET 5.0
-        uses: actions/setup-dotnet@v1
-        if: matrix.framework == 'net5.0'
-        with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
 
       - name: Test Coverage
         run: ./coverage.sh ${{ matrix.framework }} ${{ matrix.config }}
@@ -52,16 +45,16 @@ jobs:
     strategy:
       matrix:
         framework:
-          - net5.0
+          - net6.0
 
     steps:
 
       - uses: actions/checkout@v2
 
-      - name: Setup .NET 5.0
+      - name: Setup .NET 6.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
 
       - name: Test Coverage
         run: ./coverage.sh ${{ matrix.framework }} Release

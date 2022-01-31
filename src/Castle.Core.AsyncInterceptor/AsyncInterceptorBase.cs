@@ -20,7 +20,7 @@ namespace Castle.DynamicProxy
         Justification = "Must propagate the same exceptions.")]
     public abstract class AsyncInterceptorBase : IAsyncInterceptor
     {
-#if !NETSTANDARD2_0 && !NET5_0
+#if NET45
         /// <summary>
         /// A completed <see cref="Task"/>.
         /// </summary>
@@ -138,20 +138,20 @@ namespace Castle.DynamicProxy
             try
             {
                 proceedInfo.Invoke();
-#if NETSTANDARD2_0 || NET5_0
-                return Task.CompletedTask;
-#else
+#if NET45
                 return CompletedTask;
+#else
+                return Task.CompletedTask;
 #endif
             }
             catch (Exception e)
             {
-#if NETSTANDARD2_0 || NET5_0
-                return Task.FromException(e);
-#else
+#if NET45
                 var tcs = new TaskCompletionSource<int>();
                 tcs.SetException(e);
                 return tcs.Task;
+#else
+                return Task.FromException(e);
 #endif
             }
         }
@@ -167,12 +167,12 @@ namespace Castle.DynamicProxy
             }
             catch (Exception e)
             {
-#if NETSTANDARD2_0 || NET5_0
-                return Task.FromException<TResult>(e);
-#else
+#if NET45
                 var tcs = new TaskCompletionSource<TResult>();
                 tcs.SetException(e);
                 return tcs.Task;
+#else
+                return Task.FromException<TResult>(e);
 #endif
             }
         }
