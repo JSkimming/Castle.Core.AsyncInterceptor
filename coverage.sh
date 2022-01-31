@@ -4,7 +4,7 @@
 exe() { echo; echo "\$ $*" ; "$@" ; }
 
 # Parameters
-framework="${1-netcoreapp3.1}"
+framework="${1-net6.0}"
 config="${2-Debug}"
 
 include="[Castle.Core.AsyncInterceptor]*"
