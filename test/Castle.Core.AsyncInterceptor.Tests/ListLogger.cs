@@ -1,96 +1,95 @@
 // Copyright (c) 2016-2022 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace Castle.DynamicProxy
+namespace Castle.DynamicProxy;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit.Abstractions;
+
+public class ListLogger
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Xunit.Abstractions;
+    private readonly List<string> _log = new List<string>(8);
 
-    public class ListLogger
+    private readonly object _lock = new object();
+
+    public ListLogger(ITestOutputHelper output)
     {
-        private readonly List<string> _log = new List<string>(8);
+        Output = output ?? throw new ArgumentNullException(nameof(output));
+    }
 
-        private readonly object _lock = new object();
+    public ITestOutputHelper Output { get; }
 
-        public ListLogger(ITestOutputHelper output)
+    public bool Disabled { get; private set; }
+
+    public int Count
+    {
+        get
         {
-            Output = output ?? throw new ArgumentNullException(nameof(output));
-        }
-
-        public ITestOutputHelper Output { get; }
-
-        public bool Disabled { get; private set; }
-
-        public int Count
-        {
-            get
+            lock (_lock)
             {
-                lock (_lock)
+                return _log.Count;
+            }
+        }
+    }
+
+    public string this[int index]
+    {
+        get
+        {
+            lock (_lock)
+            {
+                if (index >= 0 && index < _log.Count)
                 {
-                    return _log.Count;
+                    return _log[index];
                 }
+
+                string message =
+                    $"There are '{_log.Count} logs but the index '{index}' was expected. " +
+                    $"{string.Join(Environment.NewLine, _log.Prepend("Logs:"))}";
+                throw new ArgumentOutOfRangeException(nameof(index), message);
             }
         }
+    }
 
-        public string this[int index]
+    public bool Disable(bool disable = true)
+    {
+        lock (_lock)
         {
-            get
-            {
-                lock (_lock)
-                {
-                    if (index >= 0 && index < _log.Count)
-                    {
-                        return _log[index];
-                    }
-
-                    string message =
-                        $"There are '{_log.Count} logs but the index '{index}' was expected. " +
-                        $"{string.Join(Environment.NewLine, _log.Prepend("Logs:"))}";
-                    throw new ArgumentOutOfRangeException(nameof(index), message);
-                }
-            }
+            bool oldValue = Disabled;
+            Disabled = disable;
+            return oldValue;
         }
+    }
 
-        public bool Disable(bool disable = true)
+    public string First() => this[0];
+
+    public string Last()
+    {
+        lock (_lock)
         {
-            lock (_lock)
-            {
-                bool oldValue = Disabled;
-                Disabled = disable;
-                return oldValue;
-            }
+            return this[_log.Count - 1];
         }
+    }
 
-        public string First() => this[0];
-
-        public string Last()
+    public void Add(string message)
+    {
+        lock (_lock)
         {
-            lock (_lock)
-            {
-                return this[_log.Count - 1];
-            }
+            if (Disabled)
+                return;
+
+            Output.WriteLine(message);
+            _log.Add(message);
         }
+    }
 
-        public void Add(string message)
+    public IReadOnlyList<string> GetLog()
+    {
+        lock (_lock)
         {
-            lock (_lock)
-            {
-                if (Disabled)
-                    return;
-
-                Output.WriteLine(message);
-                _log.Add(message);
-            }
-        }
-
-        public IReadOnlyList<string> GetLog()
-        {
-            lock (_lock)
-            {
-                return _log.ToList();
-            }
+            return _log.ToList();
         }
     }
 }

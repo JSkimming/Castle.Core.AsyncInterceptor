@@ -1,76 +1,75 @@
 // Copyright (c) 2016-2022 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace Castle.DynamicProxy.InterfaceProxies
+namespace Castle.DynamicProxy.InterfaceProxies;
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+public class TestAsyncInterceptorBase : AsyncInterceptorBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    private readonly ListLogger _log;
+    private readonly bool _asyncB4Proceed;
+    private readonly int _msDelayAfterProceed;
 
-    public class TestAsyncInterceptorBase : AsyncInterceptorBase
+    public TestAsyncInterceptorBase(ListLogger log, bool asyncB4Proceed, int msDelayAfterProceed)
     {
-        private readonly ListLogger _log;
-        private readonly bool _asyncB4Proceed;
-        private readonly int _msDelayAfterProceed;
+        _log = log ?? throw new ArgumentNullException(nameof(log));
+        _asyncB4Proceed = asyncB4Proceed;
+        _msDelayAfterProceed = msDelayAfterProceed;
+    }
 
-        public TestAsyncInterceptorBase(ListLogger log, bool asyncB4Proceed, int msDelayAfterProceed)
+    protected override async Task InterceptAsync(
+        IInvocation invocation,
+        IInvocationProceedInfo proceedInfo,
+        Func<IInvocation, IInvocationProceedInfo, Task> proceed)
+    {
+        try
         {
-            _log = log ?? throw new ArgumentNullException(nameof(log));
-            _asyncB4Proceed = asyncB4Proceed;
-            _msDelayAfterProceed = msDelayAfterProceed;
+            _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
+
+            if (_asyncB4Proceed)
+                await Task.Yield();
+
+            await proceed(invocation, proceedInfo).ConfigureAwait(false);
+
+            if (_msDelayAfterProceed > 0)
+                await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
+
+            _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
         }
-
-        protected override async Task InterceptAsync(
-            IInvocation invocation,
-            IInvocationProceedInfo proceedInfo,
-            Func<IInvocation, IInvocationProceedInfo, Task> proceed)
+        catch (Exception e)
         {
-            try
-            {
-                _log.Add($"{invocation.Method.Name}:StartingVoidInvocation");
-
-                if (_asyncB4Proceed)
-                    await Task.Yield();
-
-                await proceed(invocation, proceedInfo).ConfigureAwait(false);
-
-                if (_msDelayAfterProceed > 0)
-                    await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
-
-                _log.Add($"{invocation.Method.Name}:CompletedVoidInvocation");
-            }
-            catch (Exception e)
-            {
-                _log.Add($"{invocation.Method.Name}:VoidExceptionThrown:{e.Message}");
-                throw;
-            }
+            _log.Add($"{invocation.Method.Name}:VoidExceptionThrown:{e.Message}");
+            throw;
         }
+    }
 
-        protected override async Task<TResult> InterceptAsync<TResult>(
-            IInvocation invocation,
-            IInvocationProceedInfo proceedInfo,
-            Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
+    protected override async Task<TResult> InterceptAsync<TResult>(
+        IInvocation invocation,
+        IInvocationProceedInfo proceedInfo,
+        Func<IInvocation, IInvocationProceedInfo, Task<TResult>> proceed)
+    {
+        try
         {
-            try
-            {
-                _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
+            _log.Add($"{invocation.Method.Name}:StartingResultInvocation");
 
-                if (_asyncB4Proceed)
-                    await Task.Yield();
+            if (_asyncB4Proceed)
+                await Task.Yield();
 
-                TResult result = await proceed(invocation, proceedInfo).ConfigureAwait(false);
+            TResult result = await proceed(invocation, proceedInfo).ConfigureAwait(false);
 
-                if (_msDelayAfterProceed > 0)
-                    await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
+            if (_msDelayAfterProceed > 0)
+                await Task.Delay(_msDelayAfterProceed).ConfigureAwait(false);
 
-                _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
-                return result;
-            }
-            catch (Exception e)
-            {
-                _log.Add($"{invocation.Method.Name}:ResultExceptionThrown:{e.Message}");
-                throw;
-            }
+            _log.Add($"{invocation.Method.Name}:CompletedResultInvocation");
+            return result;
+        }
+        catch (Exception e)
+        {
+            _log.Add($"{invocation.Method.Name}:ResultExceptionThrown:{e.Message}");
+            throw;
         }
     }
 }

@@ -1,38 +1,37 @@
 // Copyright (c) 2016-2022 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace Castle.DynamicProxy.InterfaceProxies
+namespace Castle.DynamicProxy.InterfaceProxies;
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+public class ClassWithVirtualMethodToProxy
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    private ListLogger _log = null!;
 
-    public class ClassWithVirtualMethodToProxy
+    public ClassWithVirtualMethodToProxy(ListLogger log)
     {
-        private ListLogger _log = null!;
+        _log = log ?? throw new ArgumentNullException(nameof(log));
+    }
 
-        public ClassWithVirtualMethodToProxy(ListLogger log)
-        {
-            _log = log ?? throw new ArgumentNullException(nameof(log));
-        }
+    protected ClassWithVirtualMethodToProxy()
+    {
+    }
 
-        protected ClassWithVirtualMethodToProxy()
-        {
-        }
+    public IReadOnlyList<string> Log => _log.GetLog();
 
-        public IReadOnlyList<string> Log => _log.GetLog();
+    public virtual async Task<Guid> AsynchronousResultMethod()
+    {
+        _log.Add($"{nameof(AsynchronousResultMethod)}:Start");
+        await Task.Delay(10).ConfigureAwait(false);
+        _log.Add($"{nameof(AsynchronousResultMethod)}:End");
+        return Guid.NewGuid();
+    }
 
-        public virtual async Task<Guid> AsynchronousResultMethod()
-        {
-            _log.Add($"{nameof(AsynchronousResultMethod)}:Start");
-            await Task.Delay(10).ConfigureAwait(false);
-            _log.Add($"{nameof(AsynchronousResultMethod)}:End");
-            return Guid.NewGuid();
-        }
-
-        internal void PostConstructorInitialize(ListLogger log)
-        {
-            _log ??= log ?? throw new ArgumentNullException(nameof(log));
-        }
+    internal void PostConstructorInitialize(ListLogger log)
+    {
+        _log ??= log ?? throw new ArgumentNullException(nameof(log));
     }
 }

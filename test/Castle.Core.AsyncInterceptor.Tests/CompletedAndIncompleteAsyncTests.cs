@@ -1,289 +1,280 @@
 // Copyright (c) 2016-2022 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace Castle.DynamicProxy
+namespace Castle.DynamicProxy;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Castle.DynamicProxy.InterfaceProxies;
+using Xunit;
+using Xunit.Abstractions;
+
+public abstract class AsynchronousVoidMethodCompletedAndIncompleteBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Castle.DynamicProxy.InterfaceProxies;
-    using Xunit;
-    using Xunit.Abstractions;
+    private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
+    private readonly ListLogger _log;
+    private readonly IInterfaceToProxy _proxy;
 
-    public abstract class AsynchronousVoidMethodCompletedAndIncompleteBase
+    protected AsynchronousVoidMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
     {
-        private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
-        private readonly ListLogger _log;
-        private readonly IInterfaceToProxy _proxy;
+        _log = new ListLogger(output);
 
-        protected AsynchronousVoidMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
-        {
-            _log = new ListLogger(output);
+        IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
+        IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
-            IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
-            IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
-
-            var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed: true, msDelayAfterProceed: 10);
-            _proxy = ProxyGen.CreateProxy(
-                alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-                interceptor);
-        }
-
-        [Fact]
-        public async Task ShouldLog4Entries()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
-
-            // Assert
-            Assert.Equal(4, _log.Count);
-        }
-
-        [Fact]
-        public async Task ShouldAllowProcessingPriorToInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
-
-            // Assert
-            Assert.Equal($"{MethodName}:StartingVoidInvocation", _log[0]);
-        }
-
-        [Fact]
-        public async Task ShouldAllowProcessingAfterInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
-
-            // Assert
-            Assert.Equal($"{MethodName}:CompletedVoidInvocation", _log[3]);
-        }
+        var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed: true, msDelayAfterProceed: 10);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, interceptor);
     }
 
-    public class WhenInterceptingAsynchronousVoidMethodsWhichReturnCompletedTasks
-        : AsynchronousVoidMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldLog4Entries()
     {
-        public WhenInterceptingAsynchronousVoidMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: true)
-        {
-        }
+        // Act
+        await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.Equal(4, _log.Count);
     }
 
-    public class WhenInterceptingAsynchronousVoidMethodsWhichReturnIncompleteTasks
-        : AsynchronousVoidMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldAllowProcessingPriorToInvocation()
     {
-        public WhenInterceptingAsynchronousVoidMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: false)
-        {
-        }
+        // Act
+        await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.Equal($"{MethodName}:StartingVoidInvocation", _log[0]);
     }
 
-    public abstract class AsynchronousResultMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldAllowProcessingAfterInvocation()
     {
-        private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
-        private readonly ListLogger _log;
-        private readonly IInterfaceToProxy _proxy;
+        // Act
+        await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
-        protected AsynchronousResultMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
-        {
-            _log = new ListLogger(output);
+        // Assert
+        Assert.Equal($"{MethodName}:CompletedVoidInvocation", _log[3]);
+    }
+}
 
-            IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
-            IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
+public class WhenInterceptingAsynchronousVoidMethodsWhichReturnCompletedTasks
+    : AsynchronousVoidMethodCompletedAndIncompleteBase
+{
+    public WhenInterceptingAsynchronousVoidMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: true)
+    {
+    }
+}
 
-            var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed: true, msDelayAfterProceed: 10);
-            _proxy = ProxyGen.CreateProxy(
-                alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-                interceptor);
-        }
+public class WhenInterceptingAsynchronousVoidMethodsWhichReturnIncompleteTasks
+    : AsynchronousVoidMethodCompletedAndIncompleteBase
+{
+    public WhenInterceptingAsynchronousVoidMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: false)
+    {
+    }
+}
 
-        [Fact]
-        public async Task ShouldLog4Entries()
-        {
-            // Act
-            Guid result = await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+public abstract class AsynchronousResultMethodCompletedAndIncompleteBase
+{
+    private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
+    private readonly ListLogger _log;
+    private readonly IInterfaceToProxy _proxy;
 
-            // Assert
-            Assert.NotEqual(Guid.Empty, result);
-            Assert.Equal(4, _log.Count);
-        }
+    protected AsynchronousResultMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
+    {
+        _log = new ListLogger(output);
 
-        [Fact]
-        public async Task ShouldAllowProcessingPriorToInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+        IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
+        IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
-            // Assert
-            Assert.Equal($"{MethodName}:StartingResultInvocation", _log[0]);
-        }
-
-        [Fact]
-        public async Task ShouldAllowProcessingAfterInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
-
-            // Assert
-            Assert.Equal($"{MethodName}:CompletedResultInvocation", _log[3]);
-        }
+        var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed: true, msDelayAfterProceed: 10);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, interceptor);
     }
 
-    public class WhenInterceptingAsynchronousResultMethodsWhichReturnCompletedTasks
-        : AsynchronousResultMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldLog4Entries()
     {
-        public WhenInterceptingAsynchronousResultMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: true)
-        {
-        }
+        // Act
+        Guid result = await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.NotEqual(Guid.Empty, result);
+        Assert.Equal(4, _log.Count);
     }
 
-    public class WhenInterceptingAsynchronousResultMethodsWhichReturnIncompleteTasks
-        : AsynchronousResultMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldAllowProcessingPriorToInvocation()
     {
-        public WhenInterceptingAsynchronousResultMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: false)
-        {
-        }
+        // Act
+        await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.Equal($"{MethodName}:StartingResultInvocation", _log[0]);
     }
 
-    public abstract class TimingAsynchronousVoidMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldAllowProcessingAfterInvocation()
     {
-        private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
-        private readonly ListLogger _log;
-        private readonly TestAsyncTimingInterceptor _interceptor;
-        private readonly IInterfaceToProxy _proxy;
+        // Act
+        await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
 
-        protected TimingAsynchronousVoidMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
-        {
-            _log = new ListLogger(output);
+        // Assert
+        Assert.Equal($"{MethodName}:CompletedResultInvocation", _log[3]);
+    }
+}
 
-            IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
-            IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
+public class WhenInterceptingAsynchronousResultMethodsWhichReturnCompletedTasks
+    : AsynchronousResultMethodCompletedAndIncompleteBase
+{
+    public WhenInterceptingAsynchronousResultMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: true)
+    {
+    }
+}
 
-            _interceptor = new TestAsyncTimingInterceptor(_log);
-            _proxy = ProxyGen.CreateProxy(
-                alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-                _interceptor);
-        }
+public class WhenInterceptingAsynchronousResultMethodsWhichReturnIncompleteTasks
+    : AsynchronousResultMethodCompletedAndIncompleteBase
+{
+    public WhenInterceptingAsynchronousResultMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: false)
+    {
+    }
+}
 
-        [Fact]
-        public async Task ShouldLog4Entries()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+public abstract class TimingAsynchronousVoidMethodCompletedAndIncompleteBase
+{
+    private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
+    private readonly ListLogger _log;
+    private readonly TestAsyncTimingInterceptor _interceptor;
+    private readonly IInterfaceToProxy _proxy;
 
-            // Assert
-            Assert.Equal(4, _log.Count);
-        }
+    protected TimingAsynchronousVoidMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
+    {
+        _log = new ListLogger(output);
 
-        [Fact]
-        public async Task ShouldAllowTimingPriorToInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+        IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
+        IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
-            // Assert
-            Assert.Equal($"{MethodName}:StartingTiming", _log[0]);
-        }
-
-        [Fact]
-        public async Task ShouldAllowTimingAfterInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
-
-            // Assert
-            Assert.Equal($"{MethodName}:CompletedTiming:{_interceptor.Stopwatch.Elapsed:g}", _log[3]);
-        }
+        _interceptor = new TestAsyncTimingInterceptor(_log);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, _interceptor);
     }
 
-    public class WhenTimingAsynchronousVoidMethodsWhichReturnCompletedTasks
-        : TimingAsynchronousVoidMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldLog4Entries()
     {
-        public WhenTimingAsynchronousVoidMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: true)
-        {
-        }
+        // Act
+        await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.Equal(4, _log.Count);
     }
 
-    public class WhenTimingAsynchronousVoidMethodsWhichReturnIncompleteTasks
-        : TimingAsynchronousVoidMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldAllowTimingPriorToInvocation()
     {
-        public WhenTimingAsynchronousVoidMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: false)
-        {
-        }
+        // Act
+        await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.Equal($"{MethodName}:StartingTiming", _log[0]);
     }
 
-    public abstract class TimingAsynchronousResultMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldAllowTimingAfterInvocation()
     {
-        private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
-        private readonly ListLogger _log;
-        private readonly TestAsyncTimingInterceptor _interceptor;
-        private readonly IInterfaceToProxy _proxy;
+        // Act
+        await _proxy.AsynchronousVoidMethod().ConfigureAwait(false);
 
-        protected TimingAsynchronousResultMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
-        {
-            _log = new ListLogger(output);
+        // Assert
+        Assert.Equal($"{MethodName}:CompletedTiming:{_interceptor.Stopwatch.Elapsed:g}", _log[3]);
+    }
+}
 
-            IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
-            IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
+public class WhenTimingAsynchronousVoidMethodsWhichReturnCompletedTasks
+    : TimingAsynchronousVoidMethodCompletedAndIncompleteBase
+{
+    public WhenTimingAsynchronousVoidMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: true)
+    {
+    }
+}
 
-            _interceptor = new TestAsyncTimingInterceptor(_log);
-            _proxy = ProxyGen.CreateProxy(
-                alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-                _interceptor);
-        }
+public class WhenTimingAsynchronousVoidMethodsWhichReturnIncompleteTasks
+    : TimingAsynchronousVoidMethodCompletedAndIncompleteBase
+{
+    public WhenTimingAsynchronousVoidMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: false)
+    {
+    }
+}
 
-        [Fact]
-        public async Task ShouldLog4Entries()
-        {
-            // Act
-            Guid result = await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+public abstract class TimingAsynchronousResultMethodCompletedAndIncompleteBase
+{
+    private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
+    private readonly ListLogger _log;
+    private readonly TestAsyncTimingInterceptor _interceptor;
+    private readonly IInterfaceToProxy _proxy;
 
-            // Assert
-            Assert.NotEqual(Guid.Empty, result);
-            Assert.Equal(4, _log.Count);
-        }
+    protected TimingAsynchronousResultMethodCompletedAndIncompleteBase(ITestOutputHelper output, bool alwaysCompleted)
+    {
+        _log = new ListLogger(output);
 
-        [Fact]
-        public async Task ShouldAllowTimingPriorToInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+        IInterfaceToProxy AlwaysCompletedFactory() => new ClassWithAlwaysCompletedAsync(_log);
+        IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
-            // Assert
-            Assert.Equal($"{MethodName}:StartingTiming", _log[0]);
-        }
-
-        [Fact]
-        public async Task ShouldAllowTimingAfterInvocation()
-        {
-            // Act
-            await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
-
-            // Assert
-            Assert.Equal($"{MethodName}:CompletedTiming:{_interceptor.Stopwatch.Elapsed:g}", _log[3]);
-        }
+        _interceptor = new TestAsyncTimingInterceptor(_log);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, _interceptor);
     }
 
-    public class WhenTimingAsynchronousResultMethodsWhichReturnCompletedTasks
-        : TimingAsynchronousResultMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldLog4Entries()
     {
-        public WhenTimingAsynchronousResultMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: true)
-        {
-        }
+        // Act
+        Guid result = await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.NotEqual(Guid.Empty, result);
+        Assert.Equal(4, _log.Count);
     }
 
-    public class WhenTimingAsynchronousResultMethodsWhichReturnIncompleteTasks
-        : TimingAsynchronousResultMethodCompletedAndIncompleteBase
+    [Fact]
+    public async Task ShouldAllowTimingPriorToInvocation()
     {
-        public WhenTimingAsynchronousResultMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
-            : base(output, alwaysCompleted: false)
-        {
-        }
+        // Act
+        await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.Equal($"{MethodName}:StartingTiming", _log[0]);
+    }
+
+    [Fact]
+    public async Task ShouldAllowTimingAfterInvocation()
+    {
+        // Act
+        await _proxy.AsynchronousResultMethod().ConfigureAwait(false);
+
+        // Assert
+        Assert.Equal($"{MethodName}:CompletedTiming:{_interceptor.Stopwatch.Elapsed:g}", _log[3]);
+    }
+}
+
+public class WhenTimingAsynchronousResultMethodsWhichReturnCompletedTasks
+    : TimingAsynchronousResultMethodCompletedAndIncompleteBase
+{
+    public WhenTimingAsynchronousResultMethodsWhichReturnCompletedTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: true)
+    {
+    }
+}
+
+public class WhenTimingAsynchronousResultMethodsWhichReturnIncompleteTasks
+    : TimingAsynchronousResultMethodCompletedAndIncompleteBase
+{
+    public WhenTimingAsynchronousResultMethodsWhichReturnIncompleteTasks(ITestOutputHelper output)
+        : base(output, alwaysCompleted: false)
+    {
     }
 }
