@@ -3,11 +3,6 @@
 
 namespace Castle.DynamicProxy.InterfaceProxies;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 public class ClassWithAlwaysCompletedAsync : IInterfaceToProxy
 {
     private readonly ListLogger _log;

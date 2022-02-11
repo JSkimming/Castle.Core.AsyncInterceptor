@@ -3,8 +3,6 @@
 
 namespace Castle.DynamicProxy;
 
-using System.Threading.Tasks;
-
 /// <summary>
 /// Implement this interface to intercept method invocations with DynamicProxy2.
 /// </summary>

@@ -3,11 +3,7 @@
 
 namespace Castle.DynamicProxy.NoCoverage;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Threading.Tasks;
 
 /// <summary>
 /// A helper class to re-throw exceptions and retain the stack trace.

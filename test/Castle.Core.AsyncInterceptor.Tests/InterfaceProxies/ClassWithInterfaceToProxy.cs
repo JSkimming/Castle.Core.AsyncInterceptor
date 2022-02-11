@@ -3,12 +3,6 @@
 
 namespace Castle.DynamicProxy.InterfaceProxies;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 public class ClassWithInterfaceToProxy : IInterfaceToProxy
 {
     private readonly ListLogger _log;

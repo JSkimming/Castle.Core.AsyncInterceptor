@@ -3,8 +3,6 @@
 
 namespace Castle.DynamicProxy;
 
-using System.Threading.Tasks;
-
 /// <summary>
 /// A base type for an <see cref="IAsyncInterceptor"/> which executes only minimal processing when intercepting a
 /// method <see cref="IInvocation"/>.

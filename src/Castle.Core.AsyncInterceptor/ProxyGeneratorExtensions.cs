@@ -3,10 +3,6 @@
 
 namespace Castle.DynamicProxy;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// Extension methods to <see cref="IProxyGenerator"/>.
 /// </summary>
