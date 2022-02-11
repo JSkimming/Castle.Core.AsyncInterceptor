@@ -9,6 +9,7 @@
     <Nullable>enable</Nullable>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Authors>James Skimming</Authors>
     <Description>AsyncInterceptor is an extension to Castle DynamicProxy to simplify the development of interceptors for asynchronous methods.</Description>
