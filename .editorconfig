@@ -67,6 +67,7 @@ dotnet_sort_system_directives_first = true
 
 https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-language-conventions?view=vs-2019#csharp_using_directive_placement
 csharp_using_directive_placement = inside_namespace:error
+csharp_style_namespace_declarations = file_scoped:error
 
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventions#new-line-options
 csharp_new_line_before_open_brace = all
@@ -87,3 +88,6 @@ csharp_preserve_single_line_statements = false
 
 # IDE0008: Use explicit type instead of 'var'
 dotnet_diagnostic.IDE0008.severity = error
+
+# IDE0161: Convert to file-scoped namespace
+dotnet_diagnostic.IDE0161.severity = error
