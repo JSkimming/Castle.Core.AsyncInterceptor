@@ -84,4 +84,6 @@ csharp_indent_labels = flush_left
 
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventionswrap-options
 csharp_preserve_single_line_statements = false
-csharp_preserve_single_line_blocks = true
+
+# IDE0008: Use explicit type instead of 'var'
+dotnet_diagnostic.IDE0008.severity = error

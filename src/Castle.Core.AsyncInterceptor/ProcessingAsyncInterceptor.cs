@@ -3,7 +3,6 @@
 
 namespace Castle.DynamicProxy
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
     /// <summary>
