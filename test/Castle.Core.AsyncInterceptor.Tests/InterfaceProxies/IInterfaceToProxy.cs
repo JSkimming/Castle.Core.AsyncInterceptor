@@ -1,30 +1,29 @@
 // Copyright (c) 2016-2022 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace Castle.DynamicProxy.InterfaceProxies
+namespace Castle.DynamicProxy.InterfaceProxies;
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+public interface IInterfaceToProxy
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    IReadOnlyList<string> Log { get; }
 
-    public interface IInterfaceToProxy
-    {
-        IReadOnlyList<string> Log { get; }
+    void SynchronousVoidMethod();
 
-        void SynchronousVoidMethod();
+    void SynchronousVoidExceptionMethod();
 
-        void SynchronousVoidExceptionMethod();
+    Guid SynchronousResultMethod();
 
-        Guid SynchronousResultMethod();
+    Guid SynchronousResultExceptionMethod();
 
-        Guid SynchronousResultExceptionMethod();
+    Task AsynchronousVoidMethod();
 
-        Task AsynchronousVoidMethod();
+    Task AsynchronousVoidExceptionMethod();
 
-        Task AsynchronousVoidExceptionMethod();
+    Task<Guid> AsynchronousResultMethod();
 
-        Task<Guid> AsynchronousResultMethod();
-
-        Task<Guid> AsynchronousResultExceptionMethod();
-    }
+    Task<Guid> AsynchronousResultExceptionMethod();
 }

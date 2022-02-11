@@ -1,33 +1,32 @@
 // Copyright (c) 2016-2022 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-namespace Castle.DynamicProxy.InterfaceProxies
+namespace Castle.DynamicProxy.InterfaceProxies;
+
+using System;
+using System.Collections.Generic;
+
+public class TestProcessingAsyncInterceptor : ProcessingAsyncInterceptor<string>
 {
-    using System;
-    using System.Collections.Generic;
+    private readonly ListLogger _log;
 
-    public class TestProcessingAsyncInterceptor : ProcessingAsyncInterceptor<string>
+    public TestProcessingAsyncInterceptor(ListLogger log, string randomValue)
     {
-        private readonly ListLogger _log;
+        _log = log ?? throw new ArgumentNullException(nameof(log));
+        RandomValue = randomValue ?? throw new ArgumentNullException(nameof(randomValue));
+    }
 
-        public TestProcessingAsyncInterceptor(ListLogger log, string randomValue)
-        {
-            _log = log ?? throw new ArgumentNullException(nameof(log));
-            RandomValue = randomValue ?? throw new ArgumentNullException(nameof(randomValue));
-        }
+    public string RandomValue { get; }
 
-        public string RandomValue { get; }
+    protected override string StartingInvocation(IInvocation invocation)
+    {
+        _log.Add($"{invocation.Method.Name}:StartingInvocation:{RandomValue}");
+        return RandomValue;
+    }
 
-        protected override string StartingInvocation(IInvocation invocation)
-        {
-            _log.Add($"{invocation.Method.Name}:StartingInvocation:{RandomValue}");
-            return RandomValue;
-        }
-
-        protected override void CompletedInvocation(IInvocation invocation, string state)
-        {
-            base.CompletedInvocation(invocation, state);
-            _log.Add($"{invocation.Method.Name}:CompletedInvocation:{RandomValue}");
-        }
+    protected override void CompletedInvocation(IInvocation invocation, string state)
+    {
+        base.CompletedInvocation(invocation, state);
+        _log.Add($"{invocation.Method.Name}:CompletedInvocation:{RandomValue}");
     }
 }
