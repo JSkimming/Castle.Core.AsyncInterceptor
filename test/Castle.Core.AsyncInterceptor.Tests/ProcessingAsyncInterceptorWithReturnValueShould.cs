@@ -15,14 +15,13 @@ public class WhenProcessingSynchronousVoidMethodsWithTheReturnValue
 {
     private const string MethodName = nameof(IInterfaceToProxy.SynchronousVoidMethod);
     private readonly ListLogger _log;
-    private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
     private readonly IInterfaceToProxy _proxy;
 
     public WhenProcessingSynchronousVoidMethodsWithTheReturnValue(ITestOutputHelper output)
     {
         _log = new ListLogger(output);
-        _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
-        _proxy = ProxyGen.CreateProxy(_log, _interceptor);
+        var interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
+        _proxy = ProxyGen.CreateProxy(_log, interceptor);
     }
 
     [Fact]
@@ -60,14 +59,13 @@ public class WhenProcessingSynchronousResultMethodsWithTheReturnValue
 {
     private const string MethodName = nameof(IInterfaceToProxy.SynchronousResultMethod);
     private readonly ListLogger _log;
-    private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
     private readonly IInterfaceToProxy _proxy;
 
     public WhenProcessingSynchronousResultMethodsWithTheReturnValue(ITestOutputHelper output)
     {
         _log = new ListLogger(output);
-        _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
-        _proxy = ProxyGen.CreateProxy(_log, _interceptor);
+        var interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
+        _proxy = ProxyGen.CreateProxy(_log, interceptor);
     }
 
     [Fact]
@@ -105,14 +103,13 @@ public class WhenProcessingAsynchronousVoidMethodsWithTheReturnValue
 {
     private const string MethodName = nameof(IInterfaceToProxy.AsynchronousVoidMethod);
     private readonly ListLogger _log;
-    private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
     private readonly IInterfaceToProxy _proxy;
 
     public WhenProcessingAsynchronousVoidMethodsWithTheReturnValue(ITestOutputHelper output)
     {
         _log = new ListLogger(output);
-        _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
-        _proxy = ProxyGen.CreateProxy(_log, _interceptor);
+        var interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
+        _proxy = ProxyGen.CreateProxy(_log, interceptor);
     }
 
     [Fact]
@@ -150,14 +147,13 @@ public class WhenProcessingAsynchronousResultMethodsWithTheReturnValue
 {
     private const string MethodName = nameof(IInterfaceToProxy.AsynchronousResultMethod);
     private readonly ListLogger _log;
-    private readonly TestProcessingReturnValueAsyncInterceptor _interceptor;
     private readonly IInterfaceToProxy _proxy;
 
     public WhenProcessingAsynchronousResultMethodsWithTheReturnValue(ITestOutputHelper output)
     {
         _log = new ListLogger(output);
-        _interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
-        _proxy = ProxyGen.CreateProxy(_log, _interceptor);
+        var interceptor = new TestProcessingReturnValueAsyncInterceptor(_log);
+        _proxy = ProxyGen.CreateProxy(_log, interceptor);
     }
 
     [Fact]

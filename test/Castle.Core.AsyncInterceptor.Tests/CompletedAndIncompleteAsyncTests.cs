@@ -25,9 +25,7 @@ public abstract class AsynchronousVoidMethodCompletedAndIncompleteBase
         IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
         var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed: true, msDelayAfterProceed: 10);
-        _proxy = ProxyGen.CreateProxy(
-            alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-            interceptor);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, interceptor);
     }
 
     [Fact]
@@ -93,9 +91,7 @@ public abstract class AsynchronousResultMethodCompletedAndIncompleteBase
         IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
         var interceptor = new TestAsyncInterceptorBase(_log, asyncB4Proceed: true, msDelayAfterProceed: 10);
-        _proxy = ProxyGen.CreateProxy(
-            alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-            interceptor);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, interceptor);
     }
 
     [Fact]
@@ -163,9 +159,7 @@ public abstract class TimingAsynchronousVoidMethodCompletedAndIncompleteBase
         IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
         _interceptor = new TestAsyncTimingInterceptor(_log);
-        _proxy = ProxyGen.CreateProxy(
-            alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-            _interceptor);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, _interceptor);
     }
 
     [Fact]
@@ -232,9 +226,7 @@ public abstract class TimingAsynchronousResultMethodCompletedAndIncompleteBase
         IInterfaceToProxy AlwaysIncompleteFactory() => new ClassWithAlwaysIncompleteAsync(_log);
 
         _interceptor = new TestAsyncTimingInterceptor(_log);
-        _proxy = ProxyGen.CreateProxy(
-            alwaysCompleted ? AlwaysCompletedFactory : (Func<IInterfaceToProxy>)AlwaysIncompleteFactory,
-            _interceptor);
+        _proxy = ProxyGen.CreateProxy(alwaysCompleted ? AlwaysCompletedFactory : AlwaysIncompleteFactory, _interceptor);
     }
 
     [Fact]

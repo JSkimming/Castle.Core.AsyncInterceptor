@@ -5,7 +5,6 @@ namespace Castle.DynamicProxy;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.DynamicProxy.InterfaceProxies;
@@ -26,8 +25,7 @@ public abstract class InterceptExceptionBase
         string noneInterceptedSt = noneInterceptedException?.StackTrace ?? string.Empty;
         string interceptedSt = interceptedException?.StackTrace ?? string.Empty;
 
-        _output.WriteLine(
-            $"None Intercepted Stack Trace:{Environment.NewLine}{noneInterceptedSt}");
+        _output.WriteLine($"None Intercepted Stack Trace:{Environment.NewLine}{noneInterceptedSt}");
         _output.WriteLine($"Intercepted Stack Trace:{Environment.NewLine}{interceptedSt}");
 
         string[] separator = { Environment.NewLine };
@@ -540,7 +538,6 @@ public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronous
         CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
     }
 
-    [SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "Just Testing.")]
     public class AllExceptions
     {
         public virtual Task Test1()
