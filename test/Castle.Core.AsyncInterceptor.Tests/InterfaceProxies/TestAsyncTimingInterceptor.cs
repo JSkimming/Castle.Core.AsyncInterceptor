@@ -3,8 +3,6 @@
 
 namespace Castle.DynamicProxy.InterfaceProxies;
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 public class TestAsyncTimingInterceptor : AsyncTimingInterceptor

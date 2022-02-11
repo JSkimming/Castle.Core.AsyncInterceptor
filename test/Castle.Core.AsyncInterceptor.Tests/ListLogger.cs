@@ -3,9 +3,6 @@
 
 namespace Castle.DynamicProxy;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit.Abstractions;
 
 public class ListLogger

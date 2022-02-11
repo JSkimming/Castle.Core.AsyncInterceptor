@@ -3,10 +3,6 @@
 
 namespace Castle.DynamicProxy.InterfaceProxies;
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 public class TestAsyncInterceptorBase : AsyncInterceptorBase
 {
     private readonly ListLogger _log;

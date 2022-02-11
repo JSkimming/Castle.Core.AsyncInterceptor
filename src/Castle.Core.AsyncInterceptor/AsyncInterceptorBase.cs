@@ -3,11 +3,9 @@
 
 namespace Castle.DynamicProxy;
 
-using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Threading.Tasks;
 using Castle.DynamicProxy.NoCoverage;
 
 /// <summary>
