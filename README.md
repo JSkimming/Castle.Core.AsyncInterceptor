@@ -173,7 +173,7 @@ public class ExceptionHandlingInterceptor : AsyncInterceptorBase
 
 ### Option 2:  Implement `IAsyncInterceptor` interface to intercept invocations
 
-Create a class them implements `IAsyncInterceptor`, then register it for interception in the same was as `IInterceptor`
+Create a class that implements `IAsyncInterceptor`, then register it for interception in the same was as `IInterceptor`
 using the ProxyGenerator extension methods, e.g.
 
 ```csharp
