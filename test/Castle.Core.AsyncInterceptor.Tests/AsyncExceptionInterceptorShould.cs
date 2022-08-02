@@ -495,7 +495,7 @@ public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronous
     }
 
     [Fact]
-    public void ShouldReturnAFaultedTask()
+    public async Task ShouldReturnAFaultedTask()
     {
         // Arrange
         var target = new AllExceptions();
@@ -509,13 +509,13 @@ public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronous
         Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
 
         ArgumentOutOfRangeException noneInterceptedException =
-            Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test1(); });
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => target.Test1()).ConfigureAwait(false);
 
         CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
     }
 
     [Fact]
-    public void ShouldReturnAFaultedTaskResult()
+    public async Task ShouldReturnAFaultedTaskResult()
     {
         // Arrange
         var target = new AllExceptions();
@@ -529,7 +529,7 @@ public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronous
         Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
 
         ArgumentOutOfRangeException noneInterceptedException =
-            Assert.Throws<ArgumentOutOfRangeException>(() => { target.Test2(); });
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => target.Test2()).ConfigureAwait(false);
 
         CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
     }
