@@ -10,6 +10,9 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 guidelines=120
 
+[*.{cmd,bat,sln}]
+end_of_line = crlf
+
 # CSharp and Visual Basic code style settings:
 [*.{cs,vb}]
 
