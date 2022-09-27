@@ -1,0 +1,10 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+  "recommendations": [
+    "DavidAnson.vscode-markdownlint",
+    "EditorConfig.EditorConfig",
+    "GitHub.vscode-pull-request-github",
+    "ms-dotnettools.csharp",
+    "timonwong.shellcheck",
+  ]
+}

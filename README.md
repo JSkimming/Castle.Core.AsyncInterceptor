@@ -114,64 +114,7 @@ DynamicProxy](https://stackoverflow.com/a/43272955) provides great overview.
 If you've got this far, then it's probably safe to assume you want to intercept asynchronous methods, and the options
 for doing it manually look like a lot of work.
 
-### Option 1: Extend `AsyncInterceptorBase` class to intercept invocations
-
-Create a class that extends the abstract base class `AsyncInterceptorBase`, then register it for interception in the same was as `IInterceptor` using the ProxyGenerator extension methods, e.g.
-
-```csharp
-var myClass = new ClasThatImplementsIMyInterface();
-var generator = new ProxyGenerator();
-var interceptor = new ClasThatExtendsAsyncInterceptorBase();
-IMyInterface proxy = generator.CreateInterfaceProxyWithTargetInterface<IMyInterface>(myClass, interceptor)
-```
-
-Extending `AsyncInterceptorBase` provides a simple mechanism to intercept methods using the **async/await** pattern. There are two abstract methods that must be implemented.
-
-```csharp
-Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed);
-Task<T> InterceptAsync<T>(IInvocation invocation, Func<IInvocation, Task<T>> proceed);
-```
-
-Each method takes two parameters. The `IInvocation` provided by **DaynamicProxy** and a proceed function to execute the invocation returning an awaitable task.
-
-The first method in called when intercepting `void` methods or methods that return `Task`. The second method is called when intercepting any method that returns a value, including `Task<TResult>`.
-
-A possible extension of `AsyncInterceptorBase` for exception handling could be implemented as follows:
-
-```csharp
-public class ExceptionHandlingInterceptor : AsyncInterceptorBase
-{
-    protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
-    {
-        try
-        {
-            // Cannot simply return the the task, as any exceptions would not be caught below.
-            await proceed(invocation).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Error($"Error calling {invocation.Method.Name}.", ex);
-            throw;
-        }
-    }
-
-    protected override async Task<T> InterceptAsync<T>(IInvocation invocation, Func<IInvocation, Task<T>> proceed)
-    {
-        try
-        {
-            // Cannot simply return the the task, as any exceptions would not be caught below.
-            return await proceed(invocation).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Error($"Error calling {invocation.Method.Name}.", ex);
-            throw;
-        }
-    }
-}
-```
-
-### Option 2:  Implement `IAsyncInterceptor` interface to intercept invocations
+### Option 1:  Implement `IAsyncInterceptor` interface to intercept invocations
 
 Create a class that implements `IAsyncInterceptor`, then register it for interception in the same was as `IInterceptor`
 using the ProxyGenerator extension methods, e.g.
@@ -262,6 +205,68 @@ private async Task<TResult> InternalInterceptAsynchronous<TResult>(IInvocation i
     // Step 2. Do something after invocation.
 
     return result;
+}
+```
+
+### Option 2: Extend `AsyncInterceptorBase` class to intercept invocations
+
+#### __:warning: PROCEED WITH CAUTION :warning: This option come with a major caveat.__
+
+> If you need to perform asynchronous operations before calling proceed, then you should implement option 1, otherwise
+> you risk  thread starvation and deadlocking.
+
+Create a class that extends the abstract base class `AsyncInterceptorBase`, then register it for interception in the same way as `IInterceptor` using the ProxyGenerator extension methods, e.g.
+
+```csharp
+var myClass = new ClasThatImplementsIMyInterface();
+var generator = new ProxyGenerator();
+var interceptor = new ClasThatExtendsAsyncInterceptorBase();
+IMyInterface proxy = generator.CreateInterfaceProxyWithTargetInterface<IMyInterface>(myClass, interceptor)
+```
+
+Extending `AsyncInterceptorBase` provides a simple mechanism to intercept methods using the __async/await__ pattern. There are two abstract methods that must be implemented.
+
+```csharp
+Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed);
+Task<T> InterceptAsync<T>(IInvocation invocation, Func<IInvocation, Task<T>> proceed);
+```
+
+Each method takes two parameters. The `IInvocation` provided by __DaynamicProxy__ and a proceed function to execute the invocation returning an awaitable task.
+
+The first method in called when intercepting `void` methods or methods that return `Task`. The second method is called when intercepting any method that returns a value, including `Task<TResult>`.
+
+A possible extension of `AsyncInterceptorBase` for exception handling could be implemented as follows:
+
+```csharp
+public class ExceptionHandlingInterceptor : AsyncInterceptorBase
+{
+    protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
+    {
+        try
+        {
+            // Cannot simply return the the task, as any exceptions would not be caught below.
+            await proceed(invocation).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error calling {invocation.Method.Name}.", ex);
+            throw;
+        }
+    }
+
+    protected override async Task<T> InterceptAsync<T>(IInvocation invocation, Func<IInvocation, Task<T>> proceed)
+    {
+        try
+        {
+            // Cannot simply return the the task, as any exceptions would not be caught below.
+            return await proceed(invocation).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"Error calling {invocation.Method.Name}.", ex);
+            throw;
+        }
+    }
 }
 ```
 
