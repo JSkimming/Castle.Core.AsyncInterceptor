@@ -16,7 +16,6 @@ rootDir=$(pwd)
 
 testResults="test/TestResults"
 output="$rootDir/$testResults/output"
-tools="$rootDir/$testResults/tools"
 
 testProj1="$rootDir/test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj"
 
@@ -38,23 +37,13 @@ exe dotnet test --no-restore --no-build -f "$framework" -c "$config" \
 -p:CoverletOutput="$output/" \
 -p:CoverletOutputFormat="\"json,opencover,cobertura,lcov\""
 
-# Install trx2junit if not already installed
-if [ ! -f "$tools/trx2junit" ]
-then
-   exe dotnet tool install trx2junit --tool-path "$tools"
-fi
-
-# Install ReportGenerator if not already installed
-if [ ! -f "$tools/reportgenerator" ]
-then
-   exe dotnet tool install dotnet-reportgenerator-globaltool --tool-path "$tools"
-fi
+exe dotnet tool restore
 
 # Convert the MSTest trx files to junit xml
-exe "$tools/trx2junit" "$output"/*.trx
+exe dotnet tool run trx2junit "$output"/*.trx
 
 # Generate the reports
-exe "$tools/reportgenerator" \
+exe dotnet tool run reportgenerator \
 "-verbosity:Info" \
 "-reports:$output/coverage.$framework.opencover.xml" \
 "-targetdir:$output/Report" \
