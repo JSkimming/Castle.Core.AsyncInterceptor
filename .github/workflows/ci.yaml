@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3.0.0
         if: matrix.framework == 'net6.0'
         with:
           dotnet-version: 6.0.x
@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3.0.0
         with:
           dotnet-version: 6.0.x
 
