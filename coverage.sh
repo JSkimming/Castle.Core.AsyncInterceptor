@@ -30,7 +30,7 @@ exe dotnet test --no-restore --no-build -f "$framework" -c "$config" \
 "$testProj1" \
 --results-directory "$output/" \
 --logger "\"trx;LogFileName=$(basename "$testProj1" .csproj).trx\"" \
---logger "\"Console;noprogress=true\"" \
+--logger "\"html;LogFileName=$(basename "$testProj1" .csproj).html\"" \
 -p:CollectCoverage=true \
 -p:Include="$include" \
 -p:Exclude="$exclude" \
