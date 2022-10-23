@@ -116,7 +116,7 @@ for doing it manually look like a lot of work.
 
 ### Option 1:  Implement `IAsyncInterceptor` interface to intercept invocations
 
-Create a class that implements `IAsyncInterceptor`, then register it for interception in the same was as `IInterceptor`
+Create a class that implements `IAsyncInterceptor`, then register it for interception in the same way as `IInterceptor`
 using the ProxyGenerator extension methods, e.g.
 
 ```csharp
