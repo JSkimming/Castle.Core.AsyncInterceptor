@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;net5.0;net6.0;net7.0</TargetFrameworks>
     <RootNamespace>Castle.DynamicProxy</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

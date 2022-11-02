@@ -26,7 +26,7 @@ jobs:
           - Release
     name: Test ${{ matrix.os }} ${{ matrix.config }}
     env:
-      framework: net6.0
+      framework: net7.0
 
     steps:
 
@@ -35,7 +35,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
 
       - name: Test Coverage
         run: ./coverage.sh ${{ env.framework }} ${{ matrix.config }}
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Code coverage
     env:
-      framework: net6.0
+      framework: net7.0
 
     steps:
 
@@ -53,7 +53,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
 
       - name: Test Coverage
         run: ./coverage.sh ${{ env.framework }} Release

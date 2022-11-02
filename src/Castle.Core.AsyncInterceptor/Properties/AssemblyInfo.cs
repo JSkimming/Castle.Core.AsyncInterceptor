@@ -13,6 +13,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Castle.Core.AsyncInterceptor .NET 5.0")]
 #elif NET6_0
 [assembly: AssemblyTitle("Castle.Core.AsyncInterceptor .NET 6.0")]
+#elif NET7_0
+[assembly: AssemblyTitle("Castle.Core.AsyncInterceptor .NET 7.0")]
 #else
 [assembly: AssemblyTitle("Castle.Core.AsyncInterceptor .NET Standard")]
 #endif
