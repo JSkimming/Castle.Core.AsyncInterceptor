@@ -28,7 +28,7 @@ public abstract class AsyncInterceptorBase : IAsyncInterceptor
             nameof(InterceptSynchronousResult), BindingFlags.Static | BindingFlags.NonPublic)!;
 
     private static readonly ConcurrentDictionary<Type, GenericSynchronousHandler> GenericSynchronousHandlers =
-        new ConcurrentDictionary<Type, GenericSynchronousHandler>
+        new()
         {
             [typeof(void)] = InterceptSynchronousVoid,
         };
@@ -123,7 +123,7 @@ public abstract class AsyncInterceptorBase : IAsyncInterceptor
             // Need to use Task.Run() to prevent deadlock in .NET Framework ASP.NET requests.
             // GetAwaiter().GetResult() prevents a thrown exception being wrapped in a AggregateException.
             // See https://stackoverflow.com/a/17284612
-            Task.Run(() => task).GetAwaiter().GetResult();
+            _ = Task.Run(() => task).GetAwaiter().GetResult();
         }
 
         task.RethrowIfFaulted();

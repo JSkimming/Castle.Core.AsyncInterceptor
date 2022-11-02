@@ -1,0 +1,21 @@
+<Project>
+  <!--
+  https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2022
+  -->
+  <PropertyGroup>
+    <RootNamespace>Castle.DynamicProxy</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <DebugType>embedded</DebugType>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisModeStyle>All</AnalysisModeStyle>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ContinuousIntegrationBuild Condition=" '$(CI)' == 'true' ">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+</Project>

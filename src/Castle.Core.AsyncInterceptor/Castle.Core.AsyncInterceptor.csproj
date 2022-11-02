@@ -1,16 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
     <RootNamespace>Castle.DynamicProxy</RootNamespace>
-    <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <CodeAnalysisRuleSet>..\stylecop.ruleset</CodeAnalysisRuleSet>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Authors>James Skimming</Authors>
     <Description>AsyncInterceptor is an extension to Castle DynamicProxy to simplify the development of interceptors for asynchronous methods.</Description>
@@ -38,10 +31,6 @@
 
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -57,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     <None Include="..\..\docs\images\castle-logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 

@@ -405,7 +405,7 @@ A docker compose file is provided to run the tests on a linux container. To exec
 following command:
 
 ```bash
-docker build .
+docker build --target test --progress=plain .
 ```
 
 ### Executing the code coverage tests
