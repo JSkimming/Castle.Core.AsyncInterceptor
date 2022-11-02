@@ -10,36 +10,36 @@ jobs:
   continueOnError: "true"
   timeoutInMinutes: 5
   variables:
-    buildFramework: net6.0
+    buildFramework: net7.0
   strategy:
     matrix:
-      "Linux 6.0 Debug":
-        sdkVersion: 6.0.x
+      "Linux 7.0 Debug":
+        sdkVersion: 7.0.x
         config: Debug
         imageName: ubuntu-latest
         framework: $(buildFramework)
-      "Linux 6.0 Release":
-        sdkVersion: 6.0.x
+      "Linux 7.0 Release":
+        sdkVersion: 7.0.x
         config: Release
         imageName: ubuntu-latest
         framework: $(buildFramework)
-      "MacOS 6.0 Debug":
-        sdkVersion: 6.0.x
+      "MacOS 7.0 Debug":
+        sdkVersion: 7.0.x
         config: Debug
         imageName: macOS-latest
         framework: $(buildFramework)
-      "MacOS 6.0 Release":
-        sdkVersion: 6.0.x
+      "MacOS 7.0 Release":
+        sdkVersion: 7.0.x
         config: Release
         imageName: macOS-latest
         framework: $(buildFramework)
-      "Windows 6.0 Debug":
-        sdkVersion: 6.0.x
+      "Windows 7.0 Debug":
+        sdkVersion: 7.0.x
         config: Debug
         imageName: windows-latest
         framework: $(buildFramework)
-      "Windows 6.0 Release":
-        sdkVersion: 6.0.x
+      "Windows 7.0 Release":
+        sdkVersion: 7.0.x
         config: Release
         imageName: windows-latest
         framework: $(buildFramework)
