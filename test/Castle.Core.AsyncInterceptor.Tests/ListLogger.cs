@@ -7,9 +7,9 @@ using Xunit.Abstractions;
 
 public class ListLogger
 {
-    private readonly List<string> _log = new List<string>(8);
+    private readonly List<string> _log = new(8);
 
-    private readonly object _lock = new object();
+    private readonly object _lock = new();
 
     public ListLogger(ITestOutputHelper output)
     {

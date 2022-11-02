@@ -16,8 +16,7 @@ public class AsyncDeterminationInterceptor : IInterceptor
         typeof(AsyncDeterminationInterceptor)
                 .GetMethod(nameof(HandleAsyncWithResult), BindingFlags.Static | BindingFlags.NonPublic)!;
 
-    private static readonly ConcurrentDictionary<Type, GenericAsyncHandler> GenericAsyncHandlers =
-        new ConcurrentDictionary<Type, GenericAsyncHandler>();
+    private static readonly ConcurrentDictionary<Type, GenericAsyncHandler> GenericAsyncHandlers = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncDeterminationInterceptor"/> class.
@@ -59,6 +58,7 @@ public class AsyncDeterminationInterceptor : IInterceptor
             case MethodType.AsyncFunction:
                 GetHandler(invocation.Method.ReturnType).Invoke(invocation, AsyncInterceptor);
                 return;
+            case MethodType.Synchronous:
             default:
                 AsyncInterceptor.InterceptSynchronous(invocation);
                 return;
