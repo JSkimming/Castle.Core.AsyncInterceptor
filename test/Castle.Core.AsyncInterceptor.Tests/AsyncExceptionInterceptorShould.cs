@@ -58,7 +58,7 @@ public abstract class WhenExceptionInterceptingSynchronousVoidMethodsBase : Inte
     {
         // Act
         InvalidOperationException ex =
-            Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousVoidExceptionMethod());
+            Assert.Throws<InvalidOperationException>(_proxy.SynchronousVoidExceptionMethod);
 
         // Assert
         Assert.Equal(3, _log.Count);
@@ -71,7 +71,7 @@ public abstract class WhenExceptionInterceptingSynchronousVoidMethodsBase : Inte
     public void ShouldAllowProcessingPriorToInvocation()
     {
         // Act
-        Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousVoidExceptionMethod());
+        Assert.Throws<InvalidOperationException>(_proxy.SynchronousVoidExceptionMethod);
 
         // Assert
         Assert.Equal(MethodName + ":StartingVoidInvocation", _log[0]);
@@ -82,7 +82,7 @@ public abstract class WhenExceptionInterceptingSynchronousVoidMethodsBase : Inte
     {
         // Act
         InvalidOperationException ex =
-            Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousVoidExceptionMethod());
+            Assert.Throws<InvalidOperationException>(_proxy.SynchronousVoidExceptionMethod);
 
         // Assert
         Assert.Equal(MethodName + ":VoidExceptionThrown:" + ex.Message, _log[2]);
@@ -96,13 +96,13 @@ public abstract class WhenExceptionInterceptingSynchronousVoidMethodsBase : Inte
 
         // Act
         InvalidOperationException interceptedException =
-            Assert.Throws<InvalidOperationException>(() => _proxy.SynchronousVoidExceptionMethod());
+            Assert.Throws<InvalidOperationException>(_proxy.SynchronousVoidExceptionMethod);
 
         // Assert
 
         // Get the exception without being intercepted, this is used to compare against the intercepted exception.
         InvalidOperationException noneInterceptedException =
-            Assert.Throws<InvalidOperationException>(() => _target.SynchronousVoidExceptionMethod());
+            Assert.Throws<InvalidOperationException>(_target.SynchronousVoidExceptionMethod);
 
         CompareStackTrace(noneInterceptedException, interceptedException);
     }
@@ -509,7 +509,7 @@ public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronous
         Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
 
         ArgumentOutOfRangeException noneInterceptedException =
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => target.Test1()).ConfigureAwait(false);
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(target.Test1).ConfigureAwait(false);
 
         CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
     }
@@ -529,7 +529,7 @@ public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronous
         Assert.IsType<ArgumentOutOfRangeException>(result.Exception?.InnerException);
 
         ArgumentOutOfRangeException noneInterceptedException =
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => target.Test2()).ConfigureAwait(false);
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(target.Test2).ConfigureAwait(false);
 
         CompareStackTrace(noneInterceptedException, result.Exception?.InnerException);
     }
