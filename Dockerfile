@@ -10,8 +10,8 @@ RUN find . -type f -name '*.sh' | wc -l \
 && find . -type f -name '*.sh' | xargs shellcheck --external-sources --color=always
 
 ########################################################################################################################
-# .NET 6
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS test
+# .NET 7
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS test
 
 ENV CI=true
 
@@ -27,4 +27,4 @@ RUN dotnet restore
 
 COPY . .
 
-RUN ./coverage.sh net6.0 Debug
+RUN ./coverage.sh net7.0 Debug
