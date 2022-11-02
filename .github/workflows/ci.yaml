@@ -22,22 +22,21 @@ jobs:
         config:
           - Debug
           - Release
-        framework:
-          - net6.0
-    name: Test ${{ matrix.os }} ${{ matrix.framework }} ${{ matrix.config }}
+    name: Test ${{ matrix.os }} ${{ matrix.config }}
+    env:
+      framework: net6.0
 
     steps:
 
       - uses: actions/checkout@v3
 
-      - name: Setup .NET 6.0
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
-        if: matrix.framework == 'net6.0'
         with:
           dotnet-version: 6.0.x
 
       - name: Test Coverage
-        run: ./coverage.sh ${{ matrix.framework }} ${{ matrix.config }}
+        run: ./coverage.sh ${{ env.framework }} ${{ matrix.config }}
 
   code-coverage:
     runs-on: ubuntu-latest
@@ -49,7 +48,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: Setup .NET 6.0
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
@@ -75,3 +74,24 @@ jobs:
           find . -type f -name '*.sh' |
           wc -l && find . -type f -name '*.sh' |
           xargs shellcheck --external-sources --color=always
+
+  ######################################################################################################################
+  ## docker-tests executes the developer helper docker targets to ensure they continue to work and are not out of date.
+  docker-tests:
+    runs-on: ubuntu-latest
+    name: Docker Tests
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      DOCKER_BUILDKIT: 1
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Docker test
+        run: docker build --target test .
+
+      - name: Docker ShellCheck
+        run: docker build --target shellcheck .
