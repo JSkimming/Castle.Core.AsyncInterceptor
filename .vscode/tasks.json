@@ -34,7 +34,7 @@
         "test",
         "--nologo",
         "-f",
-        "net6.0",
+        "net7.0",
         "${workspaceFolder}/test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
@@ -56,7 +56,7 @@
         "--nologo",
         "--no-restore",
         "-f",
-        "net6.0",
+        "net7.0",
         "--project",
         "${workspaceFolder}/test/Castle.Core.AsyncInterceptor.Tests/Castle.Core.AsyncInterceptor.Tests.csproj",
         "/property:GenerateFullPaths=true",

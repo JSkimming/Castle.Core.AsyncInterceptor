@@ -49,22 +49,22 @@ workflows:
       - shellcheck/check:
           name: shellcheck
       - build/run-build:
-          name: .NET 6.0 Debug
-          image-tag: "6.0"
+          name: .NET 7.0 Debug
+          image-tag: "7.0"
           build-config: Debug
-          framework: net6.0
+          framework: net7.0
       - build/run-build:
-          name: Alpine .NET 6.0 Debug
-          image-tag: "6.0-alpine"
+          name: Alpine .NET 7.0 Debug
+          image-tag: "7.0-alpine"
           build-config: Debug
-          framework: net6.0
+          framework: net7.0
       - build/run-build:
-          name: .NET 6.0 Release
-          image-tag: "6.0"
+          name: .NET 7.0 Release
+          image-tag: "7.0"
           build-config: Release
-          framework: net6.0
+          framework: net7.0
       - build/run-build:
-          name: Alpine .NET 6.0 Release
-          image-tag: "6.0-alpine"
+          name: Alpine .NET 7.0 Release
+          image-tag: "7.0-alpine"
           build-config: Release
-          framework: net6.0
+          framework: net7.0
