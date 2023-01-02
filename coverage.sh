@@ -8,7 +8,7 @@ framework="${1-net7.0}"
 config="${2-Debug}"
 
 include="[Castle.Core.AsyncInterceptor]*"
-exclude="[Castle.Core.AsyncInterceptor]*.NoCoverage.*,[*.Tests]*"
+exclude="\"[Castle.Core.AsyncInterceptor]*.NoCoverage.*,[*.Tests]*\""
 
 # Cannot use a bash solution in alpine builds https://stackoverflow.com/a/246128
 #rootDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -25,15 +25,6 @@ exe dotnet restore "$rootDir"
 # Build the test projects
 exe dotnet build --no-restore -f "$framework" -c "$config" "$testProj1"
 
-# Temporary fix for build properties not getting passed through.
-# See https://github.com/coverlet-coverage/coverlet/issues/1391
-# See https://github.com/microsoft/vstest/issues/4014
-export CollectCoverage=true
-export Include="$include"
-export Exclude="$exclude"
-export CoverletOutput="$output/"
-export CoverletOutputFormat="json,opencover,cobertura,lcov"
-
 # Execute the tests
 exe dotnet test --no-restore --no-build -f "$framework" -c "$config" \
 "$testProj1" \
@@ -44,7 +35,7 @@ exe dotnet test --no-restore --no-build -f "$framework" -c "$config" \
 -p:Include="$include" \
 -p:Exclude="$exclude" \
 -p:CoverletOutput="$output/" \
--p:CoverletOutputFormat="json,opencover,cobertura,lcov"
+-p:CoverletOutputFormat="\"json,opencover,cobertura,lcov\""
 
 exe dotnet tool restore
 

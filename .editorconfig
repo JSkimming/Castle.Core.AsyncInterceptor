@@ -39,7 +39,7 @@ insert_final_newline = true
 # Organize usings
 dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
-file_header_template = Copyright (c) 2016-2022 James Skimming. All rights reserved.\nLicensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+file_header_template = Copyright (c) 2016-2023 James Skimming. All rights reserved.\nLicensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 # this. and Me. preferences
 dotnet_style_qualification_for_event = false:silent
