@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 James Skimming. All rights reserved.
+// Copyright (c) 2016-2023 James Skimming. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Reflection;
@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Castle.Core.AsyncInterceptor.Tests")]
-[assembly: AssemblyCopyright("Copyright (c) 2016-2022 James Skimming. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright (c) 2016-2023 James Skimming. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(false)]
