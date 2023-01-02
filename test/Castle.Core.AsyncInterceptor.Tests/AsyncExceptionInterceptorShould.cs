@@ -547,7 +547,7 @@ public class WhenExceptionInterceptingAnAsynchronousMethodThatThrowsASynchronous
         }
     }
 
-    private class MyInterceptorBase : AsyncInterceptorBase
+    private sealed class MyInterceptorBase : AsyncInterceptorBase
     {
         protected override Task InterceptAsync(
             IInvocation invocation,
