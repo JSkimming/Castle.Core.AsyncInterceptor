@@ -187,3 +187,61 @@ public class WhenTimingAsynchronousResultMethods
         Assert.Equal($"{MethodName}:CompletedTiming:{_interceptor.Stopwatch.Elapsed:g}", _log[3]);
     }
 }
+
+public class WhenTimingAsyncEnumerableMethods
+{
+    private const string MethodName = nameof(IInterfaceToProxy.AsyncEnumerableMethod);
+    private readonly ListLogger _log;
+    private readonly TestAsyncTimingInterceptor _interceptor;
+    private readonly IInterfaceToProxy _proxy;
+
+    public WhenTimingAsyncEnumerableMethods(ITestOutputHelper output)
+    {
+        _log = new ListLogger(output);
+        _interceptor = new TestAsyncTimingInterceptor(_log);
+        _proxy = ProxyGen.CreateProxy(_log, _interceptor);
+    }
+
+    [Fact]
+    public async Task ShouldLog4Entries()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal(10, results.Count);
+        Assert.Equal(4, _log.Count);
+    }
+
+    [Fact]
+    public async Task ShouldAllowTimingPriorToInvocation()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal($"{MethodName}:StartingTiming", _log[0]);
+    }
+
+    [Fact]
+    public async Task ShouldAllowTimingAfterInvocation()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal($"{MethodName}:CompletedTiming:{_interceptor.Stopwatch.Elapsed:g}", _log[3]);
+    }
+}

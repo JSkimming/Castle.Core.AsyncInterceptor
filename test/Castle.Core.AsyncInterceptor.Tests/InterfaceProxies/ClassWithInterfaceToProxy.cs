@@ -73,4 +73,34 @@ public class ClassWithInterfaceToProxy : IInterfaceToProxy
         await Task.Delay(10).ConfigureAwait(false);
         throw new InvalidOperationException(nameof(AsynchronousResultExceptionMethod) + ":Exception");
     }
+
+    public async IAsyncEnumerable<Guid> AsyncEnumerableMethod()
+    {
+        _log.Add(nameof(AsyncEnumerableMethod) + ":Start");
+        for (int i = 0; i < 10; i++)
+        {
+            await Task.Delay(10).ConfigureAwait(false);
+            yield return Guid.NewGuid();
+        }
+
+        _log.Add(nameof(AsyncEnumerableMethod) + ":End");
+    }
+
+    public IAsyncEnumerator<Guid> AsyncEnumerableExceptionMethodNoReturnValues()
+    {
+        _log.Add(nameof(AsyncEnumerableExceptionMethodNoReturnValues) + ":Start");
+        throw new InvalidOperationException(nameof(AsyncEnumerableExceptionMethodNoReturnValues) + ":Exception");
+    }
+
+    public async IAsyncEnumerator<Guid> AsyncEnumerableExceptionMethodReturnSomeValues()
+    {
+        _log.Add(nameof(AsyncEnumerableExceptionMethodReturnSomeValues) + ":Start");
+        for (int i = 0; i < 2; i++)
+        {
+            await Task.Delay(10).ConfigureAwait(false);
+            yield return Guid.NewGuid();
+        }
+
+        throw new InvalidOperationException(nameof(AsyncEnumerableExceptionMethodReturnSomeValues) + ":Exception");
+    }
 }

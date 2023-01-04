@@ -57,4 +57,19 @@ public class ClassWithAlwaysCompletedAsync : IInterfaceToProxy
         _log.Add(nameof(AsynchronousResultMethod) + ":End");
         return Task.FromResult(Guid.NewGuid());
     }
+
+    public IAsyncEnumerable<Guid> AsyncEnumerableMethod()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerator<Guid> AsyncEnumerableExceptionMethodNoReturnValues()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerator<Guid> AsyncEnumerableExceptionMethodReturnSomeValues()
+    {
+        throw new NotImplementedException();
+    }
 }

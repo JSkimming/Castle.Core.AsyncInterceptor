@@ -192,3 +192,62 @@ public class WhenProcessingAsynchronousResultMethods
         Assert.Equal($"{MethodName}:CompletedInvocation:{_interceptor.RandomValue}", _log[3]);
     }
 }
+
+public class WhenProcessingAsyncEnumerableMethods
+{
+    private const string MethodName = nameof(IInterfaceToProxy.AsyncEnumerableMethod);
+    private readonly ListLogger _log;
+    private readonly TestProcessingAsyncInterceptor _interceptor;
+    private readonly IInterfaceToProxy _proxy;
+
+    public WhenProcessingAsyncEnumerableMethods(ITestOutputHelper output)
+    {
+        string randomValue = "randomValue_" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture);
+        _log = new ListLogger(output);
+        _interceptor = new TestProcessingAsyncInterceptor(_log, randomValue);
+        _proxy = ProxyGen.CreateProxy(_log, _interceptor);
+    }
+
+    [Fact]
+    public async Task ShouldLog4Entries()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal(10, results.Count);
+        Assert.Equal(4, _log.Count);
+    }
+
+    [Fact]
+    public async Task ShouldAllowProcessingPriorToInvocation()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal($"{MethodName}:StartingInvocation:{_interceptor.RandomValue}", _log[0]);
+    }
+
+    [Fact]
+    public async Task ShouldAllowProcessingAfterInvocation()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal($"{MethodName}:CompletedInvocation:{_interceptor.RandomValue}", _log[3]);
+    }
+}

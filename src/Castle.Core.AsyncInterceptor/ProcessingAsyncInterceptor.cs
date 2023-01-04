@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 namespace Castle.DynamicProxy;
+using System.Collections.Generic;
 
 /// <summary>
 /// A base type for an <see cref="IAsyncInterceptor"/> which executes only minimal processing when intercepting a
@@ -45,6 +46,18 @@ public abstract class ProcessingAsyncInterceptor<TState> : IAsyncInterceptor
     {
         TState state = Proceed(invocation);
         invocation.ReturnValue = SignalWhenCompleteAsync<TResult>(invocation, state);
+    }
+
+    /// <summary>
+    /// Intercepts a method <paramref name="invocation"/> with return type of <see cref="IAsyncEnumerable{T}"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The type of ther returned enumerable.</typeparam>
+    /// <param name="invocation">The method invocation.</param>
+    public void InterceptAsyncEnumerable<TResult>(IInvocation invocation)
+    {
+        TState state = Proceed(invocation);
+        var innerAsync = (IAsyncEnumerable<TResult>)invocation.ReturnValue;
+        invocation.ReturnValue = SignalWhenEnumerationCompleteAsync<TResult>(invocation, innerAsync, state);
     }
 
     /// <summary>
@@ -139,5 +152,17 @@ public abstract class ProcessingAsyncInterceptor<TState> : IAsyncInterceptor
         CompletedInvocation(invocation, state, result);
 
         return result;
+    }
+
+    private async IAsyncEnumerable<TResult> SignalWhenEnumerationCompleteAsync<TResult>(IInvocation invocation, IAsyncEnumerable<TResult> innerAsync, TState state)
+    {
+        // loop / yield the proxied method
+        await foreach (TResult item in innerAsync)
+        {
+            yield return item;
+        }
+
+        // Signal that the invocation has been completed.
+        CompletedInvocation(invocation, state);
     }
 }
