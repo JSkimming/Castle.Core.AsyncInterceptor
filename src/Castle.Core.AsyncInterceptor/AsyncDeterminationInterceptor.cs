@@ -116,7 +116,7 @@ public class AsyncDeterminationInterceptor : IInterceptor
             return (GenericAsyncHandler)method.CreateDelegate(typeof(GenericAsyncHandler));
         }
 
-        throw new ArgumentException(nameof(returnType));
+        throw new ArgumentException("Only Task, Task<> or IAsyncEnumerable<> return types are supported", nameof(returnType));
     }
 
     /// <summary>
