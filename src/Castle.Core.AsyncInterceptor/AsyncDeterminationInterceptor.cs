@@ -16,6 +16,9 @@ public class AsyncDeterminationInterceptor : IInterceptor
         typeof(AsyncDeterminationInterceptor)
                 .GetMethod(nameof(HandleAsyncWithResult), BindingFlags.Static | BindingFlags.NonPublic)!;
 
+    private static readonly MethodInfo HandleAsyncEnumerableInfo =
+            typeof(AsyncDeterminationInterceptor).GetMethod(nameof(HandleAsyncEnumerable), BindingFlags.Static | BindingFlags.NonPublic)!;
+
     private static readonly ConcurrentDictionary<Type, GenericAsyncHandler> GenericAsyncHandlers = new();
 
     /// <summary>
@@ -34,6 +37,7 @@ public class AsyncDeterminationInterceptor : IInterceptor
         Synchronous,
         AsyncAction,
         AsyncFunction,
+        AsyncEnumerableFunction,
     }
 
     /// <summary>
@@ -56,6 +60,7 @@ public class AsyncDeterminationInterceptor : IInterceptor
                 AsyncInterceptor.InterceptAsynchronous(invocation);
                 return;
             case MethodType.AsyncFunction:
+            case MethodType.AsyncEnumerableFunction:
                 GetHandler(invocation.Method.ReturnType).Invoke(invocation, AsyncInterceptor);
                 return;
             case MethodType.Synchronous:
@@ -70,6 +75,11 @@ public class AsyncDeterminationInterceptor : IInterceptor
     /// </summary>
     private static MethodType GetMethodType(Type returnType)
     {
+        TypeInfo typeInfo = returnType.GetTypeInfo();
+
+        if (typeInfo.IsGenericType && typeInfo.GetGenericTypeDefinition() == typeof(IAsyncEnumerable<>))
+            return MethodType.AsyncEnumerableFunction;
+
         // If there's no return type, or it's not a task, then assume it's a synchronous method.
         if (returnType == typeof(void) || !typeof(Task).IsAssignableFrom(returnType))
             return MethodType.Synchronous;
@@ -92,9 +102,21 @@ public class AsyncDeterminationInterceptor : IInterceptor
     /// </summary>
     private static GenericAsyncHandler CreateHandler(Type returnType)
     {
-        Type taskReturnType = returnType.GetGenericArguments()[0];
-        MethodInfo method = HandleAsyncMethodInfo.MakeGenericMethod(taskReturnType);
-        return (GenericAsyncHandler)method.CreateDelegate(typeof(GenericAsyncHandler));
+        Type genericType = returnType.GetGenericTypeDefinition();
+        if (typeof(Task).IsAssignableFrom(genericType))
+        {
+            Type? taskReturnType = returnType.GetGenericArguments()[0];
+            MethodInfo method = HandleAsyncMethodInfo.MakeGenericMethod(taskReturnType);
+            return (GenericAsyncHandler)method.CreateDelegate(typeof(GenericAsyncHandler));
+        }
+        else if (genericType == typeof(IAsyncEnumerable<>))
+        {
+            Type enumerableType = returnType.GetGenericArguments()[0];
+            MethodInfo method = HandleAsyncEnumerableInfo.MakeGenericMethod(enumerableType);
+            return (GenericAsyncHandler)method.CreateDelegate(typeof(GenericAsyncHandler));
+        }
+
+        throw new ArgumentException("Only Task, Task<> or IAsyncEnumerable<> return types are supported", nameof(returnType));
     }
 
     /// <summary>
@@ -107,4 +129,13 @@ public class AsyncDeterminationInterceptor : IInterceptor
     {
         asyncInterceptor.InterceptAsynchronous<TResult>(invocation);
     }
+
+    /// <summary>
+    /// This method is created as a delegate and used to make the call to the generic
+    /// <see cref="IAsyncInterceptor.InterceptAsyncEnumerable{T}"/> method.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the <see cref="IAsyncEnumerable{T}"/> of the method
+    /// <paramref name="invocation"/>.</typeparam>
+    private static void HandleAsyncEnumerable<TResult>(IInvocation invocation, IAsyncInterceptor asyncInterceptor)
+        => asyncInterceptor.InterceptAsyncEnumerable<TResult>(invocation);
 }

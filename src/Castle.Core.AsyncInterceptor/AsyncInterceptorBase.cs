@@ -66,6 +66,12 @@ public abstract class AsyncInterceptorBase : IAsyncInterceptor
             InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedAsynchronous<TResult>);
     }
 
+    /// <inheritdoc/>
+    public void InterceptAsyncEnumerable<TResult>(IInvocation invocation)
+    {
+        throw new NotImplementedException(); // TODO : discuss the correct model here
+    }
+
     /// <summary>
     /// Override in derived classes to intercept method invocations.
     /// </summary>

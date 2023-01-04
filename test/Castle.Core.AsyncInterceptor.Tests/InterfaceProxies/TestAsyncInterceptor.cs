@@ -29,6 +29,14 @@ public class TestAsyncInterceptor : IAsyncInterceptor
         invocation.ReturnValue = LogInterceptAsynchronous<TResult>(invocation);
     }
 
+    public void InterceptAsyncEnumerable<TResult>(IInvocation invocation)
+    {
+        LogInterceptStart(invocation);
+        invocation.Proceed();
+        var innerEnumerable = (IAsyncEnumerable<TResult>)invocation.ReturnValue;
+        invocation.ReturnValue = LogInterceptAsyncEnumerable<TResult>(invocation, innerEnumerable);
+    }
+
     private async Task LogInterceptAsynchronous(IInvocation invocation)
     {
         LogInterceptStart(invocation);
@@ -46,6 +54,16 @@ public class TestAsyncInterceptor : IAsyncInterceptor
         TResult result = await task.ConfigureAwait(false);
         LogInterceptEnd(invocation);
         return result;
+    }
+
+    private async IAsyncEnumerable<TResult> LogInterceptAsyncEnumerable<TResult>(IInvocation invocation, IAsyncEnumerable<TResult> innerEnumerable)
+    {
+        await foreach (TResult result in innerEnumerable)
+        {
+            yield return result;
+        }
+
+        LogInterceptEnd(invocation);
     }
 
     private void LogInterceptStart(IInvocation invocation)

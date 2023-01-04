@@ -225,3 +225,59 @@ public class WhenInterceptingAsynchronousResultMethods
         Assert.Equal($"{MethodName}:InterceptEnd", _log[3]);
     }
 }
+
+public class WhenInterceptingAsyncEnumerableMethods
+{
+    private const string MethodName = nameof(IInterfaceToProxy.AsyncEnumerableMethod);
+    private readonly ListLogger _log;
+    private readonly IInterfaceToProxy _proxy;
+
+    public WhenInterceptingAsyncEnumerableMethods(ITestOutputHelper output)
+    {
+        _log = new ListLogger(output);
+        _proxy = ProxyGen.CreateProxy(_log, new TestAsyncInterceptor(_log));
+    }
+
+    [Fact]
+    public async Task ShouldLog4Entries()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal(10, results.Count);
+        Assert.Equal(4, _log.Count);
+    }
+
+    [Fact]
+    public async Task ShouldAllowInterceptionPriorToInvocation()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal($"{MethodName}:InterceptStart", _log[0]);
+    }
+
+    [Fact]
+    public async Task ShouldAllowInterceptionAfterInvocation()
+    {
+        // Act
+        List<Guid> results = new();
+        await foreach (Guid result in _proxy.AsyncEnumerableMethod())
+        {
+            results.Add(result);
+        }
+
+        // Assert
+        Assert.Equal($"{MethodName}:InterceptEnd", _log[3]);
+    }
+}

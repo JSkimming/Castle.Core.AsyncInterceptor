@@ -22,4 +22,10 @@ public interface IInterfaceToProxy
     Task<Guid> AsynchronousResultMethod();
 
     Task<Guid> AsynchronousResultExceptionMethod();
+
+    IAsyncEnumerable<Guid> AsyncEnumerableMethod();
+
+    IAsyncEnumerator<Guid> AsyncEnumerableExceptionMethodNoReturnValues();
+
+    IAsyncEnumerator<Guid> AsyncEnumerableExceptionMethodReturnSomeValues();
 }
