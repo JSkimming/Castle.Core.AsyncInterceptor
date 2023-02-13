@@ -47,7 +47,7 @@ public class ClassWithInterfaceToProxy : IInterfaceToProxy
     {
         _log.Add(nameof(AsynchronousVoidMethod) + ":Start");
         return Task.Delay(10).ContinueWith(
-            t => _log.Add(nameof(AsynchronousVoidMethod) + ":End"),
+            _ => _log.Add(nameof(AsynchronousVoidMethod) + ":End"),
             TaskScheduler.Default);
     }
 
@@ -55,7 +55,7 @@ public class ClassWithInterfaceToProxy : IInterfaceToProxy
     {
         _log.Add(nameof(AsynchronousVoidExceptionMethod) + ":Start");
         return Task.Delay(10).ContinueWith(
-            t => throw new InvalidOperationException(nameof(AsynchronousVoidExceptionMethod) + ":Exception"),
+            _ => throw new InvalidOperationException(nameof(AsynchronousVoidExceptionMethod) + ":Exception"),
             TaskScheduler.Default);
     }
 

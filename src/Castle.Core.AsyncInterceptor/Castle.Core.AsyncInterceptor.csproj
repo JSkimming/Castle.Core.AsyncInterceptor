@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0;net5.0;net6.0;net7.0</TargetFrameworks>
-    <RootNamespace>Castle.DynamicProxy</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Authors>James Skimming</Authors>
     <Description>AsyncInterceptor is an extension to Castle DynamicProxy to simplify the development of interceptors for asynchronous methods.</Description>
     <Copyright>Copyright © 2016-2023 James Skimming</Copyright>
@@ -18,7 +16,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>async asynchronous-methods castle castle-core dynamic dynamicproxy dynamic-proxy dynamicproxy2 intercept-methods proxy</PackageTags>
-    <ContinuousIntegrationBuild Condition=" '$(CI)' == 'true' ">true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <!-- Strong name signing -->

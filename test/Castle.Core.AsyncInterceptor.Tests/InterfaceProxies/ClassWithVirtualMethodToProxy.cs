@@ -26,8 +26,5 @@ public class ClassWithVirtualMethodToProxy
         return Guid.NewGuid();
     }
 
-    internal void PostConstructorInitialize(ListLogger log)
-    {
-        _log ??= log ?? throw new ArgumentNullException(nameof(log));
-    }
+    internal void PostConstructorInitialize(ListLogger log) => _log = log;
 }
