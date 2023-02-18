@@ -142,6 +142,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"JSkimming_Castle.Core.AsyncInterceptor" /o:"jskimming" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"JSkimming_Castle.Core.AsyncInterceptor" /o:"jskimming" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=test\Castle.Core.AsyncInterceptor.Tests\coverage.net7.0.opencover.xml
+          dotnet test -f net7.0 -c Release test\Castle.Core.AsyncInterceptor.Tests\Castle.Core.AsyncInterceptor.Tests.csproj -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:Include=[Castle.Core.AsyncInterceptor]* -p:Exclude=[Castle.Core.AsyncInterceptor]*.NoCoverage.*
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
