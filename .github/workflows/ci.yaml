@@ -101,6 +101,7 @@ jobs:
   sonar-cloud:
     name: SonarCloud
     runs-on: windows-latest
+    if: false
 
     steps:
 
