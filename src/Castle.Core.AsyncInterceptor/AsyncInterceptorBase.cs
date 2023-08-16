@@ -127,6 +127,7 @@ public abstract class AsyncInterceptorBase : IAsyncInterceptor
         }
 
         task.RethrowIfFaulted();
+        invocation.ReturnValue = task.Result;
     }
 
     private static Task ProceedSynchronous(IInvocation invocation, IInvocationProceedInfo proceedInfo)
