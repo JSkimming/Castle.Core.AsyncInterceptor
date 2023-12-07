@@ -18,9 +18,12 @@ internal static class RethrowHelper
     /// <param name="exception">The exception.</param>
     public static void Rethrow(this Exception? exception)
     {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(exception, nameof(exception));
+#else
         if (exception == null)
             throw new ArgumentNullException(nameof(exception));
-
+#endif
         ExceptionDispatchInfo.Capture(exception).Throw();
     }
 
@@ -32,9 +35,12 @@ internal static class RethrowHelper
     /// <param name="exception">The exception.</param>
     public static void RethrowInnerIfAggregate(this Exception? exception)
     {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(exception, nameof(exception));
+#else
         if (exception == null)
             throw new ArgumentNullException(nameof(exception));
-
+#endif
         switch (exception)
         {
             case AggregateException aggregate:
@@ -53,9 +59,12 @@ internal static class RethrowHelper
     /// <param name="task">The task.</param>
     public static void RethrowIfFaulted(this Task task)
     {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(task, nameof(task));
+#else
         if (task == null)
             throw new ArgumentNullException(nameof(task));
-
+#endif
         if (task.IsFaulted)
             RethrowInnerIfAggregate(task.Exception);
     }
