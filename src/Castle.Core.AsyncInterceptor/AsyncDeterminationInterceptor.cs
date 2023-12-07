@@ -70,9 +70,25 @@ public class AsyncDeterminationInterceptor : IInterceptor
     /// </summary>
     private static MethodType GetMethodType(Type returnType)
     {
+#if NET5_0_OR_GREATER
+        Type? genericTypeDef = null;
+
+        // If there's no return type, or it's not a task, then assume it's a synchronous method.
+        if (returnType == typeof(void) ||
+            (!typeof(Task).IsAssignableFrom(returnType) &&
+             !typeof(IAsyncEnumerable<>).IsAssignableFrom(genericTypeDef ??= returnType.GetGenericTypeDefinition())))
+            return MethodType.Synchronous;
+
+        // async enumerables are async!
+        if (typeof(IAsyncEnumerable<>).IsAssignableFrom(genericTypeDef ??= returnType.GetGenericTypeDefinition()))
+            return MethodType.AsyncFunction;
+#else
+
         // If there's no return type, or it's not a task, then assume it's a synchronous method.
         if (returnType == typeof(void) || !typeof(Task).IsAssignableFrom(returnType))
             return MethodType.Synchronous;
+
+#endif
 
         // The return type is a task of some sort, so assume it's asynchronous
         return returnType.GetTypeInfo().IsGenericType ? MethodType.AsyncFunction : MethodType.AsyncAction;
