@@ -22,4 +22,10 @@ public interface IInterfaceToProxy
     Task<Guid> AsynchronousResultMethod();
 
     Task<Guid> AsynchronousResultExceptionMethod();
+
+#if NET5_0_OR_GREATER
+    IAsyncEnumerable<string> AsynchronousEnumerableMethod();
+
+    IAsyncEnumerable<string> AsynchronousEnumerableExceptionMethod();
+#endif
 }

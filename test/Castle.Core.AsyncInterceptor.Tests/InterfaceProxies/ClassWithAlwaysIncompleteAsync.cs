@@ -58,4 +58,26 @@ public class ClassWithAlwaysIncompleteAsync : IInterfaceToProxy
         _log.Add(nameof(AsynchronousResultMethod) + ":End");
         return Guid.NewGuid();
     }
+
+#if NET5_0_OR_GREATER
+    public async IAsyncEnumerable<string> AsynchronousEnumerableMethod()
+    {
+        _log.Add(nameof(AsynchronousEnumerableMethod) + ":Start");
+        yield return "a";
+        _log.Add(nameof(AsynchronousEnumerableMethod) + ":Yield a");
+        await Task.Delay(10).ConfigureAwait(false);
+        yield return "b";
+        _log.Add(nameof(AsynchronousEnumerableMethod) + ":Yield b");
+    }
+
+    public async IAsyncEnumerable<string> AsynchronousEnumerableExceptionMethod()
+    {
+        _log.Add(nameof(AsynchronousEnumerableExceptionMethod) + ":Start");
+        yield return "a";
+        _log.Add(nameof(AsynchronousEnumerableExceptionMethod) + ":Yield a");
+        await Task.Delay(10).ConfigureAwait(false);
+        throw new InvalidOperationException(nameof(AsynchronousEnumerableExceptionMethod) + ":Exception");
+    }
+#endif
+
 }
