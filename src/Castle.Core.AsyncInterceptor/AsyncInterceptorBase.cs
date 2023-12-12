@@ -65,6 +65,14 @@ public abstract class AsyncInterceptorBase : IAsyncInterceptor
         invocation.ReturnValue =
             InterceptAsync(invocation, invocation.CaptureProceedInfo(), ProceedAsynchronous<TResult>);
     }
+#if NET5_0_OR_GREATER
+    /// <summary>
+    /// Intercepts an asynchronous method <paramref name="invocation"/> with return type of <see cref="IAsyncEnumerable{T}"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the <see cref="IAsyncEnumerable{T}"/>.</typeparam>
+    /// <param name="invocation">The method invocation.</param>
+    public void InterceptAsynchronousEnumerable<TResult>(IInvocation invocation) => throw new NotImplementedException();
+#endif
 
     /// <summary>
     /// Override in derived classes to intercept method invocations.

@@ -29,6 +29,10 @@ public class TestAsyncInterceptor : IAsyncInterceptor
         invocation.ReturnValue = LogInterceptAsynchronous<TResult>(invocation);
     }
 
+#if NET5_0_OR_GREATER
+    public void InterceptAsynchronousEnumerable<TResult>(IInvocation invocation) => throw new NotImplementedException();
+#endif
+
     private async Task LogInterceptAsynchronous(IInvocation invocation)
     {
         LogInterceptStart(invocation);

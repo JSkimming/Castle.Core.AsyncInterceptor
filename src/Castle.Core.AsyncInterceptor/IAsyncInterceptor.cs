@@ -26,4 +26,13 @@ public interface IAsyncInterceptor
     /// <typeparam name="TResult">The type of the <see cref="Task{T}"/> <see cref="Task{T}.Result"/>.</typeparam>
     /// <param name="invocation">The method invocation.</param>
     void InterceptAsynchronous<TResult>(IInvocation invocation);
+
+#if NET5_0_OR_GREATER
+    /// <summary>
+    /// Intercepts an asynchronous enumerable method <paramref name="invocation"/> with return type of <see cref="Task{T}"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the <see cref="IAsyncEnumerable{T}"/>.</typeparam>
+    /// <param name="invocation">The method invocation.</param>
+    void InterceptAsynchronousEnumerable<TResult>(IInvocation invocation);
+#endif
 }
